@@ -5,20 +5,7 @@ using UnityEngine;
 
 public class PokerManager : MonoBehaviour
 {
-    [Header("Prefabs")]
-    [SerializeField] private GameObject playingCardPrefab;
-    [SerializeField] private GameObject tablePlayingCardPrefab;
-
-
-    [Header("Transforms")]
-    [SerializeField] private Transform playerHandTransform;
-    [SerializeField] private Transform clubOpponentHandTransform;
-    [SerializeField] private Transform spadeOpponentHandTransform;
-    [SerializeField] private Transform heartOpponentHandTransform;
-    [SerializeField] private Transform diamondOpponentHandTransform;
-    [SerializeField] private Transform tableCardTransform;
-
-    [Header("Cards and Hands")]
+    [Header("Hands")]
     [SerializeField] private List<PlayingCard> playerHand;
     [SerializeField] private List<PlayingCard> clubOpponentHand;
     [SerializeField] private List<PlayingCard> spadeOpponentHand;
@@ -45,68 +32,40 @@ public class PokerManager : MonoBehaviour
 
         DealCards();
 
-        OffsetCardsInHand();
+        PokerVisualManager.Instance.OffsetCardsInHands();
 
         //Flop
-        PlayCommunityCard(3);
+        DrawCard(communityCards, PokerPosition.Table, 3);
         //Turn
-        PlayCommunityCard(1);
+        DrawCard(communityCards, PokerPosition.Table, 1);
         //River
-        PlayCommunityCard(1);
+        DrawCard(communityCards, PokerPosition.Table, 1);
     }
 
     private void DealCards()
     {
-        DrawCard(playerHand, playerHandTransform);
-        DrawCard(heartOpponentHand, heartOpponentHandTransform);
-        DrawCard(spadeOpponentHand, spadeOpponentHandTransform);
-        DrawCard(clubOpponentHand, clubOpponentHandTransform);
-        DrawCard(diamondOpponentHand, diamondOpponentHandTransform);
-        DrawCard(playerHand, playerHandTransform);
-        DrawCard(heartOpponentHand, heartOpponentHandTransform);
-        DrawCard(spadeOpponentHand, spadeOpponentHandTransform);
-        DrawCard(clubOpponentHand, clubOpponentHandTransform);
-        DrawCard(diamondOpponentHand, diamondOpponentHandTransform);
+        DrawCard(playerHand, PokerPosition.Joker);
+        DrawCard(heartOpponentHand, PokerPosition.Heart);
+        DrawCard(spadeOpponentHand, PokerPosition.Spade);
+        DrawCard(clubOpponentHand, PokerPosition.Club);
+        DrawCard(diamondOpponentHand, PokerPosition.Diamond);
+        DrawCard(playerHand, PokerPosition.Joker);
+        DrawCard(heartOpponentHand, PokerPosition.Heart);
+        DrawCard(spadeOpponentHand, PokerPosition.Spade);
+        DrawCard(clubOpponentHand, PokerPosition.Club);
+        DrawCard(diamondOpponentHand, PokerPosition.Diamond);
     }
 
-    public void DrawCard(List<PlayingCard> hand, Transform handTransform)
-    {
-        hand.Add(runtimeDeck[0]);
-        VisualPlayingCard card = Instantiate(playingCardPrefab, handTransform).GetComponent<VisualPlayingCard>();
-        card.PopulateData(runtimeDeck[0]);
-        runtimeDeck.Remove(runtimeDeck[0]);
-    }
-
-    public void PlayCommunityCard(int numCards)
+    public void DrawCard(List<PlayingCard> hand, PokerPosition position, int numCards = 1)
     {
         for (int i = 0; i < numCards; i++)
         {
-            communityCards.Add(runtimeDeck[0]);
-            VisualPlayingCard card = Instantiate(tablePlayingCardPrefab, tableCardTransform.transform).GetComponent<VisualPlayingCard>();
-            card.gameObject.transform.localPosition += new Vector3((tableCardTransform.transform.childCount - 1) * 1, 0, 0);
-            card.PopulateData(runtimeDeck[0]);
-            runtimeDeck.Remove(runtimeDeck[0]);
+            PlayingCard c = runtimeDeck[0];
+            hand.Add(c);
+            PokerVisualManager.Instance.SpawnCard(c, position);
+            runtimeDeck.Remove(c);
         }
     }
-
-    public void OffsetCardsInHand()
-    {
-        playerHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
-        playerHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
-
-        clubOpponentHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
-        clubOpponentHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
-
-        spadeOpponentHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
-        spadeOpponentHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
-
-        heartOpponentHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
-        heartOpponentHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
-
-        diamondOpponentHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
-        diamondOpponentHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
-    }
-
 
     private void DestroyCards()
     {
@@ -118,33 +77,11 @@ public class PokerManager : MonoBehaviour
         communityCards.Clear();
         runtimeDeck.Clear();
 
+        // Fresh playing deck
         runtimeDeck = new List<PlayingCard>(deckList);
         HelperMethods.Shuffle(runtimeDeck);
 
-        for (int i = playerHandTransform.transform.childCount - 1; i >= 0; i--)
-        {
-            playerHandTransform.transform.GetChild(i).SetParent(transform);
-        }
-        for (int i = clubOpponentHandTransform.transform.childCount - 1; i >= 0; i--)
-        {
-            clubOpponentHandTransform.transform.GetChild(i).SetParent(transform);
-        }
-        for (int i = spadeOpponentHandTransform.transform.childCount - 1; i >= 0; i--)
-        {
-            spadeOpponentHandTransform.transform.GetChild(i).SetParent(transform);
-        }
-        for (int i = heartOpponentHandTransform.transform.childCount - 1; i >= 0; i--)
-        {
-            heartOpponentHandTransform.transform.GetChild(i).SetParent(transform);
-        }
-        for (int i = diamondOpponentHandTransform.transform.childCount - 1; i >= 0; i--)
-        {
-            diamondOpponentHandTransform.transform.GetChild(i).SetParent(transform);
-        }
-        for (int i = transform.childCount - 1; i >= 0; i--)
-        {
-            Destroy(transform.GetChild(i).gameObject);
-        }
+        PokerVisualManager.Instance.DestroyCardVisuals();
     }
 
     public void CheckWin()
@@ -179,13 +116,8 @@ public class PokerManager : MonoBehaviour
     public PokerHand EvaluateScore(List<PlayingCard> communityCards, List<PlayingCard> hand)
     {
         List<PlayingCard> cards = new List<PlayingCard>(communityCards);
+        // Add hand to the community cards for the total 7 usable cards
         cards.AddRange(hand);
-
-        if (cards.Count < 5)
-        {
-            Debug.LogWarning("Not enough cards to evaluate poker hand.");
-            return PokerHand.HighCard;
-        }
 
         PokerHand bestHand = PokerHand.HighCard;
 

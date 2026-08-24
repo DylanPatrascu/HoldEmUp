@@ -5,7 +5,6 @@ public class PlayingCard : ScriptableObject
 {
     public int cardValue;
     public CardSuit cardSuit;
-    public CardColor cardColor;
     public Texture cardFrontSprite;
     public Texture cardBackSprite;
 

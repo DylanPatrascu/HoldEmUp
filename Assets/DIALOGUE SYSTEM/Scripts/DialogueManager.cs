@@ -160,6 +160,7 @@ public class DialogueManager : MonoBehaviour
         StartCoroutine(RenderSentence(sentences.Dequeue()));
     }
 
+    // Change from empty string and adding characters --> full string and reveal characters with TMP maxVisibleCharacters
     IEnumerator RenderSentence(string sentence)
     {
         sentenceText.text = "";
