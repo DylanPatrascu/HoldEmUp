@@ -5,17 +5,26 @@ using UnityEngine;
 
 public class PokerManager : MonoBehaviour
 {
-    [Header("Prefabs & Transforms")]
+    [Header("Prefabs")]
     [SerializeField] private GameObject playingCardPrefab;
     [SerializeField] private GameObject tablePlayingCardPrefab;
 
-    [SerializeField] private GameObject playerHandTransform;
-    [SerializeField] private GameObject opponentHandTransform;
-    [SerializeField] private GameObject tableCardTransform;
+
+    [Header("Transforms")]
+    [SerializeField] private Transform playerHandTransform;
+    [SerializeField] private Transform clubOpponentHandTransform;
+    [SerializeField] private Transform spadeOpponentHandTransform;
+    [SerializeField] private Transform heartOpponentHandTransform;
+    [SerializeField] private Transform diamondOpponentHandTransform;
+    [SerializeField] private Transform tableCardTransform;
 
     [Header("Cards and Hands")]
     [SerializeField] private List<PlayingCard> playerHand;
-    [SerializeField] private List<PlayingCard> opponentHand;
+    [SerializeField] private List<PlayingCard> clubOpponentHand;
+    [SerializeField] private List<PlayingCard> spadeOpponentHand;
+    [SerializeField] private List<PlayingCard> heartOpponentHand;
+    [SerializeField] private List<PlayingCard> diamondOpponentHand;
+
     [SerializeField] private List<PlayingCard> communityCards;
     private List<PlayingCard> deckList;
     private List<PlayingCard> runtimeDeck;
@@ -26,17 +35,16 @@ public class PokerManager : MonoBehaviour
     }
     private void Start()
     {
+        runtimeDeck = new List<PlayingCard>(deckList);
         ResetGame();
     }
 
     public void ResetGame()
     {
         DestroyCards();
-        
-        DrawCard(playerHand, true);
-        DrawCard(opponentHand, false);
-        DrawCard(playerHand, true);
-        DrawCard(opponentHand, false);
+
+        DealCards();
+
         OffsetCardsInHand();
 
         //Flop
@@ -47,11 +55,24 @@ public class PokerManager : MonoBehaviour
         PlayCommunityCard(1);
     }
 
-    public void DrawCard(List<PlayingCard> hand, bool isPlayer)
+    private void DealCards()
     {
-        //Debug.Log($"Drew {runtimeDeck[0].name}");
+        DrawCard(playerHand, playerHandTransform);
+        DrawCard(heartOpponentHand, heartOpponentHandTransform);
+        DrawCard(spadeOpponentHand, spadeOpponentHandTransform);
+        DrawCard(clubOpponentHand, clubOpponentHandTransform);
+        DrawCard(diamondOpponentHand, diamondOpponentHandTransform);
+        DrawCard(playerHand, playerHandTransform);
+        DrawCard(heartOpponentHand, heartOpponentHandTransform);
+        DrawCard(spadeOpponentHand, spadeOpponentHandTransform);
+        DrawCard(clubOpponentHand, clubOpponentHandTransform);
+        DrawCard(diamondOpponentHand, diamondOpponentHandTransform);
+    }
+
+    public void DrawCard(List<PlayingCard> hand, Transform handTransform)
+    {
         hand.Add(runtimeDeck[0]);
-        VisualPlayingCard card = Instantiate(playingCardPrefab, isPlayer ? playerHandTransform.transform : opponentHandTransform.transform).GetComponent<VisualPlayingCard>();
+        VisualPlayingCard card = Instantiate(playingCardPrefab, handTransform).GetComponent<VisualPlayingCard>();
         card.PopulateData(runtimeDeck[0]);
         runtimeDeck.Remove(runtimeDeck[0]);
     }
@@ -60,7 +81,6 @@ public class PokerManager : MonoBehaviour
     {
         for (int i = 0; i < numCards; i++)
         {
-            //Debug.Log($"Played {runtimeDeck[0].name}");
             communityCards.Add(runtimeDeck[0]);
             VisualPlayingCard card = Instantiate(tablePlayingCardPrefab, tableCardTransform.transform).GetComponent<VisualPlayingCard>();
             card.gameObject.transform.localPosition += new Vector3((tableCardTransform.transform.childCount - 1) * 1, 0, 0);
@@ -71,18 +91,30 @@ public class PokerManager : MonoBehaviour
 
     public void OffsetCardsInHand()
     {
-        playerHandTransform.transform.GetChild(0).localPosition += new Vector3(-1, 0, 0);
-        playerHandTransform.transform.GetChild(1).localPosition += new Vector3(1, 0, 0);
+        playerHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
+        playerHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
 
-        opponentHandTransform.transform.GetChild(0).localPosition += new Vector3(-1, 0, 0);
-        opponentHandTransform.transform.GetChild(1).localPosition += new Vector3(1, 0, 0);
+        clubOpponentHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
+        clubOpponentHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
+
+        spadeOpponentHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
+        spadeOpponentHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
+
+        heartOpponentHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
+        heartOpponentHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
+
+        diamondOpponentHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
+        diamondOpponentHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
     }
 
 
     private void DestroyCards()
     {
         playerHand.Clear();
-        opponentHand.Clear();
+        clubOpponentHand.Clear();
+        diamondOpponentHand.Clear();
+        heartOpponentHand.Clear();
+        spadeOpponentHand.Clear();
         communityCards.Clear();
         runtimeDeck.Clear();
 
@@ -93,13 +125,21 @@ public class PokerManager : MonoBehaviour
         {
             playerHandTransform.transform.GetChild(i).SetParent(transform);
         }
-        for (int i = opponentHandTransform.transform.childCount - 1; i >= 0; i--)
+        for (int i = clubOpponentHandTransform.transform.childCount - 1; i >= 0; i--)
         {
-            opponentHandTransform.transform.GetChild(i).SetParent(transform);
+            clubOpponentHandTransform.transform.GetChild(i).SetParent(transform);
         }
-        for (int i = tableCardTransform.transform.childCount - 1; i >= 0; i--)
+        for (int i = spadeOpponentHandTransform.transform.childCount - 1; i >= 0; i--)
         {
-            tableCardTransform.transform.GetChild(i).SetParent(transform);
+            spadeOpponentHandTransform.transform.GetChild(i).SetParent(transform);
+        }
+        for (int i = heartOpponentHandTransform.transform.childCount - 1; i >= 0; i--)
+        {
+            heartOpponentHandTransform.transform.GetChild(i).SetParent(transform);
+        }
+        for (int i = diamondOpponentHandTransform.transform.childCount - 1; i >= 0; i--)
+        {
+            diamondOpponentHandTransform.transform.GetChild(i).SetParent(transform);
         }
         for (int i = transform.childCount - 1; i >= 0; i--)
         {
@@ -110,24 +150,30 @@ public class PokerManager : MonoBehaviour
     public void CheckWin()
     {
         PokerHand playerScore = EvaluateScore(communityCards, playerHand);
-        PokerHand opponentScore = EvaluateScore(communityCards, opponentHand);
-        
+        PokerHand clubOpponentScore = EvaluateScore(communityCards, clubOpponentHand);
+        PokerHand heartOpponentScore = EvaluateScore(communityCards, heartOpponentHand);
+        PokerHand spadeOpponentScore = EvaluateScore(communityCards, spadeOpponentHand);
+        PokerHand diamondOpponentScore = EvaluateScore(communityCards, diamondOpponentHand);
+
         Debug.Log("Player: " + playerScore);
-        Debug.Log("Opponent" + opponentScore);
-        
+        Debug.Log("Club Opponent" + clubOpponentScore);
+        Debug.Log("Spade Opponent" + spadeOpponentScore);
+        Debug.Log("Diamond Opponent" + diamondOpponentScore);
+        Debug.Log("Heart Opponent" + heartOpponentScore);
+
         // Lower enum value = stronger hand
-        if (playerScore < opponentScore)
-        {
-            Debug.Log("PlayerWins: " + playerScore);
-        }
-        else if (playerScore == opponentScore)
-        {
-            Debug.Log("Draw: " + playerScore);
-        }
-        else
-        {
-            Debug.Log("OpponentWins" + opponentScore);
-        }
+        //if (playerScore < clubOpponentScore)
+        //{
+        //    Debug.Log("PlayerWins: " + playerScore);
+        //}
+        //else if (playerScore == clubOpponentScore)
+        //{
+        //    Debug.Log("Draw: " + playerScore);
+        //}
+        //else
+        //{
+        //   Debug.Log("OpponentWins" + clubOpponentScore);
+        //}
     }
 
     public PokerHand EvaluateScore(List<PlayingCard> communityCards, List<PlayingCard> hand)
