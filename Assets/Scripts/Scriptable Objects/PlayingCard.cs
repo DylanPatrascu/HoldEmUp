@@ -6,6 +6,11 @@ public class PlayingCard : ScriptableObject
     public int cardValue;
     public CardSuit cardSuit;
     public CardColor cardColor;
-    public Sprite cardFrontSprite;
-    public Sprite cardBackSprite;
+    public Texture cardFrontSprite;
+    public Texture cardBackSprite;
+
+    public override string ToString()
+    {
+        return $"{cardValue} of {cardSuit}";
+    }
 }
