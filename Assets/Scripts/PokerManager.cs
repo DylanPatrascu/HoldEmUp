@@ -232,58 +232,71 @@ public class PokerManager : MonoBehaviour
         // Royal Flush
         if (isFlush && isStraight && cards[0].cardValue == 14)
         {
+            Debug.Log($"royal flush, max card:{cards.Max(c => c.cardValue)}");
             return PokerHand.RoyalFlush;
         }
 
         // Straight Flush
         if (isFlush && isStraight)
         {
+            Debug.Log($"straight flush, max card:{cards.Max(c => c.cardValue)}");
             return PokerHand.StraightFlush;
         }
 
         // Four of a Kind
         if (valueCounts.Values.Any(count => count == 4))
         {
+            Debug.Log($"straight flush, card:{valueCounts.First(pair => pair.Value == 4).Key}");
             return PokerHand.FourOfAKind;
         }
 
         // Full House
         if (valueCounts.Values.Contains(3) && valueCounts.Values.Contains(2))
         {
+            Debug.Log($"full house, cards:{valueCounts.First(pair => pair.Value == 3).Key} {valueCounts.First(pair => pair.Value == 2).Key}");
+
             return PokerHand.FullHouse;
         }
 
         // Flush
         if (isFlush)
         {
+            Debug.Log($"flush, max card:{cards.Max(c => c.cardValue)}");
             return PokerHand.Flush;
         }
 
         // Straight
         if (isStraight)
         {
+            Debug.Log($"straight, max card:{cards.Max(c => c.cardValue)}");
             return PokerHand.Straight;
         }
 
         // Three of a Kind
         if (valueCounts.Values.Any(count => count == 3))
         {
+            Debug.Log($"three of a kind, cards:{valueCounts.First(pair => pair.Value == 3).Key}");
             return PokerHand.ThreeOfAKind;
         }
 
         // Two Pair
         if (valueCounts.Values.Count(count => count == 2) >= 2)
         {
+            List<int> pairValues = valueCounts.Where(pair => pair.Value == 2).Select(pair => pair.Key).OrderByDescending(value => value).Take(2).ToList();
+            Debug.Log($"2 pair, values:{pairValues[0]}, {pairValues[1]}");
             return PokerHand.TwoPair;
         }
 
         // One Pair
         if (valueCounts.Values.Any(count => count == 2))
         {
+            Debug.Log($"pair, card:{valueCounts.First(pair => pair.Value == 2).Key}");
+
             return PokerHand.OnePair;
         }
 
         // High Card
+        Debug.Log($"high card:{cards.Max(c => c.cardValue)}");
         return PokerHand.HighCard;
     }
 
