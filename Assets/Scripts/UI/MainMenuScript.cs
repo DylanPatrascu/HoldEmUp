@@ -2,20 +2,24 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class MainMenuScript : MonoBehaviour
 {
+    [SerializeField]
+    private GameManager gameManager;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        ClickSFX = GetComponent<AudioSource>();
+        // ClickSFX = GetComponent<AudioSource>();
+        if (!gameManager) gameManager = FindFirstObjectByType<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
-    public async void _load_game()
+    public void _load_game()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 3);
+        gameManager.BeginGame();
     }
     public void _quit_game()
     {
