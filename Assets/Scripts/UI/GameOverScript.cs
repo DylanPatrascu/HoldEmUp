@@ -15,6 +15,8 @@ public class GameOverScript : MonoBehaviour
         
     }
 
+
+    //On button clicked, return to main menu
     public void _return_to_menu()
     {
 
