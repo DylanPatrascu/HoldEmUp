@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Dialogue", menuName = "ScriptableObjects/Dialogue")]
+[CreateAssetMenu(fileName = "Dialogue", menuName = "Scriptable Objects/Dialogue")]
 public class Dialogue : ScriptableObject
 {
-    public string name;
+    public string dialogueName;
     public Sprite portrait;
     public AudioClip talkingClip;
 
