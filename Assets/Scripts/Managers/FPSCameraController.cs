@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CameraManager : MonoBehaviour
+public class FPSCameraController : MonoBehaviour
 {
     [SerializeField] private float mouseSensitivity = 100f;
 
@@ -13,9 +13,6 @@ public class CameraManager : MonoBehaviour
     void Start()
     {
         if (!playerBody) playerBody = transform.parent.transform;
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
     // Update is called once per frame
