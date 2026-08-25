@@ -8,12 +8,27 @@ public class GameManager : MonoBehaviour
     [DoNotSerialize]
     public StateMachine _stateMachine = new();
 
+    private static GameManager instance;
+
     private static Dictionary<State, string> stateScenes = new()
     {
-        [State.Menu] = "Assets/Scenes/SampleScene",
-        [State.InClub] = "Assets/Scenes/SampleScene",
-        [State.FirstPerson] = "Assets/Scenes/SampleScene"
+        [State.Menu] = "Assets/Scenes/MainMenu.unity",
+        [State.InClub] = "Assets/Scenes/TestClubScene.unity",
+        [State.FirstPerson] = "Assets/Scenes/TestFirstPersonScene.unity"
     };
+
+    void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+        SceneManager.LoadScene(stateScenes[State.FirstPerson]);
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -22,6 +37,7 @@ public class GameManager : MonoBehaviour
         _stateMachine.Enter += lockCursor;
         _stateMachine.Enter += handleSceneChange;
         _stateMachine.Exit  += handleSceneUnload;
+
     }
 
     public static void handleSceneChange(object sender, StateEventArgs e)
@@ -70,29 +86,12 @@ public class GameManager : MonoBehaviour
         
     }
 
-    void OnGUI()
+    public void BeginGame()
     {
-        if (!Debug.isDebugBuild) return;
-
-        GUILayout.BeginArea(new Rect(12f, 12f, 220f, 300f), GUI.skin.window);
-        GUILayout.Label($"State: {_stateMachine.CurrentState}");
-        DrawTriggerButton("To Club", Trigger.ToClub);
-        DrawTriggerButton("To First Person", Trigger.ToFirstPerson);
-        DrawTriggerButton("To Main Menu", Trigger.ToMainMenu);
-        DrawTriggerButton("Pause", Trigger.Pause);
-        DrawTriggerButton("Resume", Trigger.Resume);
-        GUILayout.EndArea();
-    }
-
-    private void DrawTriggerButton(string label, Trigger trigger)
-    {
-        if (!GUILayout.Button(label)) return;
-
         try
         {
-            _stateMachine.Fire(trigger);
-        }
-        catch (System.InvalidOperationException exception)
+            _stateMachine.Fire(Trigger.ToClub);
+        } catch (System.InvalidOperationException exception)
         {
             Debug.LogWarning(exception.Message);
         }
