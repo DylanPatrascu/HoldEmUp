@@ -76,6 +76,10 @@ public class PokerVisualManager : MonoBehaviour
     public void DestroyCardVisuals()
     {
         // Move them off of a their respective gameobjects, because otherwise it needs to wait until end of frame
+        for (int i = tableCardTransform.transform.childCount - 1; i >= 0; i--)
+        {
+            tableCardTransform.transform.GetChild(i).SetParent(transform);
+        }
         for (int i = playerHandTransform.transform.childCount - 1; i >= 0; i--)
         {
             playerHandTransform.transform.GetChild(i).SetParent(transform);

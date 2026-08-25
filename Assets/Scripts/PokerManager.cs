@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.Rendering.GPUSort;
 
 public class PokerManager : MonoBehaviour
 {
@@ -86,60 +87,92 @@ public class PokerManager : MonoBehaviour
 
     public void CheckWin()
     {
-        PokerHand playerScore = EvaluateScore(communityCards, playerHand);
-        PokerHand clubOpponentScore = EvaluateScore(communityCards, clubOpponentHand);
-        PokerHand heartOpponentScore = EvaluateScore(communityCards, heartOpponentHand);
-        PokerHand spadeOpponentScore = EvaluateScore(communityCards, spadeOpponentHand);
-        PokerHand diamondOpponentScore = EvaluateScore(communityCards, diamondOpponentHand);
+        (PokerHand, List<int>) playerScore = EvaluateScore(communityCards, playerHand);
+        (PokerHand, List<int>) clubOpponentScore = EvaluateScore(communityCards, clubOpponentHand);
+        (PokerHand, List<int>) heartOpponentScore = EvaluateScore(communityCards, heartOpponentHand);
+        (PokerHand, List<int>) spadeOpponentScore = EvaluateScore(communityCards, spadeOpponentHand);
+        (PokerHand, List<int>) diamondOpponentScore = EvaluateScore(communityCards, diamondOpponentHand);
 
-        Debug.Log("Player: " + playerScore);
-        Debug.Log("Club Opponent" + clubOpponentScore);
-        Debug.Log("Spade Opponent" + spadeOpponentScore);
-        Debug.Log("Diamond Opponent" + diamondOpponentScore);
-        Debug.Log("Heart Opponent" + heartOpponentScore);
+        Debug.Log("Player: " + playerScore.Item1 + "Cards: " + string.Join(", ", playerScore.Item2));
+        Debug.Log("Club Opponent: " + clubOpponentScore.Item1 + "Cards: " + string.Join(", ", clubOpponentScore.Item2));
+        Debug.Log("Heart Opponent: " + heartOpponentScore.Item1 + "Cards: " + string.Join(", ", heartOpponentScore.Item2));
+        Debug.Log("Spade Opponent: " + spadeOpponentScore.Item1 + "Cards: " + string.Join(", ", spadeOpponentScore.Item2));
+        Debug.Log("Diamond Opponent: " + diamondOpponentScore.Item1 + "Cards: " + string.Join(", ", diamondOpponentScore.Item2));
 
-        // Lower enum value = stronger hand
-        //if (playerScore < clubOpponentScore)
-        //{
-        //    Debug.Log("PlayerWins: " + playerScore);
-        //}
-        //else if (playerScore == clubOpponentScore)
-        //{
-        //    Debug.Log("Draw: " + playerScore);
-        //}
-        //else
-        //{
-        //   Debug.Log("OpponentWins" + clubOpponentScore);
-        //}
     }
 
-    public PokerHand EvaluateScore(List<PlayingCard> communityCards, List<PlayingCard> hand)
+    public (PokerHand, List<int>) EvaluateScore(List<PlayingCard> communityCards, List<PlayingCard> hand)
     {
-        List<PlayingCard> cards = new List<PlayingCard>(communityCards);
+        List<PlayingCard> usableCards = new List<PlayingCard>(communityCards);
         // Add hand to the community cards for the total 7 usable cards
-        cards.AddRange(hand);
+        usableCards.AddRange(hand);
 
-        PokerHand bestHand = PokerHand.HighCard;
+        PokerHand bestHand = PokerHand.Empty;
+        List<int> highCardValue = new List<int>();
 
-        var uniqueHands = GetCombinations(cards, 5).ToList();
-
+        var uniqueHands = GetCombinations(usableCards, 5).ToList();
         
         for (int i = 0; i < uniqueHands.Count; i++)
         {
             PokerHand currentHand = EvaluateFiveCards(uniqueHands[i].ToList());
-
-            // Lower enum value = stronger hand
-            if (currentHand < bestHand)
+            if (currentHand == bestHand)
             {
-                Debug.Log($"NEW BEST: {currentHand} | " + $"{string.Join(", ", uniqueHands[i].ToList())}");
+                Debug.Log("current hand being checked is" + currentHand);
+            }
+            // higher enum value = stronger hand
+            if (currentHand > bestHand)
+            {
+                //Debug.Log($"NEW BEST: {currentHand} | " + $"{string.Join(", ", uniqueHands[i].ToList())}");
                 bestHand = currentHand;
+
+                List<PlayingCard> bestHandCards = uniqueHands[i].ToList().OrderByDescending(c => c.cardValue).ToList();
+                Dictionary<int, int> bestHandValues = bestHandCards.GroupBy(c => c.cardValue).ToDictionary(group => group.Key, group => group.Count());
+                highCardValue.Clear();
+
+
+                switch (bestHand)
+                {
+                    case PokerHand.RoyalFlush:
+                        highCardValue.Add(bestHandCards.Max(c => c.cardValue));
+                        break;
+                    case PokerHand.StraightFlush:
+                        highCardValue.Add(bestHandCards.Max(c => c.cardValue));
+                        break;
+                    case PokerHand.FourOfAKind:
+                        highCardValue.Add(bestHandValues.First(pair => pair.Value == 4).Key);
+                        break;
+                    case PokerHand.FullHouse:
+                        highCardValue.Add(bestHandValues.First(pair => pair.Value == 3).Key); // index 0 is always the triple
+                        highCardValue.Add(bestHandValues.First(pair => pair.Value == 2).Key);
+                        break;
+                    case PokerHand.Flush:
+                        highCardValue.Add(bestHandCards.Max(c => c.cardValue));
+                        break;
+                    case PokerHand.Straight:
+                        highCardValue.Add(bestHandCards.Max(c => c.cardValue));
+                        break;
+                    case PokerHand.ThreeOfAKind:
+                        highCardValue.Add(bestHandValues.First(pair => pair.Value == 3).Key);
+                        break;
+                    case PokerHand.TwoPair:
+                        highCardValue = bestHandValues.Where(pair => pair.Value == 2).Select(pair => pair.Key).OrderByDescending(value => value).Take(2).ToList();
+                        break;
+                    case PokerHand.OnePair:
+                        highCardValue.Add(bestHandValues.First(pair => pair.Value == 2).Key);
+                        break;
+                    case PokerHand.HighCard:
+                        Debug.Log("entered");
+                        highCardValue.Add(bestHandCards.Max(c => c.cardValue));
+                        break;
+                    default: // High Card
+                        highCardValue.Add(bestHandCards.Max(c => c.cardValue));
+                        break;
+                }
             }
         }
 
-        return bestHand;
+        return (bestHand, highCardValue);
     }
-
-    
 
     // Algorithm I found to get combinations
     static IEnumerable<IEnumerable<T>> GetCombinations<T>(IEnumerable<T> list, int length)
@@ -164,71 +197,58 @@ public class PokerManager : MonoBehaviour
         // Royal Flush
         if (isFlush && isStraight && cards[0].cardValue == 14)
         {
-            Debug.Log($"royal flush, max card:{cards.Max(c => c.cardValue)}");
             return PokerHand.RoyalFlush;
         }
 
         // Straight Flush
         if (isFlush && isStraight)
         {
-            Debug.Log($"straight flush, max card:{cards.Max(c => c.cardValue)}");
             return PokerHand.StraightFlush;
         }
 
         // Four of a Kind
         if (valueCounts.Values.Any(count => count == 4))
         {
-            Debug.Log($"straight flush, card:{valueCounts.First(pair => pair.Value == 4).Key}");
             return PokerHand.FourOfAKind;
         }
 
         // Full House
         if (valueCounts.Values.Contains(3) && valueCounts.Values.Contains(2))
         {
-            Debug.Log($"full house, cards:{valueCounts.First(pair => pair.Value == 3).Key} {valueCounts.First(pair => pair.Value == 2).Key}");
-
             return PokerHand.FullHouse;
         }
 
         // Flush
         if (isFlush)
         {
-            Debug.Log($"flush, max card:{cards.Max(c => c.cardValue)}");
             return PokerHand.Flush;
         }
 
         // Straight
         if (isStraight)
         {
-            Debug.Log($"straight, max card:{cards.Max(c => c.cardValue)}");
             return PokerHand.Straight;
         }
 
         // Three of a Kind
         if (valueCounts.Values.Any(count => count == 3))
         {
-            Debug.Log($"three of a kind, cards:{valueCounts.First(pair => pair.Value == 3).Key}");
             return PokerHand.ThreeOfAKind;
         }
 
         // Two Pair
         if (valueCounts.Values.Count(count => count == 2) >= 2)
         {
-            List<int> pairValues = valueCounts.Where(pair => pair.Value == 2).Select(pair => pair.Key).OrderByDescending(value => value).Take(2).ToList();
-            Debug.Log($"2 pair, values:{pairValues[0]}, {pairValues[1]}");
             return PokerHand.TwoPair;
         }
 
         // One Pair
         if (valueCounts.Values.Any(count => count == 2))
         {
-            Debug.Log($"pair, card:{valueCounts.First(pair => pair.Value == 2).Key}");
-
             return PokerHand.OnePair;
         }
 
         // High Card
-        Debug.Log($"high card:{cards.Max(c => c.cardValue)}");
         return PokerHand.HighCard;
     }
 
