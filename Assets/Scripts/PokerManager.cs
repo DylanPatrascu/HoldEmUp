@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PokerManager : MonoBehaviour
 {
+    public static PokerManager Instance { get; private set; }
+
     [Header("Hands")]
     [SerializeField] private List<PlayingCard> jokerHand;
     [SerializeField] private List<PlayingCard> clubOpponentHand;
@@ -21,6 +23,12 @@ public class PokerManager : MonoBehaviour
     #region Unity Methods
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
         deckList = Resources.LoadAll<PlayingCard>("PlayingCards").ToList();
     }
     private void Start()
@@ -82,17 +90,32 @@ public class PokerManager : MonoBehaviour
 
         PokerVisualManager.Instance.OffsetCardsInHands();
         
+        //small blind, big blind -> start on player and rotate clockwise. 1$ and 2$
+        
+        //Pre-Flop
+        // each player folds, calls or raises the big blind. starts left of big blind
+        // betting continues until each active player have bet equal bets in the pot
+
         //Flop
         BurnCard();
         DrawCard(communityCards, PokerPosition.Table, 3);
+        //betting starts at the person with the button (left of dealer)
+        //same options as above, but if no one has bet yet, you can check
         
         //Turn
         BurnCard();
         DrawCard(communityCards, PokerPosition.Table, 1);
+        //betting starts at the person with the button (left of dealer)
+        //same options as above, but if no one has bet yet, you can check
 
         //River
         BurnCard();
         DrawCard(communityCards, PokerPosition.Table, 1);
+        //betting starts at the person with the button (left of dealer)
+        //same options as above, but if no one has bet yet, you can check
+
+        //reveal hands starting left of dealer
+        //if draw, divide pot equally
     }
 
     public void CheckWin()

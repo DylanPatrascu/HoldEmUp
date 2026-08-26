@@ -13,11 +13,20 @@ public class BettingManager : MonoBehaviour
     [SerializeField] private int maxBet;
     public List<int> allBalances;
 
-    public int currentBet;
-    public PokerPosition currentBetter;
+    [SerializeField] private int currentBet;
+    [SerializeField] private PokerPosition currentBetter;
+
+    [SerializeField] private int pot = 0;
 
     private void Start()
     {
+        allBalances = new List<int> { jokerStartBalance, clubStartBalance, spadeStartBalance, heartStartBalance, diamondStartBalance };
+    }
+
+    public void ResetGame()
+    {
+        pot = 0;
+        currentBet = 0;
         allBalances = new List<int> { jokerStartBalance, clubStartBalance, spadeStartBalance, heartStartBalance, diamondStartBalance };
     }
     // usable for player
@@ -66,6 +75,7 @@ public class BettingManager : MonoBehaviour
     public void SubmitBet()
     {
         Debug.Log($"{currentBetter} just bet ${currentBet}");
+        pot += currentBet;
         currentBet = 0;
         BettingVisualManager.Instance.UpdateBet(currentBet);
     }
