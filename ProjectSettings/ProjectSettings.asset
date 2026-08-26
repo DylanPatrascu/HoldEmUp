@@ -826,24 +826,24 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Android: 
-    EmbeddedLinux: 
-    GameCoreScarlett: 
-    GameCoreXboxOne: 
-    Kepler: 
-    LinuxHeadlessSimulation: 
-    Nintendo Switch: 
-    Nintendo Switch 2: 
-    PS4: 
-    PS5: 
-    QNX: 
-    Standalone: 
-    VisionOS: 
-    WebGL: 
-    Windows Store Apps: 
-    XboxOne: 
-    iPhone: 
-    tvOS: 
+    Android: DOTWEEN
+    EmbeddedLinux: DOTWEEN
+    GameCoreScarlett: DOTWEEN
+    GameCoreXboxOne: DOTWEEN
+    Kepler: DOTWEEN
+    LinuxHeadlessSimulation: DOTWEEN
+    Nintendo Switch: DOTWEEN
+    Nintendo Switch 2: DOTWEEN
+    PS4: DOTWEEN
+    PS5: DOTWEEN
+    QNX: DOTWEEN
+    Standalone: DOTWEEN
+    VisionOS: DOTWEEN
+    WebGL: DOTWEEN
+    Windows Store Apps: DOTWEEN
+    XboxOne: DOTWEEN
+    iPhone: DOTWEEN
+    tvOS: DOTWEEN
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
@@ -865,7 +865,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Brackeys2026
-  metroPackageVersion: 
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -873,7 +873,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Brackeys2026
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: Brackeys2026
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
