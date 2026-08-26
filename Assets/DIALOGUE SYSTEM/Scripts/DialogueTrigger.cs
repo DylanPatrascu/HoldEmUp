@@ -10,6 +10,7 @@ public class DialogueTrigger : MonoBehaviour
 
     public void TriggerDialog()
     {
+        print(tree.nodes[0]);
         FindAnyObjectByType<DialogueManager>().StartDialogue(tree.nodes[0]);
     }
 }

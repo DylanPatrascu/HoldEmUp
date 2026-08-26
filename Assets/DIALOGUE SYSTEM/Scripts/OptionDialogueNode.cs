@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using XNode;
 
-public class OptionDialogueNode : Node
+public class OptionDialogueNode : DialogueNode
 {
-	public Dialogue speaker;
 	public Dialogue responses;
-	
-	[Input] public Node prevNode;
 	
 	[Output] public Node optionA;
 	[Output] public Node optionB;

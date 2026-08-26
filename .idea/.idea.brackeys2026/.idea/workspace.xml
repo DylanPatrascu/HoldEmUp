@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e06ab53c-b6c5-48f5-8d8c-8dd039693c6f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/DialogueNode.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/DialogueNode.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/RandomDialogueOption.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/RandomDialogueOption.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/RandomOptionPoolNode.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/RandomOptionPoolNode.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Player2D.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Suspect.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Suspect.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Interfaces.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Interfaces/IInteractable.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Interfaces/IInteractable.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scenes/DialogueSystemSample.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scenes/DialogueSystemSample.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Example Dialog Tree.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Example Dialog Tree.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Example Dialog Tree.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Example Dialog Tree.asset.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 1.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 1.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 1.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 1.asset.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 2.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 2.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 2.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 2.asset.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 3.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 3.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 3.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 3.asset.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 4.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 4.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 4.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 4.asset.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum Responses 1.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum Responses 1.asset.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum Responses 2.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum Responses 2.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum Responses 2.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum Responses 2.asset.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 1.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 1.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 1.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 1.asset.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 2.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 2.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 2.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 2.asset.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/DialogueManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/DialogueManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/DialogueTrigger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/DialogueTrigger.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/OptionDialogueNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/OptionDialogueNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/SimpleDialogueNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/SimpleDialogueNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InputSystem_Actions.inputactions" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/InputSystem_Actions.inputactions" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/DOTweenSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/DOTweenSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/ClubScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/ClubScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player2D.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player2D.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Player2D.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Settings/PC_RPAsset.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Settings/PC_RPAsset.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Settings/PC_Renderer.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Settings/PC_Renderer.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/URPProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/URPProjectSettings.asset" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@bb329a87fcdc/Runtime/UGUI/EventSystem/EventSystem.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="3IQNlY2dGrLQnbdVRr3LpOg1GZg" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;kat-branch&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
+    <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.3.9f1\Editor\Unity.exe" />
+      <option name="PROGRAM_PARAMETERS" value="-projectPath &quot;C:\Users\kfrai\Unity Games\brackeys2026&quot; -debugCodeOptimization" />
+      <option name="WORKING_DIRECTORY" value="C:\Users\kfrai\Unity Games\brackeys2026" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.3.9f1\Editor\Unity.exe" />
+      <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath &quot;C:\Users\kfrai\Unity Games\brackeys2026&quot; -testResults Logs/results.xml -logFile Logs/Editor.log -testPlatform EditMode -debugCodeOptimization" />
+      <option name="WORKING_DIRECTORY" value="C:\Users\kfrai\Unity Games\brackeys2026" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="listenPortForConnections" value="false" />
+      <option name="pid" />
+      <option name="projectPathOnTarget" />
+      <option name="runtimes">
+        <list />
+      </option>
+      <option name="selectedOptions">
+        <list />
+      </option>
+      <method v="2" />
+    </configuration>
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="listenPortForConnections" value="false" />
+      <option name="pid" />
+      <option name="projectPathOnTarget" />
+      <option name="runtimes">
+        <list />
+      </option>
+      <option name="selectedOptions">
+        <list />
+      </option>
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e06ab53c-b6c5-48f5-8d8c-8dd039693c6f" name="Changes" comment="" />
+      <created>1787692986384</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1787692986384</updated>
+      <workItem from="1787692990547" duration="18539000" />
+      <workItem from="1787766051926" duration="11380000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
+  <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
+  <component name="UnityProjectDiscoverer">
+    <option name="hasUnityReference" value="true" />
+    <option name="unityProject" value="true" />
+    <option name="unityProjectFolder" value="true" />
+  </component>
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="Both" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+</project>
