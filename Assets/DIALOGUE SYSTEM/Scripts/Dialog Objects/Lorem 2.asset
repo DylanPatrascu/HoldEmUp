@@ -16,6 +16,4 @@ MonoBehaviour:
   portrait: {fileID: 21300000, guid: 705fc8208f82c4985b2df56497f9e988, type: 3}
   talkingClip: {fileID: 8300000, guid: 84a640c09c50b40898a0744dfb4175c7, type: 3}
   sentences:
-  - 'Option 2: Velit aliquet sagittis id consectetur. Vitae tortor condimentum lacinia
-    quis vel eros donec ac odio. Faucibus interdum posuere lorem ipsum dolor sit
-    amet consectetur.'
+  - Branch 1.1.2

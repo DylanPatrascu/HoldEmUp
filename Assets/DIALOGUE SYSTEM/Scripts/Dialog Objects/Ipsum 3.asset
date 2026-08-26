@@ -16,5 +16,12 @@ MonoBehaviour:
   portrait: {fileID: 21300000, guid: d35ee1f2dcb1b48678b2d4ea6d8d468b, type: 3}
   talkingClip: {fileID: 8300000, guid: f6c857dbc4602471a97d0b3a0e1e03f3, type: 3}
   sentences:
-  - 'Response 2A: Feugiat pretium nibh ipsum consequat. Malesuada fames ac turpis
-    egestas sed tempus urna et.'
+  - 'Branch 3 - Testing long text: Lorem ipsum dolor sit amet, consectetur adipiscing
+    elit. Donec et laoreet eros, et mattis massa. Phasellus scelerisque eleifend
+    sem at dictum. In sit amet auctor sem, sed vestibulum magna. Aenean pellentesque
+    nunc ac volutpat porttitor. Suspendisse nec libero non sem sagittis interdum
+    eu et nunc. Phasellus lacinia sapien vitae pulvinar fermentum. Duis fermentum
+    dapibus massa at blandit. Vestibulum ante ipsum primis in faucibus orci luctus
+    et ultrices posuere cubilia curae; Maecenas non enim tincidunt, eleifend dui
+    bibendum, mollis risus. Ut dapibus placerat sem, ut tristique neque. Morbi ut
+    nisi sed odio interdum dapibus.'
