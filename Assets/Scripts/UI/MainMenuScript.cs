@@ -19,7 +19,7 @@ public class MainMenuScript : MonoBehaviour
     }
     public void _load_game()
     {
-        gameManager.BeginGame();
+        gameManager.Fire(Trigger.ToClub);
     }
     public void _quit_game()
     {
