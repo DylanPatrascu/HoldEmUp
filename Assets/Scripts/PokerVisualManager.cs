@@ -30,6 +30,7 @@ public class PokerVisualManager : MonoBehaviour
         GameObject cardObject;
         switch (player)
         {
+            case PokerPosition.Joker:
             default:
                 cardObject = Instantiate(playingCardPrefab, playerHandTransform);
                 break;
