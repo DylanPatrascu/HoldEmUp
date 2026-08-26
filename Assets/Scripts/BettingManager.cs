@@ -4,12 +4,13 @@ using UnityEngine;
 public class BettingManager : MonoBehaviour
 {
     [Header("Chip Balances")]
-    [SerializeField] private int jokerBalance;
-    [SerializeField] private int clubBalance;
-    [SerializeField] private int spadeBalance;
-    [SerializeField] private int heartBalance;
-    [SerializeField] private int diamondBalance;
+    [SerializeField] private int jokerStartBalance;
+    [SerializeField] private int clubStartBalance;
+    [SerializeField] private int spadeStartBalance;
+    [SerializeField] private int heartStartBalance;
+    [SerializeField] private int diamondStartBalance;
 
+    [SerializeField] private int maxBet;
     public List<int> allBalances;
 
     public int currentBet;
@@ -17,7 +18,7 @@ public class BettingManager : MonoBehaviour
 
     private void Start()
     {
-        allBalances = new List<int> { jokerBalance, clubBalance, spadeBalance, heartBalance, diamondBalance };
+        allBalances = new List<int> { jokerStartBalance, clubStartBalance, spadeStartBalance, heartStartBalance, diamondStartBalance };
     }
     // usable for player
     public void ResetBet()
@@ -31,7 +32,7 @@ public class BettingManager : MonoBehaviour
     public void BetAmount(PokerPosition player, int amount)
     {
         // if sufficient balance
-        if (allBalances[(int)player] - amount >= 0)
+        if (allBalances[(int)player] - amount >= 0 && currentBet + amount <= 30)
         {
             currentBetter = player;
             currentBet += amount;
@@ -67,6 +68,11 @@ public class BettingManager : MonoBehaviour
         Debug.Log($"{currentBetter} just bet ${currentBet}");
         currentBet = 0;
         BettingVisualManager.Instance.UpdateBet(currentBet);
+    }
+
+    public int GetCurrentBet()
+    {
+        return currentBet;
     }
 
 }
