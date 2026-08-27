@@ -63,7 +63,6 @@ public class PokerManager : MonoBehaviour
             PokerPosition position = entry.Key;
             List<PlayingCard> hand = entry.Value;
             DrawCard(hand, position);
-            Debug.Log(position);
 
         }
 
