@@ -19,9 +19,10 @@ public class PokerManager : MonoBehaviour
     private List<PlayingCard> runtimeDeck;
     private List<List<PlayingCard>> allHands;
 
+    public List<PlayingCard> GetHand(PokerPosition player) => allHands[(int)player];
 
     #region Unity Methods
-    private void Awake()
+    public void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -31,7 +32,7 @@ public class PokerManager : MonoBehaviour
         Instance = this;
         deckList = Resources.LoadAll<PlayingCard>("PlayingCards").ToList();
     }
-    private void Start()
+    public void Start()
     {
         runtimeDeck = new List<PlayingCard>(deckList);
         allHands = new List<List<PlayingCard>> { jokerHand, clubOpponentHand, spadeOpponentHand, diamondOpponentHand, heartOpponentHand };
@@ -41,7 +42,7 @@ public class PokerManager : MonoBehaviour
     #endregion
 
     #region Poker Game Methods
-    private void DealCards()
+    public void DealCards()
     {
         for (int i = 0; i < allHands.Count * 2; i++)
         {
@@ -67,7 +68,7 @@ public class PokerManager : MonoBehaviour
         runtimeDeck.Remove(runtimeDeck[0]);
     }
 
-    private void DestroyCards()
+    public void DestroyCards()
     {
         for (int i = 0; i < allHands.Count; i++)
         {
@@ -173,12 +174,12 @@ public class PokerManager : MonoBehaviour
 
     #region Poker Comparisons
 
-    private bool IsFlush(List<PlayingCard> cards)
+    public bool IsFlush(List<PlayingCard> cards)
     {
         return cards.All(card => card.cardSuit == cards[0].cardSuit);
     }
 
-    private bool IsStraight(List<PlayingCard> cards)
+    public bool IsStraight(List<PlayingCard> cards)
     {
         List<int> values = cards.Select(card => card.cardValue).Distinct().OrderByDescending(value => value).ToList();
 
@@ -203,7 +204,7 @@ public class PokerManager : MonoBehaviour
         return false;
     }
 
-    private bool IsSameScore(PokerScore score1, PokerScore score2)
+    public bool IsSameScore(PokerScore score1, PokerScore score2)
     {
         // Different hand types = not a tie
         if (score1.pokerHand != score2.pokerHand)
@@ -229,7 +230,7 @@ public class PokerManager : MonoBehaviour
         // Same hand type AND same tiebreaker values
         return true;
     }
-    private bool IsBetterScore(PokerScore score1, PokerScore score2)
+    public bool IsBetterScore(PokerScore score1, PokerScore score2)
     {
         if (score1.pokerHand > score2.pokerHand)
         {
@@ -279,7 +280,7 @@ public class PokerManager : MonoBehaviour
     }
 
     // Determines what kind of poker hand 5 cards are
-    private PokerHand EvaluateFiveCards(List<PlayingCard> cards)
+    public PokerHand EvaluateFiveCards(List<PlayingCard> cards)
     {
         cards = cards.OrderByDescending(card => card.cardValue).ToList();
 
@@ -349,7 +350,7 @@ public class PokerManager : MonoBehaviour
 
     #region Poker Getters
     // Gets list of required cards to evaluate a poker hand
-    private List<int> GetScoreValues(PokerHand handType, List<PlayingCard> cards)
+    public List<int> GetScoreValues(PokerHand handType, List<PlayingCard> cards)
     {
         Dictionary<int, int> valueCounts = cards.GroupBy(card => card.cardValue).ToDictionary(group => group.Key, group => group.Count());
 
@@ -419,7 +420,7 @@ public class PokerManager : MonoBehaviour
     }
 
     // Gets the highest card in a Straight
-    private int GetStraightHighCard(List<PlayingCard> cards)
+    public int GetStraightHighCard(List<PlayingCard> cards)
     {
         List<int> values = cards.Select(card => card.cardValue).Distinct().OrderByDescending(value => value).ToList();
 
