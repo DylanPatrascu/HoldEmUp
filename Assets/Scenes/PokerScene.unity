@@ -1486,7 +1486,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 777efd25b02af374ab3116cc744e24e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BettingVisualManager
-  bettingManager: {fileID: 1684045216}
   currentBetText: {fileID: 643235295}
   OneDollarChipParent: {fileID: 219788438}
   TenDollarChipParent: {fileID: 1940239627}
@@ -1498,12 +1497,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 341317420}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.75827, y: -1.85614, z: 0.36469}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1730698435}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &341650097
 PrefabInstance:
@@ -6015,12 +6014,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1606254188}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.58431, y: 1.10902, z: 1.58431}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.82604, y: -0.74712, z: 1.9490001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1730698435}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1659749610
 PrefabInstance:
@@ -6188,15 +6187,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e842fb2f897b1d488e3c15c046dcc82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BettingManager
-  jokerStartBalance: 100
-  clubStartBalance: 100
-  spadeStartBalance: 100
-  heartStartBalance: 100
-  diamondStartBalance: 100
   maxBet: 30
-  allBalances: 
-  currentBet: 0
-  currentBetter: 0
+  playerBalance: 100
   pot: 0
 --- !u!4 &1684045217
 Transform:
@@ -6206,12 +6198,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1684045215}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.75827, y: -1.85614, z: 0.36469}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1730698435}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1689665140
 GameObject:
@@ -6270,6 +6262,55 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.034508668, y: 0.049671933, z: 0.02476553}
   m_Center: {x: 0, y: 0, z: 0.012453201}
+--- !u!1 &1730698433
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1730698435}
+  - component: {fileID: 1730698434}
+  m_Layer: 0
+  m_Name: PokerGameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1730698434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730698433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f8b39fa4ff6be7488e0d7236f6e69f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PokerGameManager
+  awaitingPlayer: 0
+--- !u!4 &1730698435
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730698433}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.75827, y: 1.85614, z: -0.36469}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1942569653}
+  - {fileID: 1606254190}
+  - {fileID: 1684045217}
+  - {fileID: 341317422}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1736148699
 GameObject:
   m_ObjectHideFlags: 0
@@ -6862,12 +6903,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1942569651}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.75827, y: -1.85614, z: 0.36469}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1730698435}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1959887597
 PrefabInstance:
@@ -7687,10 +7728,7 @@ SceneRoots:
   - {fileID: 708821606}
   - {fileID: 508467046}
   - {fileID: 1689665141}
-  - {fileID: 1942569653}
-  - {fileID: 1606254190}
-  - {fileID: 1684045217}
-  - {fileID: 341317422}
+  - {fileID: 1730698435}
   - {fileID: 667523055}
   - {fileID: 535677519}
   - {fileID: 1266864775}

@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class PokerGameManager : MonoBehaviour
 {
-    private enum GameState
+    public enum GameState
     {
         StartGame,
         Preflop, // Betting without check
@@ -16,6 +16,7 @@ public class PokerGameManager : MonoBehaviour
 
     public static PokerGameManager Instance;
 
+    [SerializeField]
     private bool awaitingPlayer = false;
     private List<PokerPosition> ActivePlayers;
     private PokerPosition SmallBlind = PokerPosition.Joker;
@@ -24,13 +25,13 @@ public class PokerGameManager : MonoBehaviour
     private PokerPosition CurrentPlayer;
 
     private GameState gameState = GameState.StartGame;
-    private GameState CurrentGameState 
+    public GameState CurrentGameState 
     { 
         get { return gameState; } 
         set
         {
-            GameStateChanged?.Invoke(this, EventArgs.Empty);
             gameState = value;
+            GameStateChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -77,6 +78,7 @@ public class PokerGameManager : MonoBehaviour
             foreach (PokerPosition player in Enum.GetValues(typeof(PokerPosition)))
             {
                 if (player == PokerPosition.Table) continue;
+                CurrentPlayer = player;
                 if (player != PokerPosition.Joker) continue; // PokerAction action = NPCManager.Instance.GetAction(PokerManager.Instance.GetHand(player))
 
                 awaitingPlayer = true;

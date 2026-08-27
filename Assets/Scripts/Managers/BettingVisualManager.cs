@@ -5,7 +5,6 @@ public class BettingVisualManager : MonoBehaviour
 {
     public static BettingVisualManager Instance { get; private set; }
 
-    [SerializeField] private BettingManager bettingManager;
     [SerializeField] private TMP_Text currentBetText;
 
     [SerializeField] private Transform OneDollarChipParent;
@@ -35,29 +34,29 @@ public class BettingVisualManager : MonoBehaviour
     }
     public void PlayerBet(int amount)
     {
-        bettingManager.BetAmount(PokerPosition.Joker, amount);
+        BettingManager.Instance.BetAmount(PokerPosition.Joker, amount);
         UpdateVisibleChips();
     }
 
     public void PlayerAllIn()
     {
-        bettingManager.AllIn(PokerPosition.Joker);
+        BettingManager.Instance.BetAmount(PokerPosition.Joker, BettingManager.MAXIMUM_BET);
     }
     public void PlayerRemove(int amount)
     {
-        bettingManager.RemoveAmount(PokerPosition.Joker, amount);
+        BettingManager.Instance.RemoveAmount(amount);
         UpdateVisibleChips();
     }
 
     public void SubmitBet()
     {
-        bettingManager.SubmitBet();
+        BettingManager.Instance.SubmitBet(PokerPosition.Joker);
         UpdateVisibleChips();
     }
 
     public void PlayerResetBet()
     {
-        bettingManager.ResetBet();
+        BettingManager.Instance.ResetBet();
         UpdateVisibleChips();
     }
 
@@ -68,7 +67,7 @@ public class BettingVisualManager : MonoBehaviour
 
     public (int, int) GetChipDistribution()
     {
-        int balance = bettingManager.GetCurrentBet();
+        int balance = BettingManager.Instance.PlayerBet;
         return ((balance - balance % 10) / 10, balance % 10);
     }
 

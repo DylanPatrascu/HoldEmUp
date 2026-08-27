@@ -17,7 +17,7 @@ public class BettingManager : MonoBehaviour
     private Dictionary<PokerPosition, int> currentBets;
 
     public bool AreEqualBets(List<PokerPosition> players) => players.All(player => currentBets[player] == currentBets[players[0]]);
-    private int PlayerBet => currentBets[PokerPosition.Joker];
+    public int PlayerBet => currentBets[PokerPosition.Joker];
 
     [SerializeField] private int pot = 0;
 

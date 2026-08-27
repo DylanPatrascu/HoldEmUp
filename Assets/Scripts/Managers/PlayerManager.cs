@@ -3,22 +3,41 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    private bool actionMode = false;
-    public void Start()
+    public enum ActionMode
     {
-        PokerGameManager.Instance.GameStateChanged += ActivateActionMode;
+        Waiting,
+        Betting,
+        Preflop
     }
 
-    public void Update()
+    public ActionMode actionMode { get; private set; } = ActionMode.Waiting;
+
+    void Start()
     {
-        if (actionMode)
+        PokerGameManager.Instance.GameStateChanged += SetPlayerAction;
+    }
+
+    void Update()
+    {
+        if (actionMode == ActionMode.Preflop || actionMode == ActionMode.Betting)
         {
             Debug.Log("Listening to player input");
         }
     }
 
-    public void ActivateActionMode(object sender, EventArgs e)
+    public void SetPlayerAction(object sender, EventArgs e)
     {
-        actionMode = true;
+        switch (PokerGameManager.Instance.CurrentGameState)
+        {
+            case PokerGameManager.GameState.Preflop:
+                actionMode = ActionMode.Preflop;
+                break;
+            case PokerGameManager.GameState.Turn:
+                actionMode = ActionMode.Betting;
+                break;
+            default:
+                actionMode = ActionMode.Waiting;
+                break;
+        }
     }
 }
