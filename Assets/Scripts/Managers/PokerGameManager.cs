@@ -15,9 +15,8 @@ public class PokerGameManager : MonoBehaviour
     }
 
     public static PokerGameManager Instance;
-
-    [SerializeField] private bool awaitingPlayer = false;
-    public List<PokerPosition> ActivePlayers;
+    public bool awaitingPlayer { get; private set; } = false;
+    private List<PokerPosition> ActivePlayers;
     private PokerPosition SmallBlind = PokerPosition.Heart;
     private PokerPosition NextPlayer(PokerPosition current) => (PokerPosition)(((int)current + 1) % 5);
     private PokerPosition BigBlind => NextPlayer(SmallBlind);
@@ -49,7 +48,6 @@ public class PokerGameManager : MonoBehaviour
 
     void Start()
     {    
-        // TODO: GameManager.Instance.PokerRound += 1;
         StartCoroutine(MainGame());
     }
 
@@ -58,7 +56,17 @@ public class PokerGameManager : MonoBehaviour
         CurrentGameState = GameState.Preflop;
         yield return StartCoroutine(PreflopPhase());
         CurrentGameState = GameState.Postflop;
-        yield return StartCoroutine(FlopPhase());
+        yield return StartCoroutine(PostFlopPhase(3));
+
+        //Turn
+        yield return StartCoroutine(PostFlopPhase(1));
+
+        //River
+        yield return StartCoroutine(PostFlopPhase(1));
+
+        //Showdown
+        PokerManager.Instance.CheckWin();
+
     }
 
     IEnumerator BettingRound()
@@ -83,13 +91,13 @@ public class PokerGameManager : MonoBehaviour
     {
         PokerManager.Instance.DestroyCards();
         BettingManager.Instance.ResetGame();
+        // TODO: GameManager.Instance.PokerRound += 1; (shift small blind by how many games of poker youve played
         CurrentPlayer = NextPlayer(BigBlind);
         foreach (PokerPosition player in Enum.GetValues(typeof(PokerPosition)))
         {
             if (player == PokerPosition.Table) continue;
             ActivePlayers.Add(player);
         }
-        Debug.Log("h");
         // Rotation of the button
         SmallBlind = NextPlayer(SmallBlind);
         BettingManager.Instance.BetAmount(SmallBlind, BettingManager.MINIMUM_BET);
@@ -103,14 +111,16 @@ public class PokerGameManager : MonoBehaviour
         yield return StartCoroutine(BettingRound());
     }
 
-    IEnumerator FlopPhase()
+    IEnumerator PostFlopPhase(int numCards)
     {
         PokerManager.Instance.BurnCard();
-        PokerManager.Instance.DrawCard(PokerManager.Instance.communityCards, PokerPosition.Table, 3);
+        PokerManager.Instance.DrawCard(PokerManager.Instance.communityCards, PokerPosition.Table, numCards);
 
+        //starts folling betting round
         yield return StartCoroutine(BettingRound());
     }
 
+    //ui button method
     public void SetAwaitingPlayer(bool toggle)
     {
         awaitingPlayer = toggle;

@@ -7,7 +7,7 @@ public class PlayerManager : MonoBehaviour
     {
         Waiting,
         Betting,
-        Preflop
+        PreflopBetting
     }
 
     public ActionMode actionMode { get; private set; } = ActionMode.Waiting;
@@ -19,18 +19,28 @@ public class PlayerManager : MonoBehaviour
 
     void Update()
     {
-        if (actionMode == ActionMode.Preflop || actionMode == ActionMode.Betting)
+        if (actionMode == ActionMode.PreflopBetting)
         {
-            Debug.Log("Listening to player input");
+            Debug.Log("Listening to player input: no checking");
+        }
+        if (actionMode == ActionMode.Betting)
+        {
+            Debug.Log("Listening to player input: checking allowed");
         }
     }
 
     public void SetPlayerAction(object sender, EventArgs e)
     {
+        if (!PokerGameManager.Instance.awaitingPlayer)
+        {
+            actionMode = ActionMode.Waiting;
+            return;
+        }
+
         switch (PokerGameManager.Instance.CurrentGameState)
         {
             case PokerGameManager.GameState.Preflop:
-                actionMode = ActionMode.Preflop;
+                actionMode = ActionMode.PreflopBetting;
                 break;
             case PokerGameManager.GameState.Postflop:
                 actionMode = ActionMode.Betting;
