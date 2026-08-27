@@ -5,53 +5,42 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e06ab53c-b6c5-48f5-8d8c-8dd039693c6f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/DialogueNode.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/DialogueNode.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/RandomDialogueOption.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/RandomDialogueOption.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/RandomOptionPoolNode.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/RandomOptionPoolNode.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Player2D.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Suspect.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Suspect.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Interfaces.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Interfaces/IInteractable.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Interfaces/IInteractable.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scenes/DialogueSystemSample.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scenes/DialogueSystemSample.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Example Dialog Tree.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Example Dialog Tree.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Example Dialog Tree.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Example Dialog Tree.asset.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 1.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 1.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 1.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 1.asset.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 2.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 2.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 2.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 2.asset.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 3.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 3.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 3.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 3.asset.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 4.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 4.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 4.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum 4.asset.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum Responses 1.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum Responses 1.asset.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum Responses 2.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum Responses 2.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum Responses 2.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Ipsum Responses 2.asset.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 1.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 1.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 1.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 1.asset.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 2.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 2.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 2.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/Dialog Objects/Lorem 2.asset.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/BribeDialogueNode.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/BribeDialogueNode.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.brackeys2026/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.brackeys2026/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/DialogueManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/DialogueManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/DialogueTrigger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/DialogueTrigger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/OptionDialogueNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/OptionDialogueNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/SimpleDialogueNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DIALOGUE SYSTEM/Scripts/SimpleDialogueNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/InputSystem_Actions.inputactions" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/InputSystem_Actions.inputactions" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/DOTweenSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/DOTweenSettings.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/ClubScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/ClubScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player2D.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player2D.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Player2D.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Settings/PC_RPAsset.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Settings/PC_RPAsset.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Settings/PC_Renderer.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Settings/PC_Renderer.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/URPProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/URPProjectSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/ClubSceneManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/ClubSceneManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Club Dialogue/Club Dialogue.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Club Dialogue/Club Dialogue.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Club Dialogue/Dialogue1 A.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Club Dialogue/Dialogue1 A.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Club Dialogue/Dialogue1 B.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Club Dialogue/Dialogue1 B.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Club Dialogue/Finished Dialogue.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Club Dialogue/Finished Dialogue.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Club Dialogue/Root Responses.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Club Dialogue/Root Responses.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Club Dialogue/Root.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Club Dialogue/Root.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Dialogue1 A.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Dialogue1 A.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Dialogue1 B.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Dialogue1 B.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Dialogue1 C.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Dialogue1 C.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Dialogue1 D.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Dialogue1 D.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Diamond Dialogue.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Diamond Dialogue.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Finished Dialogue.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Finished Dialogue.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Root Responses.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Root Responses.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Root.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Diamond Dialogue/Root.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Heart Dialogue/Dialogue1 A.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Heart Dialogue/Dialogue1 A.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Heart Dialogue/Dialogue1 B.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Heart Dialogue/Dialogue1 B.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Heart Dialogue/Finished Dialogue.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Heart Dialogue/Finished Dialogue.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Heart Dialogue/Heart Dialogue.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Heart Dialogue/Heart Dialogue.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Heart Dialogue/Root Responses.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Heart Dialogue/Root Responses.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Heart Dialogue/Root.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Heart Dialogue/Root.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Spade DIalogue/Dialogue1 A.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Spade DIalogue/Dialogue1 A.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Spade DIalogue/Dialogue1 B.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Spade DIalogue/Dialogue1 B.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Spade DIalogue/Finished Dialogue.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Spade DIalogue/Finished Dialogue.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Spade DIalogue/Root Responses.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Spade DIalogue/Root Responses.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Spade DIalogue/Root.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/Dialogue/Spade DIalogue/Root.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/PlayerChair.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/2D Scripts/PlayerChair.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Managers/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Managers/GameManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Managers/StateMachine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Managers/StateMachine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/MainMenuScript.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/MainMenuScript.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,7 +130,7 @@
       <option name="presentableId" value="Default" />
       <updated>1787692986384</updated>
       <workItem from="1787692990547" duration="18539000" />
-      <workItem from="1787766051926" duration="11380000" />
+      <workItem from="1787766051926" duration="19617000" />
     </task>
     <servers />
   </component>

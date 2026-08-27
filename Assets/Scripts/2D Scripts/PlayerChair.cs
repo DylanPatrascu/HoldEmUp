@@ -1,18 +1,24 @@
 using System;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerChair : MonoBehaviour, IInteractable
 {
     private bool _interactable = false;
-    [SerializeField] private SpriteRenderer _interactSprite;
+    [SerializeField] private SpriteRenderer interactSprite;
+    [SerializeField] private ClubSceneManager manager;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (_interactSprite == null)
+        if (manager == null)
         {
-            throw new Exception("PlayerChair: _interactSprite is null");
+            throw new Exception("PlayerChair: manager is null");
+        }
+        if (interactSprite == null)
+        {
+            throw new Exception("PlayerChair: interactSprite is null");
         }
     }
 
@@ -25,11 +31,13 @@ public class PlayerChair : MonoBehaviour, IInteractable
     public void SetInteractable(bool state)
     {
         _interactable = state;
-        _interactSprite.enabled = state;
+        interactSprite.enabled = state;
     }
 
     public void Interact()
     {
-        print("Player Chair Interacted");
+        manager.DisplayConfirmationMenu();
     }
+    
+    
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f5df1054b3b04644895c017f53191d3, type: 3}
   m_Name: Dialogue1 A
   m_EditorClassIdentifier: 
-  name: Club
+  dialogueName: Club
   portrait: {fileID: 21300000, guid: 303e8d7aa6f101d468e104f86a6c3282, type: 3}
   talkingClip: {fileID: 8300000, guid: f6c857dbc4602471a97d0b3a0e1e03f3, type: 3}
   sentences:

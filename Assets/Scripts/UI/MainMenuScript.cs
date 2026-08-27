@@ -2,14 +2,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class MainMenuScript : MonoBehaviour
 {
-    [SerializeField]
-    private GameManager gameManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         // ClickSFX = GetComponent<AudioSource>();
-        if (!gameManager) gameManager = FindFirstObjectByType<GameManager>();
     }
 
     // Update is called once per frame
@@ -19,7 +16,7 @@ public class MainMenuScript : MonoBehaviour
     }
     public void _load_game()
     {
-        gameManager.Fire(Trigger.ToClub);
+        GameManager.instance.Fire(Trigger.ToClub);
     }
     public void _quit_game()
     {
