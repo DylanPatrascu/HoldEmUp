@@ -74,7 +74,6 @@ public class BettingVisualManager : MonoBehaviour
     public void UpdateVisibleChips()
     {
         (int, int) chipCounts = GetChipDistribution();
-        Debug.Log($"{chipCounts.Item1},{chipCounts.Item2}");
         for (int i = 0; i < TenDollarChipParent.childCount; i++) {
             TenDollarChipParent.GetChild(i).gameObject.SetActive(i < chipCounts.Item1);
         }
