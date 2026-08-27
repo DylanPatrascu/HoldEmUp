@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f5df1054b3b04644895c017f53191d3, type: 3}
   m_Name: Root Responses
   m_EditorClassIdentifier: 
-  name: Spade
+  dialogueName: Spade
   portrait: {fileID: 21300000, guid: 03d2c93aeae013b49b8968e91fa08456, type: 3}
   talkingClip: {fileID: 8300000, guid: f6c857dbc4602471a97d0b3a0e1e03f3, type: 3}
   sentences:

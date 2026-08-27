@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f5df1054b3b04644895c017f53191d3, type: 3}
   m_Name: Finished Dialogue
   m_EditorClassIdentifier: 
-  name: Diamond
+  dialogueName: Diamond
   portrait: {fileID: 21300000, guid: 1f0c645e7dda9f54eb02eaf01c9f76f5, type: 3}
   talkingClip: {fileID: 8300000, guid: f6c857dbc4602471a97d0b3a0e1e03f3, type: 3}
   sentences:

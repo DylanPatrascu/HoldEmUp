@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 
     public State CurrentState { get { return _stateMachine.CurrentState; } }
 
-    private static GameManager instance;
+    public static GameManager instance;
 
     private static Dictionary<State, string> stateScenes = new()
     {
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         _stateMachine.Enter += handleSceneChange;
-        _stateMachine.Exit  += handleSceneUnload;
+        _stateMachine.Exit  += handleSceneChange;
     }
 
     public static void handleSceneChange(object sender, StateEventArgs e)
@@ -52,17 +52,12 @@ public class GameManager : MonoBehaviour
             Cursor.visible = true;
         }
 
-        // If it's a Pause screen then we don't need to load a new scene
-        if (e.target == State.Paused) return;
-
         string sceneToLoad = stateScenes[e.target];
         SceneManager.LoadSceneAsync(sceneToLoad);
     }
 
     public static void handleSceneUnload(object sender, StateEventArgs e)
     {
-        if (e.target == State.Paused) return;
-
         string sceneToUnload = stateScenes[e.target];
         SceneManager.UnloadSceneAsync(sceneToUnload);
         Debug.Log($"Unloaded scene {e.target}");
@@ -78,4 +73,14 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning(exception.Message);
         }
     }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0f;
+    }
+    public void UnpauseGame()
+    {
+        Time.timeScale = 1f;
+    }
+    
 }
