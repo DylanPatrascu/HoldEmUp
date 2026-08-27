@@ -25,6 +25,10 @@ public class BettingManager : MonoBehaviour
     public const int MAXIMUM_BET = 30;
     public const int STARTING_BALANCE = 100;
 
+    private void Awake()
+    {
+        currentBets = new Dictionary<PokerPosition, int>();
+    }
     private void Start()
     {
         if (Instance != null && Instance != this)
@@ -70,6 +74,7 @@ public class BettingManager : MonoBehaviour
         }
 
         currentBets[player] += amount;
+        Debug.Log($"{player} bet {amount}");
     }
     
     // usable by UI and NPCS

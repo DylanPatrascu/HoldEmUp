@@ -31,12 +31,12 @@ public class PokerManager : MonoBehaviour
         }
         Instance = this;
         deckList = Resources.LoadAll<PlayingCard>("PlayingCards").ToList();
+        runtimeDeck = new List<PlayingCard>(deckList);
+        allHands = new List<List<PlayingCard>> { jokerHand, clubOpponentHand, spadeOpponentHand, diamondOpponentHand, heartOpponentHand };
     }
     public void Start()
     {
-        runtimeDeck = new List<PlayingCard>(deckList);
-        allHands = new List<List<PlayingCard>> { jokerHand, clubOpponentHand, spadeOpponentHand, diamondOpponentHand, heartOpponentHand };
-        ResetGame();
+        //ResetGame();
     }
 
     #endregion

@@ -16,10 +16,9 @@ public class PokerGameManager : MonoBehaviour
 
     public static PokerGameManager Instance;
 
-    [SerializeField]
-    private bool awaitingPlayer = false;
-    private List<PokerPosition> ActivePlayers;
-    private PokerPosition SmallBlind = PokerPosition.Joker;
+    [SerializeField] private bool awaitingPlayer = false;
+    public List<PokerPosition> ActivePlayers;
+    private PokerPosition SmallBlind = PokerPosition.Heart;
     private PokerPosition NextPlayer(PokerPosition current) => (PokerPosition)(((int)current + 1) % 5);
     private PokerPosition BigBlind => NextPlayer(SmallBlind);
     private PokerPosition CurrentPlayer;
@@ -37,9 +36,7 @@ public class PokerGameManager : MonoBehaviour
 
     [SerializeField]
     public EventHandler GameStateChanged;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -47,6 +44,11 @@ public class PokerGameManager : MonoBehaviour
             return;
         }
         Instance = this;
+        ActivePlayers = new List<PokerPosition>();
+    }
+
+    void Start()
+    {    
         // TODO: GameManager.Instance.PokerRound += 1;
         StartCoroutine(FirstPhase());
     }
@@ -61,7 +63,7 @@ public class PokerGameManager : MonoBehaviour
             if (player == PokerPosition.Table) continue;
             ActivePlayers.Add(player);
         }
-        
+        Debug.Log("h");
         // Rotation of the button
         SmallBlind = NextPlayer(SmallBlind);
         BettingManager.Instance.BetAmount(SmallBlind, BettingManager.MINIMUM_BET);
@@ -83,9 +85,15 @@ public class PokerGameManager : MonoBehaviour
 
                 awaitingPlayer = true;
                 // TODO: Add visual cue to let player know
+                // TODO: Player CANNOT check
                 yield return new WaitUntil(() => !awaitingPlayer);
             }
         }
         // TODO: Include NPC actions
+    }
+
+    public void SetAwaitingPlayer(bool toggle)
+    {
+        awaitingPlayer = toggle;
     }
 }
