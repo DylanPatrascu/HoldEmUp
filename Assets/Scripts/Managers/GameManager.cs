@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [DoNotSerialize]
+    [System.NonSerialized]
     private static StateMachine _stateMachine = new();
 
     public State CurrentState { get { return _stateMachine.CurrentState; } }
