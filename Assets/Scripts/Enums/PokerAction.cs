@@ -1,11 +1,11 @@
 
 public enum PokerAction
 {
-    Fold = 0,
-    Check = 1,
-    Bet = 2,
-    Call = 3,
-    Raise = 4
+    Fold = 0, //ui
+    Check = 1, //ui
+    Bet = 2, //input your bet
+    Call = 3, //ui
+    Raise = 4 //input your bet
 }
 
 // If nobody has yet made a bet, then a player may either check (decline to bet, but keep their cards) or bet.

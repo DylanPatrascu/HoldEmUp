@@ -14,12 +14,12 @@ public class PokerManager : MonoBehaviour
     [SerializeField] private List<PlayingCard> heartOpponentHand;
     [SerializeField] private List<PlayingCard> diamondOpponentHand;
 
-    [SerializeField] private List<PlayingCard> communityCards;
+    public List<PlayingCard> communityCards;
     private List<PlayingCard> deckList;
     private List<PlayingCard> runtimeDeck;
-    private List<List<PlayingCard>> allHands;
 
-    public List<PlayingCard> GetHand(PokerPosition player) => allHands[(int)player];
+    public Dictionary<PokerPosition, List<PlayingCard>> allH;
+    public List<PlayingCard> GetHand(PokerPosition player) => allH[player];
 
     #region Unity Methods
     public void Awake()
@@ -31,12 +31,19 @@ public class PokerManager : MonoBehaviour
         }
         Instance = this;
         deckList = Resources.LoadAll<PlayingCard>("PlayingCards").ToList();
+        runtimeDeck = new List<PlayingCard>(deckList);
+        allH = new Dictionary<PokerPosition, List<PlayingCard>>
+        {
+            [PokerPosition.Joker] = jokerHand,
+            [PokerPosition.Club] = clubOpponentHand,
+            [PokerPosition.Spade] = spadeOpponentHand,
+            [PokerPosition.Diamond] = diamondOpponentHand,
+            [PokerPosition.Heart] = heartOpponentHand,
+        };
     }
     public void Start()
     {
-        runtimeDeck = new List<PlayingCard>(deckList);
-        allHands = new List<List<PlayingCard>> { jokerHand, clubOpponentHand, spadeOpponentHand, diamondOpponentHand, heartOpponentHand };
-        ResetGame();
+        //ResetGame();
     }
 
     #endregion
@@ -44,12 +51,22 @@ public class PokerManager : MonoBehaviour
     #region Poker Game Methods
     public void DealCards()
     {
-        for (int i = 0; i < allHands.Count * 2; i++)
+        foreach (KeyValuePair<PokerPosition, List<PlayingCard>> entry in allH)
         {
-            int index = i % allHands.Count;
-            DrawCard(allHands[index], (PokerPosition)(index));
+            PokerPosition position = entry.Key;
+            List<PlayingCard> hand = entry.Value;
+            DrawCard(hand, position);
         }
-       
+
+        foreach (KeyValuePair<PokerPosition, List<PlayingCard>> entry in allH)
+        {
+            PokerPosition position = entry.Key;
+            List<PlayingCard> hand = entry.Value;
+            DrawCard(hand, position);
+
+        }
+
+
     }
 
     public void DrawCard(List<PlayingCard> hand, PokerPosition position, int numCards = 1)
@@ -70,9 +87,9 @@ public class PokerManager : MonoBehaviour
 
     public void DestroyCards()
     {
-        for (int i = 0; i < allHands.Count; i++)
+        foreach (KeyValuePair<PokerPosition, List<PlayingCard>> entry in allH)
         {
-            allHands[i].Clear();
+            entry.Value.Clear();
         }
         communityCards.Clear();
         runtimeDeck.Clear();
@@ -83,7 +100,8 @@ public class PokerManager : MonoBehaviour
 
         PokerVisualManager.Instance.DestroyCardVisuals();
     }
-    public void ResetGame()
+    /*
+     public void ResetGame()
     {
         DestroyCards();
 
@@ -119,15 +137,18 @@ public class PokerManager : MonoBehaviour
         //if draw, divide pot equally
     }
 
+    */
+
     public void CheckWin()
     {
         List<PokerScore> allScores = new List<PokerScore>();
 
-        for (int i = 0; i < allHands.Count; i++)
+        foreach (KeyValuePair<PokerPosition, List<PlayingCard>> entry in allH)
         {
-            allScores.Add(EvaluateScore(communityCards, allHands[i]));
+            allScores.Add(EvaluateScore(communityCards, entry.Value));
+
         }
-        
+
         // Start by assuming player has the best hand
         PokerScore winningScore = allScores[0];
 
