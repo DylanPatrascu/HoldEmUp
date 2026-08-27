@@ -3,15 +3,12 @@ using System;
 public enum State
 {
     Menu,
-    Paused,
     InClub,
     FirstPerson
 }
 
 public enum Trigger
 {
-    Pause,
-    Resume,
     ToClub,
     ToFirstPerson,
     ToMainMenu
@@ -34,8 +31,6 @@ public class StateMachine
     public EventHandler<StateEventArgs> Enter;
     public EventHandler<StateEventArgs> Exit;
 
-    private State stateBeforePause;
-
     public void Fire(Trigger trigger)
     {
         // Assumes user will never be able to go directly from Menu to the First Person poker game
@@ -44,18 +39,10 @@ public class StateMachine
             (State.Menu, Trigger.ToClub)            => State.InClub,
             (State.InClub, Trigger.ToFirstPerson)   => State.FirstPerson,
             (State.InClub, Trigger.ToMainMenu)      => State.Menu,
-            (State.InClub, Trigger.Pause)           => State.Paused,
-            (State.Paused, Trigger.Resume)          => stateBeforePause,
             (State.FirstPerson, Trigger.ToClub)     => State.InClub,
             (State.FirstPerson, Trigger.ToMainMenu) => State.Menu,
-            (State.FirstPerson, Trigger.Pause)      => State.Paused,
             _ => throw new InvalidOperationException($"Invalid transition from {CurrentState} via {trigger}")
         };
-
-        if (nextState == State.Paused)
-        {
-            stateBeforePause = CurrentState;
-        }
 
         Exit?.Invoke(trigger, new StateEventArgs(CurrentState));
         CurrentState = nextState;
