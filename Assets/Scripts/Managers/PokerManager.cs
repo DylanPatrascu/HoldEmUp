@@ -14,7 +14,7 @@ public class PokerManager : MonoBehaviour
     [SerializeField] private List<PlayingCard> heartOpponentHand;
     [SerializeField] private List<PlayingCard> diamondOpponentHand;
 
-    [SerializeField] private List<PlayingCard> communityCards;
+    public List<PlayingCard> communityCards;
     private List<PlayingCard> deckList;
     private List<PlayingCard> runtimeDeck;
     private List<List<PlayingCard>> allHands;

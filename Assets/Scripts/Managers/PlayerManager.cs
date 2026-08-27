@@ -32,7 +32,7 @@ public class PlayerManager : MonoBehaviour
             case PokerGameManager.GameState.Preflop:
                 actionMode = ActionMode.Preflop;
                 break;
-            case PokerGameManager.GameState.Turn:
+            case PokerGameManager.GameState.Postflop:
                 actionMode = ActionMode.Betting;
                 break;
             default:

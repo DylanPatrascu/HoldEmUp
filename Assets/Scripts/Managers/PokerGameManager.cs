@@ -10,7 +10,7 @@ public class PokerGameManager : MonoBehaviour
     {
         StartGame,
         Preflop, // Betting without check
-        Turn, // Betting with check
+        Postflop, // Betting with check so it includes Flop, Turn and River phases
         EndGame
     }
 
@@ -50,10 +50,36 @@ public class PokerGameManager : MonoBehaviour
     void Start()
     {    
         // TODO: GameManager.Instance.PokerRound += 1;
-        StartCoroutine(FirstPhase());
+        StartCoroutine(MainGame());
     }
 
-    IEnumerator FirstPhase()
+    IEnumerator MainGame()
+    {
+        CurrentGameState = GameState.Preflop;
+        yield return StartCoroutine(PreflopPhase());
+        CurrentGameState = GameState.Postflop;
+        yield return StartCoroutine(FlopPhase());
+    }
+
+    IEnumerator BettingRound()
+    {
+        while (!BettingManager.Instance.AreEqualBets(ActivePlayers))
+        {
+            foreach (PokerPosition player in Enum.GetValues(typeof(PokerPosition)))
+            {
+                if (player == PokerPosition.Table) continue;
+                CurrentPlayer = player;
+                if (player != PokerPosition.Joker) continue; // PokerAction action = NPCManager.Instance.GetAction(PokerManager.Instance.GetHand(player))
+
+                awaitingPlayer = true;
+                // TODO: Add visual cue to let player know
+                // TODO: Player CANNOT check
+                yield return new WaitUntil(() => !awaitingPlayer);
+            }
+        }
+    }
+
+    IEnumerator PreflopPhase()
     {
         PokerManager.Instance.DestroyCards();
         BettingManager.Instance.ResetGame();
@@ -74,22 +100,15 @@ public class PokerGameManager : MonoBehaviour
         PokerManager.Instance.DealCards();
         PokerVisualManager.Instance.OffsetCardsInHands();
 
-        CurrentGameState = GameState.Preflop;
-        while (!BettingManager.Instance.AreEqualBets(ActivePlayers))
-        {
-            foreach (PokerPosition player in Enum.GetValues(typeof(PokerPosition)))
-            {
-                if (player == PokerPosition.Table) continue;
-                CurrentPlayer = player;
-                if (player != PokerPosition.Joker) continue; // PokerAction action = NPCManager.Instance.GetAction(PokerManager.Instance.GetHand(player))
+        yield return StartCoroutine(BettingRound());
+    }
 
-                awaitingPlayer = true;
-                // TODO: Add visual cue to let player know
-                // TODO: Player CANNOT check
-                yield return new WaitUntil(() => !awaitingPlayer);
-            }
-        }
-        // TODO: Include NPC actions
+    IEnumerator FlopPhase()
+    {
+        PokerManager.Instance.BurnCard();
+        PokerManager.Instance.DrawCard(PokerManager.Instance.communityCards, PokerPosition.Table, 3);
+
+        yield return StartCoroutine(BettingRound());
     }
 
     public void SetAwaitingPlayer(bool toggle)
