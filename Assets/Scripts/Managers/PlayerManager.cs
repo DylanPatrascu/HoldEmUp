@@ -1,15 +1,43 @@
+using System;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public enum ActionMode
     {
-        
+        Waiting,
+        Betting,
+        Preflop
     }
 
-    // Update is called once per frame
+    public ActionMode actionMode { get; private set; } = ActionMode.Waiting;
+
+    void Start()
+    {
+        PokerGameManager.Instance.GameStateChanged += SetPlayerAction;
+    }
+
     void Update()
     {
+        if (actionMode == ActionMode.Preflop || actionMode == ActionMode.Betting)
+        {
+            Debug.Log("Listening to player input");
+        }
+    }
+
+    public void SetPlayerAction(object sender, EventArgs e)
+    {
+        switch (PokerGameManager.Instance.CurrentGameState)
+        {
+            case PokerGameManager.GameState.Preflop:
+                actionMode = ActionMode.Preflop;
+                break;
+            case PokerGameManager.GameState.Turn:
+                actionMode = ActionMode.Betting;
+                break;
+            default:
+                actionMode = ActionMode.Waiting;
+                break;
+        }
     }
 }
