@@ -5,12 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [DoNotSerialize]
-    private static StateMachine _stateMachine = new();
+    public static StateMachine _stateMachine = new();
 
     public State CurrentState { get { return _stateMachine.CurrentState; } }
 
-    public static GameManager instance;
+    public static GameManager Instance;
 
     private static Dictionary<State, string> stateScenes = new()
     {
@@ -21,13 +20,13 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if (instance != null)
+        if (Instance != null)
         {
             Destroy(gameObject);
             return;
         }
 
-        instance = this;
+        Instance = this;
         DontDestroyOnLoad(gameObject);
         SceneManager.LoadScene(stateScenes[State.Menu]);
     }
