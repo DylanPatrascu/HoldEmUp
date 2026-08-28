@@ -10,16 +10,14 @@ public class PokerGameManager : MonoBehaviour
     {
         StartGame,
         Preflop, // Betting without check
-        Turn, // Betting with check
+        Postflop, // Betting with check so it includes Flop, Turn and River phases
         EndGame
     }
 
     public static PokerGameManager Instance;
-
-    [SerializeField]
-    private bool awaitingPlayer = false;
+    public bool awaitingPlayer { get; private set; } = false;
     private List<PokerPosition> ActivePlayers;
-    private PokerPosition SmallBlind = PokerPosition.Joker;
+    private PokerPosition SmallBlind = PokerPosition.Heart;
     private PokerPosition NextPlayer(PokerPosition current) => (PokerPosition)(((int)current + 1) % 5);
     private PokerPosition BigBlind => NextPlayer(SmallBlind);
     private PokerPosition CurrentPlayer;
@@ -37,9 +35,7 @@ public class PokerGameManager : MonoBehaviour
 
     [SerializeField]
     public EventHandler GameStateChanged;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -47,32 +43,34 @@ public class PokerGameManager : MonoBehaviour
             return;
         }
         Instance = this;
-        // TODO: GameManager.Instance.PokerRound += 1;
-        StartCoroutine(FirstPhase());
+        ActivePlayers = new List<PokerPosition>();
     }
 
-    IEnumerator FirstPhase()
+    void Start()
+    {    
+        StartCoroutine(MainGame());
+    }
+
+    IEnumerator MainGame()
     {
-        PokerManager.Instance.DestroyCards();
-        BettingManager.Instance.ResetGame();
-        CurrentPlayer = NextPlayer(BigBlind);
-        foreach (PokerPosition player in Enum.GetValues(typeof(PokerPosition)))
-        {
-            if (player == PokerPosition.Table) continue;
-            ActivePlayers.Add(player);
-        }
-        
-        // Rotation of the button
-        SmallBlind = NextPlayer(SmallBlind);
-        BettingManager.Instance.BetAmount(SmallBlind, BettingManager.MINIMUM_BET);
-        BettingManager.Instance.SubmitBet(SmallBlind);
-        BettingManager.Instance.BetAmount(BigBlind, BettingManager.MINIMUM_BET * 2);
-        BettingManager.Instance.SubmitBet(BigBlind);
-
-        PokerManager.Instance.DealCards();
-        PokerVisualManager.Instance.OffsetCardsInHands();
-
         CurrentGameState = GameState.Preflop;
+        yield return StartCoroutine(PreflopPhase());
+        CurrentGameState = GameState.Postflop;
+        yield return StartCoroutine(PostFlopPhase(3));
+
+        //Turn
+        yield return StartCoroutine(PostFlopPhase(1));
+
+        //River
+        yield return StartCoroutine(PostFlopPhase(1));
+
+        //Showdown
+        PokerManager.Instance.CheckWin();
+
+    }
+
+    IEnumerator BettingRound()
+    {
         while (!BettingManager.Instance.AreEqualBets(ActivePlayers))
         {
             foreach (PokerPosition player in Enum.GetValues(typeof(PokerPosition)))
@@ -83,9 +81,48 @@ public class PokerGameManager : MonoBehaviour
 
                 awaitingPlayer = true;
                 // TODO: Add visual cue to let player know
+                // TODO: Player CANNOT check
                 yield return new WaitUntil(() => !awaitingPlayer);
             }
         }
-        // TODO: Include NPC actions
+    }
+
+    IEnumerator PreflopPhase()
+    {
+        PokerManager.Instance.DestroyCards();
+        BettingManager.Instance.ResetGame();
+        // TODO: GameManager.Instance.PokerRound += 1; (shift small blind by how many games of poker youve played
+        CurrentPlayer = NextPlayer(BigBlind);
+        foreach (PokerPosition player in Enum.GetValues(typeof(PokerPosition)))
+        {
+            if (player == PokerPosition.Table) continue;
+            ActivePlayers.Add(player);
+        }
+        // Rotation of the button
+        SmallBlind = NextPlayer(SmallBlind);
+        BettingManager.Instance.BetAmount(SmallBlind, BettingManager.MINIMUM_BET);
+        BettingManager.Instance.SubmitBet(SmallBlind);
+        BettingManager.Instance.BetAmount(BigBlind, BettingManager.MINIMUM_BET * 2);
+        BettingManager.Instance.SubmitBet(BigBlind);
+
+        PokerManager.Instance.DealCards();
+        PokerVisualManager.Instance.OffsetCardsInHands();
+
+        yield return StartCoroutine(BettingRound());
+    }
+
+    IEnumerator PostFlopPhase(int numCards)
+    {
+        PokerManager.Instance.BurnCard();
+        PokerManager.Instance.DrawCard(PokerManager.Instance.communityCards, PokerPosition.Table, numCards);
+
+        //starts folling betting round
+        yield return StartCoroutine(BettingRound());
+    }
+
+    //ui button method
+    public void SetAwaitingPlayer(bool toggle)
+    {
+        awaitingPlayer = toggle;
     }
 }
