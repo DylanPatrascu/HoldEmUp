@@ -6,9 +6,11 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [DoNotSerialize]
-    public StateMachine _stateMachine = new();
+    private static StateMachine _stateMachine = new();
 
-    private static GameManager instance;
+    public State CurrentState { get { return _stateMachine.CurrentState; } }
+
+    public static GameManager instance;
 
     private static Dictionary<State, string> stateScenes = new()
     {
@@ -27,73 +29,58 @@ public class GameManager : MonoBehaviour
 
         instance = this;
         DontDestroyOnLoad(gameObject);
-        SceneManager.LoadScene(stateScenes[State.FirstPerson]);
+        SceneManager.LoadScene(stateScenes[State.Menu]);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _stateMachine.Enter += unlockCursor;
-        _stateMachine.Enter += lockCursor;
         _stateMachine.Enter += handleSceneChange;
-        _stateMachine.Exit  += handleSceneUnload;
-
+        _stateMachine.Exit  += handleSceneChange;
     }
 
     public static void handleSceneChange(object sender, StateEventArgs e)
     {
-        if (e.target == State.Paused) return;
+        // Handle Cursor Locks
+        if (e.target == State.FirstPerson)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        } else
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
 
         string sceneToLoad = stateScenes[e.target];
-        var op = SceneManager.LoadSceneAsync(sceneToLoad);
-        op.completed += (AsyncOperation obj) =>
-        {
-            Scene loadedScene = SceneManager.GetSceneByPath(sceneToLoad);
-            Debug.Log($"{stateScenes} {e.target} finished loading (build index: {loadedScene.buildIndex}).");
-            Debug.Log($"It has {loadedScene.rootCount} root(s).");
-            Debug.Log($"There are now {SceneManager.loadedSceneCount} Scenes open.");
-        };
+        SceneManager.LoadSceneAsync(sceneToLoad);
     }
 
     public static void handleSceneUnload(object sender, StateEventArgs e)
     {
-        if (e.target == State.Paused) return;
-
         string sceneToUnload = stateScenes[e.target];
         SceneManager.UnloadSceneAsync(sceneToUnload);
         Debug.Log($"Unloaded scene {e.target}");
     }
 
-    public static void unlockCursor(object sender, StateEventArgs e)
-    {
-       if (e.target == State.FirstPerson) return;
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
-
-    public static void lockCursor(object sender, StateEventArgs e)
-    {
-       if (e.target != State.FirstPerson) return;
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void BeginGame()
+    public void Fire(Trigger trigger)
     {
         try
         {
-            _stateMachine.Fire(Trigger.ToClub);
+            _stateMachine.Fire(trigger);
         } catch (System.InvalidOperationException exception)
         {
             Debug.LogWarning(exception.Message);
         }
     }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0f;
+    }
+    public void UnpauseGame()
+    {
+        Time.timeScale = 1f;
+    }
+    
 }
