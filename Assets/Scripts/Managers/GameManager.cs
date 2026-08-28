@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public static StateMachine _stateMachine = new();
 
     public State CurrentState { get { return _stateMachine.CurrentState; } }
+    public int PlayerBalance;
 
     public static GameManager Instance;
 
@@ -27,7 +28,7 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        SceneManager.LoadScene(stateScenes[State.Menu]);
+        SceneManager.LoadScene(stateScenes[State.FirstPerson]);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
