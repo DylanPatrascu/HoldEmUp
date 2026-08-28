@@ -16,7 +16,7 @@ public class MainMenuScript : MonoBehaviour
     }
     public void _load_game()
     {
-        GameManager.instance.Fire(Trigger.ToClub);
+        GameManager._stateMachine.Fire(Trigger.ToClub);
     }
     public void _quit_game()
     {

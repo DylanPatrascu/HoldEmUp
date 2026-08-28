@@ -80,7 +80,7 @@ public class PokerManager : MonoBehaviour
         }
     }
 
-    public void BurnCard(int numCards = 1)
+    public void BurnCard()
     {
         runtimeDeck.Remove(runtimeDeck[0]);
     }
@@ -141,55 +141,54 @@ public class PokerManager : MonoBehaviour
 
     public void CheckWin()
     {
-        List<PokerScore> allScores = new List<PokerScore>();
-
+        List<(PokerPosition Position, PokerScore Score)> allScores = new List<(PokerPosition, PokerScore)>();
+ 
         foreach (KeyValuePair<PokerPosition, List<PlayingCard>> entry in allH)
         {
-            allScores.Add(EvaluateScore(communityCards, entry.Value));
-
+            allScores.Add((entry.Key, EvaluateScore(communityCards, entry.Value)));
         }
-
-        // Start by assuming player has the best hand
-        PokerScore winningScore = allScores[0];
-
+ 
+        // Start by assuming the first player has the best hand
+        PokerScore winningScore = allScores[0].Score;
+ 
         // Check everyone else
         for (int i = 1; i < allScores.Count; i++)
         {
-            if (IsBetterScore(allScores[i], winningScore))
+            if (IsBetterScore(allScores[i].Score, winningScore))
             {
-                winningScore = allScores[i];
+                winningScore = allScores[i].Score;
             }
         }
-
-        //find anyone with better score
-
-        List<int> winnerIndexes = new List<int>();
-
+ 
+        // Find anyone with the same (winning) score
+ 
+        List<PokerPosition> winners = new List<PokerPosition>();
+ 
         for (int i = 0; i < allScores.Count; i++)
         {
-            if (IsSameScore(allScores[i], winningScore))
+            if (IsSameScore(allScores[i].Score, winningScore))
             {
-                winnerIndexes.Add(i);
+                winners.Add(allScores[i].Position);
             }
         }
-
-
+ 
         //output
-        if (winnerIndexes.Count == 1)
+        if (winners.Count == 1)
         {
             // ONE winner
-            Debug.Log($"WINNER NAME: {(PokerPosition)winnerIndexes[0]} | " + $"HAND: {winningScore.pokerHand} | " + $"SCORE: {string.Join(", ", winningScore.pokerCards)}");
+            Debug.Log($"WINNER NAME: {winners[0]} | " + $"HAND: {winningScore.pokerHand} | " + $"SCORE: {string.Join(", ", winningScore.pokerCards)}");
         }
         else
         {
             // tie
             Debug.Log($"TIE! HAND: {winningScore.pokerHand} | " + $"SCORE: {string.Join(", ", winningScore.pokerCards)}");
-            foreach (int i in winnerIndexes)
+            foreach (PokerPosition position in winners)
             {
-                Debug.Log($"{(PokerPosition)i}");
+                Debug.Log($"{position}");
             }
         }
     }
+
 
     #endregion
 
