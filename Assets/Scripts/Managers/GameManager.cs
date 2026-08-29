@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -8,17 +9,21 @@ public class GameManager : MonoBehaviour
 
     public State CurrentState { get { return _stateMachine.CurrentState; } }
 
-    // Input System Actions
-
     public int PlayerBalance = BettingManager.STARTING_BALANCE;
     public int PokerRound = 0;
 
     public static GameManager Instance;
 
+    [SerializeField]
+    private GameObject pauseGameUI;
+    public PauseMenu PauseGameUI => pauseGameUI.GetComponent<PauseMenu>();
+
+    public bool IsGamePaused { get; private set; } = false;
+
     private static Dictionary<State, string> stateScenes = new()
     {
         [State.Menu] = "Assets/Scenes/MainMenu.unity",
-        [State.InClub] = "Assets/Scenes/PokerScene.unity",
+        [State.InClub] = "Assets/Scenes/ClubScene.unity",
         [State.FirstPerson] = "Assets/Scenes/PokerScene.unity"
     };
 
@@ -32,16 +37,19 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        
-        
+
+        pauseGameUI = Instantiate(pauseGameUI, GameObject.Find("Canvas").transform);
+        pauseGameUI.SetActive(false);
+
         // SceneManager.LoadScene(stateScenes[CurrentState]);
     }
-    
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _stateMachine.Enter += handleSceneChange;
         _stateMachine.Exit  += handleSceneChange;
+        
         // _stateMachine.Fire(Trigger.ToFirstPerson);
     }
 
@@ -82,11 +90,28 @@ public class GameManager : MonoBehaviour
 
     public void PauseGame()
     {
+        pauseGameUI.SetActive(true);
         Time.timeScale = 0f;
+        IsGamePaused = true;
+
+        if (CurrentState == State.FirstPerson)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
-    public void UnpauseGame()
+
+    public void ResumeGame()
     {
+        pauseGameUI.SetActive(false);
         Time.timeScale = 1f;
+        IsGamePaused = false;
+
+        if (CurrentState == State.FirstPerson)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
     
 }

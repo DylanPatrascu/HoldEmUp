@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -63,9 +64,7 @@ public class PokerManager : MonoBehaviour
             PokerPosition position = entry.Key;
             List<PlayingCard> hand = entry.Value;
             DrawCard(hand, position);
-
         }
-
 
     }
 
@@ -75,7 +74,6 @@ public class PokerManager : MonoBehaviour
         {
             PlayingCard c = runtimeDeck[0];
             hand.Add(c);
-            PokerVisualManager.Instance.SpawnCard(c, position);
             runtimeDeck.Remove(c);
         }
     }
@@ -97,6 +95,7 @@ public class PokerManager : MonoBehaviour
         // Fresh playing deck
         runtimeDeck = new List<PlayingCard>(deckList);
         HelperMethods.Shuffle(runtimeDeck);
+        AudioManager.Instance.PlayAudioClip(AudioSnippet.PlayingCardShuffle);
 
         PokerVisualManager.Instance.DestroyCardVisuals();
     }
