@@ -16,4 +16,4 @@ MonoBehaviour:
   portrait: {fileID: 21300000, guid: 303e8d7aa6f101d468e104f86a6c3282, type: 3}
   talkingClip: {fileID: 8300000, guid: 84a640c09c50b40898a0744dfb4175c7, type: 3}
   sentences:
-  - Hi, I am Club
+  - Hi, I am <b>Club</b> <sprite=0>
