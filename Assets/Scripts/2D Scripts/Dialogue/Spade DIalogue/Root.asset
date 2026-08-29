@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueName: Spade
   portrait: {fileID: 21300000, guid: 03d2c93aeae013b49b8968e91fa08456, type: 3}
-  talkingClip: {fileID: 8300000, guid: 84a640c09c50b40898a0744dfb4175c7, type: 3}
+  talkingClip: {fileID: 8300000, guid: bc810412a78cea643ace8127849d2ac8, type: 3}
   sentences:
   - Hi, I am Spade

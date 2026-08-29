@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueName: Club
   portrait: {fileID: 21300000, guid: 303e8d7aa6f101d468e104f86a6c3282, type: 3}
-  talkingClip: {fileID: 8300000, guid: f6c857dbc4602471a97d0b3a0e1e03f3, type: 3}
+  talkingClip: {fileID: 8300000, guid: fbd3eab309d198b46b45524c2db2800a, type: 3}
   sentences:
   - 'You chose option A. '
