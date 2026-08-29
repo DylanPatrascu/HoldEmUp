@@ -19,7 +19,7 @@ public class Player2D : MonoBehaviour
         moveInput = value.Get<Vector2>();
     }
 
-    public void OnInteract(InputValue value)
+    public void OnChipInteract(InputValue value)
     {
         print(currentInteractable);
         if (value.isPressed)
