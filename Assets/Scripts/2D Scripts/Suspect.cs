@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 
 public class Suspect : MonoBehaviour, IInteractable
 {
-    [SerializeField] private SpriteRenderer interactSprite;
+    [SerializeField] private GameObject interact;
     [SerializeField] private ClubSceneManager clubSceneManager;
     
     [Space]
@@ -23,7 +23,7 @@ public class Suspect : MonoBehaviour, IInteractable
         _trees = new DialogueTree[]
             { roundOneDialogueTree, roundTwoDialogueTree, roundThreeDialogueTree, roundFourDialogueTree };
         
-        if (interactSprite == null)
+        if (interact == null)
         {
             throw new Exception(name + ": _interactSprite is null");
         }
@@ -54,7 +54,7 @@ public class Suspect : MonoBehaviour, IInteractable
     public void SetInteractable(bool state)
     {
         _interactable = state;
-        interactSprite.enabled = state;
+        interact.SetActive(state);
     }
 
     public void Interact()
