@@ -33,7 +33,7 @@ public class NPCManager : MonoBehaviour
     private Dictionary<PokerPosition, NPCPersonality> personalityMap; // Built based on editor input from serialized list
     private static readonly NPCPersonality DefaultPersonality = new NPCPersonality();
 
-    void Start()
+    void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -48,6 +48,18 @@ public class NPCManager : MonoBehaviour
 
     public void BuildPersonalityMap()
     {
+        foreach (PokerPosition player in Enum.GetValues(typeof(PokerPosition)))
+        {
+            if (player == PokerPosition.Joker || player == PokerPosition.Table) continue;
+            PositionPersonality pp = new()
+            {
+                position = player,
+                personality = DefaultPersonality
+            };
+            if (!personalityAssignments.Any(pp => pp.position == player))
+                personalityAssignments.Add(pp);
+        }
+
         personalityMap = new Dictionary<PokerPosition, NPCPersonality>();
         foreach (PositionPersonality entry in personalityAssignments)
         {
@@ -70,18 +82,12 @@ public class NPCManager : MonoBehaviour
 
     public void SetNPCAction(object sender, EventArgs e)
     {
-        switch (PokerGameManager.Instance.CurrentGameState)
+        actionMode = PokerGameManager.Instance.CurrentGameState switch
         {
-            case PokerGameManager.GameState.Preflop:
-                actionMode = PlayerActionMode.PreflopBetting;
-                break;
-            case PokerGameManager.GameState.Postflop:
-                actionMode = PlayerActionMode.Betting;
-                break;
-            default:
-                actionMode = PlayerActionMode.Waiting;
-                break;
-        }
+            PokerGameManager.GameState.Preflop => PlayerActionMode.PreflopBetting,
+            PokerGameManager.GameState.Postflop => PlayerActionMode.Betting,
+            _ => PlayerActionMode.Waiting,
+        };
     }
 
     // Decision Making
@@ -117,6 +123,7 @@ public class NPCManager : MonoBehaviour
 
         int myBet = BettingManager.Instance.GetBet(player);
         int highestBet = BettingManager.Instance.GetHighestBet(activePlayers);
+        Debug.Log($"[NPCManager] Current highest bet is: {highestBet}");
         int amountToCall = Mathf.Max(0, highestBet - myBet);
 
         bool canCheck = amountToCall == 0 && actionMode != PlayerActionMode.PreflopBetting;

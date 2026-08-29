@@ -15,6 +15,7 @@ public class PokerVisualManager : MonoBehaviour
     [SerializeField] private Transform diamondOpponentHandTransform;
     [SerializeField] private Transform tableCardTransform;
 
+
     private void Awake()
     {
         if (Instance != null && Instance != this)

@@ -1,25 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 public class BettingManager : MonoBehaviour
 {
     public static BettingManager Instance { get; private set; }
-
-    [SerializeField] private int maxBet;
-
-    [Header("Chip Details")]
-    [SerializeField] 
-    private int playerBalance; // TODO: Retain using GameManager
     
     [SerializeField] 
     private Dictionary<PokerPosition, int> currentBets;
 
-    public bool AreEqualBets(List<PokerPosition> players) => players.All(player => currentBets[player] == currentBets[players[0]]);
     public int GetBet(PokerPosition player) => currentBets.TryGetValue(player, out int bet) ? bet : 0;
     public int GetHighestBet(List<PokerPosition> players) => players.Select(GetBet).DefaultIfEmpty(0).Max();
-    public int PlayerBet => currentBets[PokerPosition.Joker];
+    public bool AreEqualBets(List<PokerPosition> players) => players.All(player => currentBets[player] == currentBets[players[0]]);
+    public int PlayerBet => currentBets.TryGetValue(PokerPosition.Joker, out int bet) ? bet : 0;
 
     [SerializeField] private int pot = 0;
 
@@ -29,22 +24,19 @@ public class BettingManager : MonoBehaviour
 
     private void Awake()
     {
-        currentBets = new Dictionary<PokerPosition, int>();
-    }
-    private void Start()
-    {
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
         Instance = this;
+        currentBets = new();
     }
 
     public void ResetGame()
     {
         pot = 0;
-        playerBalance = STARTING_BALANCE;
+        GameManager.Instance.PlayerBalance = STARTING_BALANCE;
 
         // Reset bets
         foreach (PokerPosition player in Enum.GetValues(typeof(PokerPosition)))
@@ -57,45 +49,52 @@ public class BettingManager : MonoBehaviour
     // usable for player
     public void ResetBet()
     {
-        playerBalance += PlayerBet;
+        GameManager.Instance.PlayerBalance += PlayerBet;
         currentBets[PokerPosition.Joker] = 0;
-        BettingVisualManager.Instance.UpdateBet(currentBets[PokerPosition.Joker]);
+        BettingVisualManager.Instance.UpdateBet(PlayerBet);
     }
 
     // usable by UI and NPCS
-    public void BetAmount(PokerPosition player, int amount)
+    public bool BetAmount(PokerPosition player, int amount)
     {
-        if (currentBets[player] + amount > MAXIMUM_BET) return;
+        if (currentBets[player] + amount > MAXIMUM_BET) return false;
 
         if (player == PokerPosition.Joker)
         {
             // TODO: Add visual cue that player has insufficient money
-            if (playerBalance - amount < 0) return;
-            playerBalance -= amount;
-            BettingVisualManager.Instance.UpdateBet(currentBets[player]);
+            if (GameManager.Instance.PlayerBalance - amount < 0) return false;
+            GameManager.Instance.PlayerBalance -= amount;
         }
 
         currentBets[player] += amount;
         Debug.Log($"{player} bet {amount}");
+        BettingVisualManager.Instance.UpdateBet(PlayerBet);
+        return true;
     }
     
     // usable by UI and NPCS
-    public void RemoveAmount(int amount)
+    public bool RemoveAmount(int amount)
     {
         // if sufficient currentbet amount
         if (PlayerBet >= amount)
         {
             currentBets[PokerPosition.Joker] -= amount;
-            playerBalance += amount;
-            BettingVisualManager.Instance.UpdateBet(currentBets[PokerPosition.Joker]);
+            GameManager.Instance.PlayerBalance += amount;
+            BettingVisualManager.Instance.UpdateBet(PlayerBet);
+            return true;
+        }
+        return false;
+    }
+
+    public void SubmitBets(List<PokerPosition> players)
+    {
+        foreach (PokerPosition player in players)
+        {
+            if (player == PokerPosition.Table) return;
+            pot += currentBets[player];
+            currentBets[player] = 0;
+            BettingVisualManager.Instance.UpdateBet(PlayerBet);
         }
     }
 
-    public void SubmitBet(PokerPosition player)
-    {
-        if (player == PokerPosition.Table) return;
-        pot += currentBets[player];
-        currentBets[player] = 0;
-        BettingVisualManager.Instance.UpdateBet(currentBets[PokerPosition.Joker]);
-    }
 }
