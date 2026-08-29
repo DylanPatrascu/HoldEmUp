@@ -58,6 +58,7 @@ public class PokerVisualManager : MonoBehaviour
         }
 
         OffsetCardsInHands();
+
         yield return null;
     }
     public IEnumerator SpawnCard(PlayingCard card, PokerPosition player)
@@ -119,8 +120,16 @@ public class PokerVisualManager : MonoBehaviour
 
     public void OffsetCardsInHands()
     {
-        playerHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
-        playerHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
+        int i = 0;
+        foreach (Transform child in playerHandTransform)
+        {
+            child.DOLocalMove(Vector3.zero + new Vector3( ++i, 0.05f*i, 0), .5f);
+            child.DOLocalRotate(Vector3.zero, .5f);
+            //child.localRotation = Quaternion.identity;
+            child.gameObject.GetComponent<VisualPlayingCard>().ShowCardData();
+        }
+        //playerHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
+        //playerHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
 
         clubOpponentHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
         clubOpponentHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
