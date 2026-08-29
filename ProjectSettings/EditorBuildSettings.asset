@@ -7,7 +7,7 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/PokerScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05   
+    guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Scenes/GameEntrance.unity
     guid: fac2803f5e121324f8c6ca89334d57d0

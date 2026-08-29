@@ -9,5 +9,7 @@ public class Dialogue : ScriptableObject
     public AudioClip talkingClip;
 
     [TextArea(3,10)]
+    public string questionLeadingToDialogue = "";
+    [TextArea(3,10)]
     public string[] sentences;
 }

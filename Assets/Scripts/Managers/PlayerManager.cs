@@ -25,13 +25,13 @@ public class PlayerManager : MonoBehaviour
         if (actionMode == PlayerActionMode.Waiting) return;
 
         HandleChipInteraction();
-        HandleActionKeys();
+        //HandleActionKeys();
     }
 
     private void HandleChipInteraction()
     {
-        bool interactPressed = GameManager.Instance.Controls.Player.ChipInteract.WasPressedThisFrame();
-        if (!interactPressed) return;
+        // bool interactPressed = GameManager.Instance.Controls.Player.ChipInteract.WasPressedThisFrame();
+        // if (!interactPressed) return;
 
         Chip chip = RaycastForChip();
         if (chip == null || chip.IsLocked) return;
@@ -67,7 +67,7 @@ public class PlayerManager : MonoBehaviour
         return null;
     }
 
-    private void HandleActionKeys()
+    /*private void HandleActionKeys()
     {
         if (GameManager.Instance.Controls.Player.Fold.WasPressedThisFrame())
         {
@@ -86,7 +86,7 @@ public class PlayerManager : MonoBehaviour
             PerformSubmitBet();
             return;
         }
-    }
+    }*/
 
         private int AmountToCall()
     {
