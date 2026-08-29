@@ -20,4 +20,9 @@ public class VisualPlayingCard : MonoBehaviour
         cardFront.material = cardFrontMaterial;
         cardBack.material = cardBackMaterial;
     }
+
+    public void HideCardData()
+    {
+        cardFrontMaterial.mainTexture = cardData.cardBackSprite;
+    }
 }

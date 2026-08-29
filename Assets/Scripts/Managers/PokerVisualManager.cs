@@ -1,5 +1,8 @@
 using DG.Tweening;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 public class PokerVisualManager : MonoBehaviour
 {
@@ -18,7 +21,7 @@ public class PokerVisualManager : MonoBehaviour
     [SerializeField] private Transform diamondOpponentHandTransform;
     [SerializeField] private Transform tableCardTransform;
 
-    private const float CARD_MOVEMENT_SPEED = 2f;
+    private const float CARD_MOVEMENT_SPEED = 1f;
 
 
     private void Awake()
@@ -30,7 +33,33 @@ public class PokerVisualManager : MonoBehaviour
         }
         Instance = this;
     }
+    private List<KeyValuePair<PokerPosition, List<PlayingCard>>> GetHandsFlattened()
+    {
+        Dictionary<PokerPosition, List<PlayingCard>> hands = new Dictionary<PokerPosition,List<PlayingCard>>(PokerManager.Instance.allH);
 
+        List <KeyValuePair<PokerPosition, List<PlayingCard>>> allHandsFlattened = hands.ToList();
+        return allHandsFlattened.OrderBy(c => (int)c.Key).ToList();
+    }
+    public IEnumerator DealCardsToEveryone()
+    {
+        PokerPosition player = PokerGameManager.Instance.SmallBlind;
+        List<KeyValuePair<PokerPosition, List<PlayingCard>>> flattenedHands = GetHandsFlattened();
+
+        for (int i = (int)player; i < flattenedHands.Count; i++)
+        {
+            var curr = flattenedHands[i % flattenedHands.Count];
+            yield return StartCoroutine(SpawnCard(curr.Value[0], curr.Key));
+        }
+
+        for (int i = (int)player; i < flattenedHands.Count; i++)
+        {
+            var curr = flattenedHands[i % flattenedHands.Count];
+            yield return StartCoroutine(SpawnCard(curr.Value[1], curr.Key));
+        }
+
+        OffsetCardsInHands();
+        yield return null;
+    }
     public IEnumerator SpawnCard(PlayingCard card, PokerPosition player)
     {
         GameObject cardObject = Instantiate(playingCardPrefab, cardDeckTransform);
@@ -40,6 +69,7 @@ public class PokerVisualManager : MonoBehaviour
             cardObject.transform.rotation *= Quaternion.Euler(0, 180f, 0);
         }
         visualCard.PopulateData(card);
+        visualCard.HideCardData();
         AudioManager.Instance.PlayAudioClip(AudioSnippet.PlayingCardDeal);
 
         switch (player)
@@ -47,37 +77,37 @@ public class PokerVisualManager : MonoBehaviour
             case PokerPosition.Joker:
             default:
                 //cardObject = Instantiate(playingCardPrefab, playerHandTransform);
-                cardObject.transform.DOMove(playerHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
+                yield return cardObject.transform.DOMove(playerHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
                 cardObject.transform.SetParent(playerHandTransform);
                 break;
             case PokerPosition.Heart:
                 //cardObject = Instantiate(playingCardPrefab, heartOpponentHandTransform);
-                cardObject.transform.DOMove(heartOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
+                yield return cardObject.transform.DOMove(heartOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
                 cardObject.transform.SetParent(heartOpponentHandTransform);
 
 
                 break;
             case PokerPosition.Spade:
                 //cardObject = Instantiate(playingCardPrefab, spadeOpponentHandTransform);
-                cardObject.transform.DOMove(spadeOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
+                yield return cardObject.transform.DOMove(spadeOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
                 cardObject.transform.SetParent(spadeOpponentHandTransform);
 
 
                 break;
             case PokerPosition.Club:
                 //cardObject = Instantiate(playingCardPrefab, clubOpponentHandTransform);
-                cardObject.transform.DOMove(clubOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
+                yield return cardObject.transform.DOMove(clubOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
                 cardObject.transform.SetParent(clubOpponentHandTransform);
 
                 break;
             case PokerPosition.Diamond:
                 //cardObject = Instantiate(playingCardPrefab, diamondOpponentHandTransform);
-                cardObject.transform.DOMove(diamondOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
+                yield return cardObject.transform.DOMove(diamondOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
                 cardObject.transform.SetParent(diamondOpponentHandTransform);
 
                 break;
             case PokerPosition.Table:
-                cardObject.transform.DOMove(tableCardTransform.position += new Vector3((tableCardTransform.transform.childCount - 1) * 1.1f, 0, 0), CARD_MOVEMENT_SPEED).WaitForCompletion();
+                yield return cardObject.transform.DOMove(tableCardTransform.position += new Vector3((tableCardTransform.transform.childCount - 1) * 1.1f, 0, 0), CARD_MOVEMENT_SPEED).WaitForCompletion();
                 cardObject.transform.SetParent(tableCardTransform);
 
                 //cardObject = Instantiate(tablePlayingCardPrefab, tableCardTransform);

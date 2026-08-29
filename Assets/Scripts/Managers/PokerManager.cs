@@ -66,6 +66,8 @@ public class PokerManager : MonoBehaviour
             DrawCard(hand, position);
         }
 
+        StartCoroutine(PokerVisualManager.Instance.DealCardsToEveryone());
+
     }
 
     public void DrawCard(List<PlayingCard> hand, PokerPosition position, int numCards = 1)

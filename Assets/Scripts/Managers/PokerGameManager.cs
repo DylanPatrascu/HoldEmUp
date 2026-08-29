@@ -46,8 +46,8 @@ public class PokerGameManager : MonoBehaviour
 
     public bool awaitingPlayer { get; private set; } = false;
     public List<PokerPosition> ActivePlayers = new();
-    private PokerPosition NextPlayer(PokerPosition current) => (PokerPosition)(((int)current + 1) % 5);
-    private PokerPosition SmallBlind = PokerPosition.Spade;
+    public PokerPosition NextPlayer(PokerPosition current) => (PokerPosition)(((int)current + 1) % 5);
+    public PokerPosition SmallBlind = PokerPosition.Spade;
     private PokerPosition BigBlind => NextPlayer(SmallBlind);
     private PokerPosition CurrentPlayer;
 
@@ -228,8 +228,6 @@ public class PokerGameManager : MonoBehaviour
             BettingManager.Instance.BetAmount(BigBlind, BettingManager.MINIMUM_BET * 2);
 
             PokerManager.Instance.DealCards();
-
-            PokerVisualManager.Instance.OffsetCardsInHands();
         }
         catch (Exception e)
         {
