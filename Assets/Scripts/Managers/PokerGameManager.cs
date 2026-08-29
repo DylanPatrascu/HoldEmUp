@@ -158,7 +158,7 @@ public class PokerGameManager : MonoBehaviour
                     SubmitAction(player, action, amount);
 
                     PerformedPlayerAction?.Invoke(this, new PokerEvent(player, action, amount, isBluffing));
-                    yield return new WaitUntil(() => !PausedForAnimationEvents);
+                    //yield return new WaitUntil(() => !PausedForAnimationEvents);
                     continue;
                 }
 
@@ -166,7 +166,7 @@ public class PokerGameManager : MonoBehaviour
                 GameStateChanged?.Invoke(this, EventArgs.Empty); // Done this to force PlayerAction to switch
                 Debug.Log("[PokerGameManager] Waiting for player input.");
                 yield return new WaitUntil(() => !awaitingPlayer);
-                yield return new WaitUntil(() => !PausedForAnimationEvents);
+                //yield return new WaitUntil(() => !PausedForAnimationEvents);
             }
         } while (!BettingManager.Instance.AreEqualBets(ActivePlayers));
         BettingManager.Instance.SubmitBets(ActivePlayers);
@@ -246,6 +246,7 @@ public class PokerGameManager : MonoBehaviour
 
             PokerManager.Instance.DrawCard(PokerManager.Instance.communityCards, PokerPosition.Table, numCards);
             //visual tie in for dealing
+            //get community cards and draw them
         }
         catch (Exception e)
         {
