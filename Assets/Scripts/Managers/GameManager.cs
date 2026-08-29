@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -12,6 +13,12 @@ public class GameManager : MonoBehaviour
     public int PokerRound = 0;
 
     public static GameManager Instance;
+
+    [SerializeField]
+    private GameObject pauseGameUI;
+    public PauseMenu PauseGameUI => pauseGameUI.GetComponent<PauseMenu>();
+
+    public bool IsGamePaused { get; private set; } = false;
 
     private static Dictionary<State, string> stateScenes = new()
     {
@@ -30,7 +37,10 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        
+
+        pauseGameUI = Instantiate(pauseGameUI, GameObject.Find("Canvas").transform);
+        pauseGameUI.SetActive(false);
+
         // SceneManager.LoadScene(stateScenes[CurrentState]);
     }
 
@@ -39,6 +49,7 @@ public class GameManager : MonoBehaviour
     {
         _stateMachine.Enter += handleSceneChange;
         _stateMachine.Exit  += handleSceneChange;
+        
         // _stateMachine.Fire(Trigger.ToFirstPerson);
     }
 
@@ -79,11 +90,28 @@ public class GameManager : MonoBehaviour
 
     public void PauseGame()
     {
+        pauseGameUI.SetActive(true);
         Time.timeScale = 0f;
+        IsGamePaused = true;
+
+        if (CurrentState == State.FirstPerson)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
-    public void UnpauseGame()
+
+    public void ResumeGame()
     {
+        pauseGameUI.SetActive(false);
         Time.timeScale = 1f;
+        IsGamePaused = false;
+
+        if (CurrentState == State.FirstPerson)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
     
 }

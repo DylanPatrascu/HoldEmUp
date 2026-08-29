@@ -1,4 +1,5 @@
 using System;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,6 +13,12 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private Camera interactionCamera;
     [SerializeField] private LayerMask chipLayerMask;
 
+    [SerializeField]
+    private PlayerInput playerInput;
+
+    [SerializeField]
+    private CinemachineCamera cCam;
+
     void Start()
     {
         if (interactionCamera == null)
@@ -20,6 +27,10 @@ public class PlayerManager : MonoBehaviour
         }
         PokerGameManager.Instance.GameStateChanged += SetPlayerAction;
         PokerGameManager.Instance.PerformedPlayerAction += ActionAnimationHandler;
+        GameManager.Instance.PauseGameUI.ResumeRequested += OnCancel;
+
+        if (playerInput == null) playerInput = GetComponent<PlayerInput>();
+        playerInput.SwitchCurrentActionMap("Player");
     }
 
     public void ActionAnimationHandler(object sender, PokerGameManager.PokerEvent e)
@@ -29,7 +40,32 @@ public class PlayerManager : MonoBehaviour
         PokerGameManager.Instance.SetPausedForAnimationEvents(false);
     }
 
-    private void OnChipInteract(InputValue value)
+    public void OnPause(InputValue value)
+    {
+        if (!value.isPressed || GameManager.Instance.IsGamePaused) return;
+
+
+        GameManager.Instance.PauseGame();
+        playerInput.SwitchCurrentActionMap("UI");
+    }
+
+    public void OnCancel(InputValue value)
+    {
+        if (!value.isPressed || !GameManager.Instance.IsGamePaused) return;
+
+        GameManager.Instance.ResumeGame();
+        playerInput.SwitchCurrentActionMap("Player");
+    }
+
+    public void OnCancel(object sender, EventArgs e)
+    {
+        if (!GameManager.Instance.IsGamePaused) return;
+
+        GameManager.Instance.ResumeGame();
+        playerInput.SwitchCurrentActionMap("Player");
+    }
+
+    public void OnChipInteract(InputValue value)
     {
         if (actionMode == PlayerActionMode.Waiting || !value.isPressed) return;
 
@@ -76,7 +112,7 @@ public class PlayerManager : MonoBehaviour
  
     private bool CanCheck() => AmountToCall() == 0 && actionMode != PlayerActionMode.PreflopBetting;
  
-    private void OnFold(InputValue value)
+    public void OnFold(InputValue value)
     {
         if (actionMode == PlayerActionMode.Waiting || !value.isPressed) return;
 
@@ -84,7 +120,7 @@ public class PlayerManager : MonoBehaviour
         EndTurn();
     }
  
-    private void OnCheckorCall(InputValue value)
+    public void OnCheckorCall(InputValue value)
     {
         if (actionMode == PlayerActionMode.Waiting || !value.isPressed) return;
 
@@ -106,8 +142,8 @@ public class PlayerManager : MonoBehaviour
  
         EndTurn();
     }
- 
-    private void OnSubmitBet(InputValue value)
+
+    public void OnSubmitBet(InputValue value)
     {
         if (actionMode == PlayerActionMode.Waiting || !value.isPressed) return;
 
@@ -146,6 +182,13 @@ public class PlayerManager : MonoBehaviour
         EventInvokingSubmitAction(action, builtAmount);
         
         EndTurn();
+    }
+
+    private void OnSwitchCamera(InputValue value)
+    {
+        if (!value.isPressed) return;
+
+        cCam.Priority.Value = cCam.Priority.Value == 0 ? 1 : 0;
     }
 
     private void EventInvokingSubmitAction(PokerAction action, int amount)

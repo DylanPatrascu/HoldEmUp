@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerChair
   - Chip
+  - MainCanvas
   layers:
   - Default
   - TransparentFX
