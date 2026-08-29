@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2db737c83bf9fb4bbfcc90863c280aa, type: 3}
+  m_Name: Ace of Spades
+  m_EditorClassIdentifier: Assembly-CSharp::PlayingCard
+  cardValue: 14
+  cardSuit: 0
+  cardFrontSprite: {fileID: 2800000, guid: 087fa1957803360479aafdcb0a9ce636, type: 3}
+  cardBackSprite: {fileID: 2800000, guid: 3a16c0045f0106346ae60b054b0e9c77, type: 3}

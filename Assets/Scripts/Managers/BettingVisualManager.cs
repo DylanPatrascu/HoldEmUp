@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -34,7 +35,26 @@ public class BettingVisualManager : MonoBehaviour
         }
         Instance = this;
     }
+    private void Start()
+    {
+        PokerGameManager.Instance.PerformedPlayerAction += PlaySounds;
 
+    }
+
+    private void PlaySounds(object sender, PokerGameManager.PokerEvent e)
+    {
+        if (e.Player == PokerPosition.Joker || e.Player == PokerPosition.Table) return;
+        if (e.Action == PokerAction.Fold)
+        {
+            AudioManager.Instance.PlayAudioClip(AudioSnippet.PlayingCardFold);
+        }
+        else
+        {
+            AudioManager.Instance.PlayAudioClip(AudioSnippet.PokerChip);
+
+        }
+    }
+    
     public void UpdateBet(int bet)
     {
         currentBetText.text = bet.ToString();

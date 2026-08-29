@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -13,7 +14,6 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] Vector2 audioVolumeRange;
     [SerializeField] Vector2 audioPitchRange;
-
     private AudioSource audioSource;
 
     private void Awake()
