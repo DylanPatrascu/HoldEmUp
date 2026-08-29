@@ -8,9 +8,6 @@ public class GameManager : MonoBehaviour
 
     public State CurrentState { get { return _stateMachine.CurrentState; } }
 
-    // Input System Actions
-    public InputActions Controls;
-
     public int PlayerBalance = BettingManager.STARTING_BALANCE;
     public int PokerRound = 0;
 
@@ -33,17 +30,9 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
-        Controls = new InputActions();
         
         // SceneManager.LoadScene(stateScenes[CurrentState]);
     }
-
-    void OnEnable()
-    { Controls.Enable(); }
-
-    void OnDisable()
-    { Controls.Disable(); }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
