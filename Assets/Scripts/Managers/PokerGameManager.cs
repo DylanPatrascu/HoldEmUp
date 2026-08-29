@@ -245,6 +245,7 @@ public class PokerGameManager : MonoBehaviour
             PokerManager.Instance.BurnCard();
 
             PokerManager.Instance.DrawCard(PokerManager.Instance.communityCards, PokerPosition.Table, numCards);
+            //visual tie in for dealing
         }
         catch (Exception e)
         {
