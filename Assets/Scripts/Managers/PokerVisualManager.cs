@@ -66,7 +66,6 @@ public class PokerVisualManager : MonoBehaviour
         }
 
         OffsetCardsInHands();
-
         yield return null;
     }
     public IEnumerator SpawnCard(PlayingCard card, PokerPosition player)
