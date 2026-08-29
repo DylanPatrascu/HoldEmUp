@@ -35,6 +35,7 @@ public class PlayerManager : MonoBehaviour
 
     public void ActionAnimationHandler(object sender, PokerGameManager.PokerEvent e)
     {
+        Debug.Log($"{e.Player} did {e.Action} and PausedForAnimations is {PokerGameManager.Instance.PausedForAnimationEvents}");
         if (e.Player != PLAYER_POSITION) return;
 
         PokerGameManager.Instance.SetPausedForAnimationEvents(false);
@@ -43,7 +44,6 @@ public class PlayerManager : MonoBehaviour
     public void OnPause(InputValue value)
     {
         if (!value.isPressed || GameManager.Instance.IsGamePaused) return;
-
 
         GameManager.Instance.PauseGame();
         playerInput.SwitchCurrentActionMap("UI");
@@ -179,6 +179,7 @@ public class PlayerManager : MonoBehaviour
             action = PokerAction.Raise; // built more than what was owed
         }
  
+        PokerGameManager.Instance.SetPausedForAnimationEvents(true);
         EventInvokingSubmitAction(action, builtAmount);
         
         EndTurn();

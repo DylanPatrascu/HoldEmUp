@@ -84,6 +84,8 @@ public class PokerVisualManager : MonoBehaviour
                 //cardObject.transform.localPosition += new Vector3((tableCardTransform.transform.childCount - 1) * 1.3f, 0, 0); // To offset the cards on the table
                 break;
         }
+
+        OffsetCardsInHands();
         yield return null;
     }
 

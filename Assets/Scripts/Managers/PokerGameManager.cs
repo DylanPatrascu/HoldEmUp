@@ -13,7 +13,7 @@ public class PokerGameManager : MonoBehaviour
         EndGame
     }
 
-    private bool PausedForAnimationEvents = false;
+    public bool PausedForAnimationEvents { get; private set; } = false;
     public void SetPausedForAnimationEvents(bool toggle) => PausedForAnimationEvents = toggle;
 
     public enum GameAction
@@ -76,13 +76,8 @@ public class PokerGameManager : MonoBehaviour
 
     void Start()
     {    
-        PerformedGameAction += DefaultEventHandler;
-        PerformedPlayerAction += DefaultEventHandler;
         StartCoroutine(MainGame());
     }
-
-    private void DefaultEventHandler(object sender, PokerEvent e)
-    { PausedForAnimationEvents = true; }
 
     IEnumerator MainGame()
     {
@@ -157,6 +152,7 @@ public class PokerGameManager : MonoBehaviour
                     (action, amount, isBluffing) = NPCManager.Instance.GetAction(PokerManager.Instance.communityCards, hand, player, ActivePlayers);
                     SubmitAction(player, action, amount);
 
+                    SetPausedForAnimationEvents(true);
                     PerformedPlayerAction?.Invoke(this, new PokerEvent(player, action, amount, isBluffing));
                     yield return new WaitUntil(() => !PausedForAnimationEvents);
                     continue;
@@ -228,8 +224,6 @@ public class PokerGameManager : MonoBehaviour
             BettingManager.Instance.BetAmount(BigBlind, BettingManager.MINIMUM_BET * 2);
 
             PokerManager.Instance.DealCards();
-
-            PokerVisualManager.Instance.OffsetCardsInHands();
         }
         catch (Exception e)
         {
