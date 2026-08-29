@@ -63,10 +63,7 @@ public class PokerManager : MonoBehaviour
             PokerPosition position = entry.Key;
             List<PlayingCard> hand = entry.Value;
             DrawCard(hand, position);
-
         }
-
-
     }
 
     public void DrawCard(List<PlayingCard> hand, PokerPosition position, int numCards = 1)
@@ -97,6 +94,7 @@ public class PokerManager : MonoBehaviour
         // Fresh playing deck
         runtimeDeck = new List<PlayingCard>(deckList);
         HelperMethods.Shuffle(runtimeDeck);
+        AudioManager.Instance.PlayAudioClip(AudioSnippet.PlayingCardShuffle);
 
         PokerVisualManager.Instance.DestroyCardVisuals();
     }

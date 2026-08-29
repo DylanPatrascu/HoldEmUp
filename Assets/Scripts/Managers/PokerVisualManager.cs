@@ -8,6 +8,7 @@ public class PokerVisualManager : MonoBehaviour
     [SerializeField] private GameObject tablePlayingCardPrefab;
 
     [Header("Transforms")]
+    [SerializeField] private Transform cardDeckTransform;
     [SerializeField] private Transform playerHandTransform;
     [SerializeField] private Transform clubOpponentHandTransform;
     [SerializeField] private Transform spadeOpponentHandTransform;
@@ -54,6 +55,7 @@ public class PokerVisualManager : MonoBehaviour
         }
         VisualPlayingCard visualCard = cardObject.GetComponent<VisualPlayingCard>();
         visualCard.PopulateData(card);
+        AudioManager.Instance.PlayAudioClip(AudioSnippet.PlayingCardDeal);
     }
 
     public void OffsetCardsInHands()
