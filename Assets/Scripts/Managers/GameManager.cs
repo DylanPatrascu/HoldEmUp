@@ -8,6 +8,12 @@ public class GameManager : MonoBehaviour
 
     public State CurrentState { get { return _stateMachine.CurrentState; } }
 
+    // Input System Actions
+    public InputActions Controls;
+
+    public int PlayerBalance = BettingManager.STARTING_BALANCE;
+    public int PokerRound = 0;
+
     public static GameManager Instance;
 
     private static Dictionary<State, string> stateScenes = new()
@@ -27,14 +33,26 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        SceneManager.LoadScene(stateScenes[State.Menu]);
+
+        Controls = new InputActions();
+        
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        // SceneManager.LoadScene(stateScenes[CurrentState]);
     }
+
+    void OnEnable()
+    { Controls.Enable(); }
+
+    void OnDisable()
+    { Controls.Disable(); }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _stateMachine.Enter += handleSceneChange;
         _stateMachine.Exit  += handleSceneChange;
+        // _stateMachine.Fire(Trigger.ToFirstPerson);
     }
 
     public static void handleSceneChange(object sender, StateEventArgs e)

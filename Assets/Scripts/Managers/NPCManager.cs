@@ -33,7 +33,7 @@ public class NPCManager : MonoBehaviour
     private Dictionary<PokerPosition, NPCPersonality> personalityMap; // Built based on editor input from serialized list
     private static readonly NPCPersonality DefaultPersonality = new NPCPersonality();
 
-    void Start()
+    void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -48,6 +48,18 @@ public class NPCManager : MonoBehaviour
 
     public void BuildPersonalityMap()
     {
+        foreach (PokerPosition player in Enum.GetValues(typeof(PokerPosition)))
+        {
+            if (player == PokerPosition.Joker || player == PokerPosition.Table) continue;
+            PositionPersonality pp = new()
+            {
+                position = player,
+                personality = DefaultPersonality
+            };
+            if (!personalityAssignments.Any(pp => pp.position == player))
+                personalityAssignments.Add(pp);
+        }
+
         personalityMap = new Dictionary<PokerPosition, NPCPersonality>();
         foreach (PositionPersonality entry in personalityAssignments)
         {
@@ -70,32 +82,34 @@ public class NPCManager : MonoBehaviour
 
     public void SetNPCAction(object sender, EventArgs e)
     {
-        switch (PokerGameManager.Instance.CurrentGameState)
+        actionMode = PokerGameManager.Instance.CurrentGameState switch
         {
-            case PokerGameManager.GameState.Preflop:
-                actionMode = PlayerActionMode.PreflopBetting;
-                break;
-            case PokerGameManager.GameState.Postflop:
-                actionMode = PlayerActionMode.Betting;
-                break;
-            default:
-                actionMode = PlayerActionMode.Waiting;
-                break;
-        }
+            PokerGameManager.GameState.Preflop => PlayerActionMode.PreflopBetting,
+            PokerGameManager.GameState.Postflop => PlayerActionMode.Betting,
+            _ => PlayerActionMode.Waiting,
+        };
     }
 
     // Decision Making
 
-    public PokerAction GetAction(List<PlayingCard> communityCards, List<PlayingCard> hand, PokerPosition player)
+    public (PokerAction Action, int Amount, bool IsBluffing) GetAction(
+        List<PlayingCard> communityCards, 
+        List<PlayingCard> hand, 
+        PokerPosition player,
+        List<PokerPosition> activePlayers)
     {
         NPCPersonality profile = GetPersonality(player);
         float handStrength = EvaluateHandStrength(communityCards, hand);
 
-        return DecideAction(handStrength, profile);
+        return DecideAction(handStrength, profile, player, activePlayers);
     }
 
     // smart randomizer
-    private PokerAction DecideAction(float handStrength, NPCPersonality personality)
+    private (PokerAction Action, int Amount, bool IsBluffing) DecideAction(
+        float handStrength, 
+        NPCPersonality personality,
+        PokerPosition player,
+        List<PokerPosition> activePlayers)
     {
         bool isBluffing = UnityEngine.Random.value < personality.bluffFrequency;
         float effectiveStrength = isBluffing ? 1f - handStrength : handStrength;
@@ -106,27 +120,54 @@ public class NPCManager : MonoBehaviour
         // lower bar to raise or bet
         // aggressive personalities will raise with anything above 0.55 strength, while 0 aggression would need crazy good hand before raising
         float raiseThreshold = 0.55f + (1f - personality.aggression) * 0.35f; 
+
+        int myBet = BettingManager.Instance.GetBet(player);
+        int highestBet = BettingManager.Instance.GetHighestBet(activePlayers);
+        Debug.Log($"[NPCManager] Current highest bet is: {highestBet}");
+        int amountToCall = Mathf.Max(0, highestBet - myBet);
+
+        bool canCheck = amountToCall == 0 && actionMode != PlayerActionMode.PreflopBetting;
  
         if (effectiveStrength < foldThreshold && !isBluffing)
         {
+            if (canCheck) return (PokerAction.Check, 0, isBluffing);
+
             // some personalities will still call regardless of their weak hand
-            return UnityEngine.Random.value < personality.callStation
-                ? PokerAction.Call
-                : PokerAction.Fold;
+            bool staysIn = UnityEngine.Random.value < personality.callStation;
+            return staysIn
+                ? (PokerAction.Call, amountToCall, isBluffing)
+                : (PokerAction.Fold, 0, isBluffing);
         }
  
         if (effectiveStrength >= raiseThreshold || isBluffing)
         {
-            // 
-            return UnityEngine.Random.value < personality.aggression
-                ? PokerAction.Raise
-                : PokerAction.Bet;
+            bool wantsToRaise = UnityEngine.Random.value < personality.aggression;
+
+            if (wantsToRaise)
+            {
+                PokerAction action = amountToCall > 0 ? PokerAction.Raise : PokerAction.Bet;
+                int amount = amountToCall + GetBetSize(effectiveStrength, personality, highestBet);
+
+                return (action, amount, isBluffing);
+            }
         }
  
-        return PokerAction.Call;
+        return canCheck
+            ? (PokerAction.Check, 0, isBluffing)
+            : (PokerAction.Call, amountToCall, isBluffing);
     }
  
+    // If we decide to change the players' balances we'd change the clamping logic here
+    private int GetBetSize(float handStrength, NPCPersonality personality, int highestBet)
+    {
+        float sizeFactor = Mathf.Clamp01((handStrength * 0.6f) + (personality.aggression * 0.4f));
 
+        int minRaise = BettingManager.MINIMUM_BET;
+        int maxRaise = Mathf.Max(minRaise, BettingManager.MAXIMUM_BET - highestBet);
+
+        int size = minRaise + Mathf.RoundToInt((maxRaise - minRaise) * sizeFactor);
+        return Mathf.Clamp(size, minRaise, maxRaise);
+    }
 
     // Hand-strength score (0 = weakest, 1 = strongest) used by DecideAction.
     private float EvaluateHandStrength(List<PlayingCard> communityCards, List<PlayingCard> hand)

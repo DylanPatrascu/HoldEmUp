@@ -26,7 +26,7 @@ public class StateEventArgs : EventArgs
 
 public class StateMachine
 {
-    public State CurrentState { get; private set; } = State.Menu;
+    public State CurrentState { get; private set; } = State.InClub;
 
     public EventHandler<StateEventArgs> Enter;
     public EventHandler<StateEventArgs> Exit;

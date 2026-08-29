@@ -5,15 +5,16 @@ TagManager:
   serializedVersion: 3
   tags:
   - PlayerChair
+  - Chip
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Chip
   - Water
   - UI
-  - 
-  - 
+  - LockedChip
+  - Table
   - 
   - 
   - 
