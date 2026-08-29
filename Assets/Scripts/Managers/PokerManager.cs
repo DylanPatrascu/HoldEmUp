@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -64,6 +65,7 @@ public class PokerManager : MonoBehaviour
             List<PlayingCard> hand = entry.Value;
             DrawCard(hand, position);
         }
+
     }
 
     public void DrawCard(List<PlayingCard> hand, PokerPosition position, int numCards = 1)
@@ -72,7 +74,6 @@ public class PokerManager : MonoBehaviour
         {
             PlayingCard c = runtimeDeck[0];
             hand.Add(c);
-            PokerVisualManager.Instance.SpawnCard(c, position);
             runtimeDeck.Remove(c);
         }
     }

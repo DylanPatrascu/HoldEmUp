@@ -7191,6 +7191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PokerVisualManager
   playingCardPrefab: {fileID: 9166648616244967935, guid: f3acc8a679020f145b701511de1b72ce, type: 3}
   tablePlayingCardPrefab: {fileID: 8184628605872176312, guid: 4fa45698e5a1daf498706046bca759d9, type: 3}
+  cardDeckTransform: {fileID: 1209977539}
   playerHandTransform: {fileID: 1025439858}
   clubOpponentHandTransform: {fileID: 1366915840}
   spadeOpponentHandTransform: {fileID: 511175598}
