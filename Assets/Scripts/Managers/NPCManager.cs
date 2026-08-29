@@ -41,9 +41,13 @@ public class NPCManager : MonoBehaviour
             return;
         }
         Instance = this;
-        PokerGameManager.Instance.GameStateChanged += SetNPCAction;
 
         BuildPersonalityMap();
+    }
+
+    void Start()
+    {
+        PokerGameManager.Instance.GameStateChanged += SetNPCAction;
     }
 
     public void BuildPersonalityMap()

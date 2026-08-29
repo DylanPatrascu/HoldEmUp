@@ -11,17 +11,13 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private Camera interactionCamera;
     [SerializeField] private LayerMask chipLayerMask;
 
-    void Awake()
-    {
-        PokerGameManager.Instance.GameStateChanged += SetPlayerAction;
-    }
-
     void Start()
     {
         if (interactionCamera == null)
         {
             interactionCamera = Camera.main;
         }
+        PokerGameManager.Instance.GameStateChanged += SetPlayerAction;
     }
 
     void Update()
