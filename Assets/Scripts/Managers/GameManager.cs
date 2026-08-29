@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     private static Dictionary<State, string> stateScenes = new()
     {
         [State.Menu] = "Assets/Scenes/MainMenu.unity",
-        [State.InClub] = "Assets/Scenes/PokerScene.unity",
+        [State.InClub] = "Assets/Scenes/ClubScene.unity",
         [State.FirstPerson] = "Assets/Scenes/PokerScene.unity"
     };
 
