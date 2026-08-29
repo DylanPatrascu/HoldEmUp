@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayingCard
   cardValue: 8
   cardSuit: 2
-  cardFrontSprite: {fileID: 2800000, guid: 1f68317e7dfb21946822a6deacc979a5, type: 3}
-  cardBackSprite: {fileID: 2800000, guid: 14c97dbfad1fdc94cbb525fd2f25c599, type: 3}
+  cardFrontSprite: {fileID: 2800000, guid: 311fc8f3053ae4d40a5c798f09ced9fa, type: 3}
+  cardBackSprite: {fileID: 2800000, guid: 3a16c0045f0106346ae60b054b0e9c77, type: 3}
