@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -7,8 +8,22 @@ public class BettingVisualManager : MonoBehaviour
 
     [SerializeField] private TMP_Text currentBetText;
 
-    [SerializeField] private Transform OneDollarChipParent;
-    [SerializeField] private Transform TenDollarChipParent;
+
+    [Header("Chips and spawning them")]
+    [SerializeField]
+    private GameObject oneChip;
+    [SerializeField]
+    private GameObject tenChip;
+
+    [SerializeField]
+    private ChipStacks playerStack;
+    [SerializeField]
+    private ChipStacks playerTable;
+
+    [Header("Chip Movement")]
+    [SerializeField] private float liftHeight = 0.3f;
+    [SerializeField] private float liftDuration = 0.15f;
+
 
     private void Awake()
     {
@@ -20,67 +35,95 @@ public class BettingVisualManager : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
-    {
-        for (int i = 0; i < TenDollarChipParent.childCount; i++)
-        {
-            TenDollarChipParent.GetChild(i).gameObject.SetActive(false);
-        }
-
-        for (int i = 0; i < OneDollarChipParent.childCount; i++)
-        {
-            OneDollarChipParent.GetChild(i).gameObject.SetActive(false);
-        }
-    }
-    public void PlayerBet(int amount)
-    {
-        BettingManager.Instance.BetAmount(PokerPosition.Joker, amount);
-        UpdateVisibleChips();
-    }
-
-    public void PlayerAllIn()
-    {
-        BettingManager.Instance.BetAmount(PokerPosition.Joker, BettingManager.MAXIMUM_BET);
-    }
-    public void PlayerRemove(int amount)
-    {
-        BettingManager.Instance.RemoveAmount(amount);
-        UpdateVisibleChips();
-    }
-
-    public void SubmitBet()
-    {
-        BettingManager.Instance.SubmitBet(PokerPosition.Joker);
-        UpdateVisibleChips();
-    }
-
-    public void PlayerResetBet()
-    {
-        BettingManager.Instance.ResetBet();
-        UpdateVisibleChips();
-    }
-
     public void UpdateBet(int bet)
     {
         currentBetText.text = bet.ToString();
     }
 
-    public (int, int) GetChipDistribution()
+    public void SpawnChips(int amount, ChipLocation location, bool locked = false)
     {
-        int balance = BettingManager.Instance.PlayerBet;
-        return ((balance - balance % 10) / 10, balance % 10);
-    }
-
-    public void UpdateVisibleChips()
-    {
-        (int, int) chipCounts = GetChipDistribution();
-        for (int i = 0; i < TenDollarChipParent.childCount; i++) {
-            TenDollarChipParent.GetChild(i).gameObject.SetActive(i < chipCounts.Item1);
-        }
-
-        for (int i = 0; i < OneDollarChipParent.childCount; i++)
+        int onesPile = amount % 10;
+        int tensPile = (amount - onesPile) / 10;
+        ChipStacks chipStacks = location == ChipLocation.Stack ? playerStack : playerTable;
+ 
+        if (onesPile == 0)
         {
-            OneDollarChipParent.GetChild(i).gameObject.SetActive(i < chipCounts.Item2);
+            tensPile--;
+            onesPile = 10;
+        }
+ 
+        chipStacks.ClearStacks();
+ 
+        for (int i = 0; i < onesPile; i++)
+        {
+            SpawnChipAt(oneChip, 1, chipStacks.Ones, i, location, locked);
+        }
+        for (int i = 0; i < tensPile; i++)
+        {
+            SpawnChipAt(tenChip, 10, chipStacks.Tens, i, location, locked);
         }
     }
+
+    private GameObject SpawnChipAt(GameObject prefab, int value, Transform pile, int stackIndex, ChipLocation location, bool locked = false)
+    {
+        Vector3 spawnPosition = pile.position + Vector3.up * (stackIndex * 0.05f);
+ 
+        GameObject spawned = Instantiate(prefab, spawnPosition, Quaternion.identity, pile);
+ 
+        Chip chip = spawned.GetComponent<Chip>();
+        if (chip != null)
+        {
+            chip.chipValue = value;
+            chip.location = location;
+            chip.SetLocked(locked);
+        }
+ 
+        return spawned;
+    }
+
+    public void MoveChip(Chip chip, ChipLocation destination)
+    {
+        StartCoroutine(AnimateChipMove(chip, destination));
+    }
+ 
+    private IEnumerator AnimateChipMove(Chip chip, ChipLocation destination)
+    {
+        chip.SetLocked(true);
+ 
+        Vector3 startPosition = chip.transform.position;
+        Vector3 liftedPosition = startPosition + Vector3.up * liftHeight;
+        float elapsed = 0f;
+ 
+        while (elapsed < liftDuration)
+        {
+            elapsed += Time.deltaTime;
+            chip.transform.position = Vector3.Lerp(startPosition, liftedPosition, elapsed / liftDuration);
+            yield return null;
+        }
+ 
+        int value = chip.chipValue;
+        GameObject prefab = value == 10 ? tenChip : oneChip;
+        ChipStacks destinationStack = destination == ChipLocation.Stack ? playerStack : playerTable;
+        Transform pile = value == 10 ? destinationStack.Tens : destinationStack.Ones;
+ 
+        Destroy(chip.gameObject);
+ 
+        SpawnChipAt(prefab, value, pile, pile.childCount, destination);
+    }
+
+    public void SetChipsLocked(ChipLocation location, bool locked)
+    {
+        ChipStacks chipStacks = location == ChipLocation.Stack ? playerStack : playerTable;
+        foreach (Chip chip in chipStacks.GetComponentsInChildren<Chip>())
+        {
+            chip.SetLocked(locked);
+        }
+    }
+
+    public void SetAllChipsLocked(bool locked)
+    {
+        SetChipsLocked(ChipLocation.Stack, locked);
+        SetChipsLocked(ChipLocation.Table, locked);
+    }
+
 }
