@@ -1538,10 +1538,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HeartSuspect
   interactSprite: {fileID: 1045209778}
   clubSceneManager: {fileID: 719768047}
-  roundOneDialogueTree: {fileID: 11400000, guid: 5d40feb1696b7b144852ff60b078063b, type: 2}
-  roundTwoDialogueTree: {fileID: 11400000, guid: 5d40feb1696b7b144852ff60b078063b, type: 2}
-  roundThreeDialogueTree: {fileID: 11400000, guid: 5d40feb1696b7b144852ff60b078063b, type: 2}
-  roundFourDialogueTree: {fileID: 11400000, guid: 5d40feb1696b7b144852ff60b078063b, type: 2}
+  roundOneDialogueTree: {fileID: 11400000, guid: 3b1c94fc12288504daef180b5ed55cd9, type: 2}
+  roundTwoDialogueTree: {fileID: 11400000, guid: 0d84ccd859c6ac944869546a5ad175c2, type: 2}
+  roundThreeDialogueTree: {fileID: 11400000, guid: b42a4472c32fb4d488c4b3825a26395b, type: 2}
+  roundFourDialogueTree: {fileID: 11400000, guid: 9911f47b3f421a949b709aeb4f46e0b2, type: 2}
 --- !u!50 &494825089
 Rigidbody2D:
   serializedVersion: 5
@@ -1891,10 +1891,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   interactSprite: {fileID: 1435767171}
   clubSceneManager: {fileID: 719768047}
-  roundOneDialogueTree: {fileID: 11400000, guid: 8f51c5627de962f4bb4d4a95c9a4b153, type: 2}
-  roundTwoDialogueTree: {fileID: 11400000, guid: 8f51c5627de962f4bb4d4a95c9a4b153, type: 2}
-  roundThreeDialogueTree: {fileID: 11400000, guid: 8f51c5627de962f4bb4d4a95c9a4b153, type: 2}
-  roundFourDialogueTree: {fileID: 11400000, guid: 8f51c5627de962f4bb4d4a95c9a4b153, type: 2}
+  roundOneDialogueTree: {fileID: 11400000, guid: 4554bb8c09ee0c74fbd8cd253c31853f, type: 2}
+  roundTwoDialogueTree: {fileID: 11400000, guid: 068b08ba1d6c1f44dad136ec3e26292e, type: 2}
+  roundThreeDialogueTree: {fileID: 11400000, guid: 2fdcd48c83e9a8844b4736e9986fdebd, type: 2}
+  roundFourDialogueTree: {fileID: 11400000, guid: 5827e502ddebc574599f4132af9d6262, type: 2}
 --- !u!50 &500266095
 Rigidbody2D:
   serializedVersion: 5
@@ -3774,9 +3774,9 @@ MonoBehaviour:
   interactSprite: {fileID: 143750691}
   clubSceneManager: {fileID: 719768047}
   roundOneDialogueTree: {fileID: 11400000, guid: 8d809832c05462a40b29412ac1d38497, type: 2}
-  roundTwoDialogueTree: {fileID: 11400000, guid: 26d23598a02013c43acd95af092e1889, type: 2}
-  roundThreeDialogueTree: {fileID: 11400000, guid: 26d23598a02013c43acd95af092e1889, type: 2}
-  roundFourDialogueTree: {fileID: 11400000, guid: 26d23598a02013c43acd95af092e1889, type: 2}
+  roundTwoDialogueTree: {fileID: 11400000, guid: 522016171756dd64c832e551bc296927, type: 2}
+  roundThreeDialogueTree: {fileID: 11400000, guid: c34299791a05c7944909b65d90e61b7b, type: 2}
+  roundFourDialogueTree: {fileID: 11400000, guid: 8794e9f5df1dba6409133768c1d0cec2, type: 2}
 --- !u!50 &1006077218
 Rigidbody2D:
   serializedVersion: 5
@@ -6415,10 +6415,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   interactSprite: {fileID: 445240758}
   clubSceneManager: {fileID: 719768047}
-  roundOneDialogueTree: {fileID: 11400000, guid: 75a079d487f8b4240a642f52f52eea09, type: 2}
-  roundTwoDialogueTree: {fileID: 11400000, guid: 75a079d487f8b4240a642f52f52eea09, type: 2}
-  roundThreeDialogueTree: {fileID: 11400000, guid: 75a079d487f8b4240a642f52f52eea09, type: 2}
-  roundFourDialogueTree: {fileID: 11400000, guid: 75a079d487f8b4240a642f52f52eea09, type: 2}
+  roundOneDialogueTree: {fileID: 11400000, guid: ed656f3a2a552b14caf25a6aa4f12926, type: 2}
+  roundTwoDialogueTree: {fileID: 11400000, guid: ffa36cf1f633ea44bba40aa13b7d3313, type: 2}
+  roundThreeDialogueTree: {fileID: 11400000, guid: 3b26c55c6500c6a46b0a40fac0f8aad4, type: 2}
+  roundFourDialogueTree: {fileID: 11400000, guid: c7c6c9d74a427ab4f92a85a14d74fd96, type: 2}
 --- !u!50 &1616262720
 Rigidbody2D:
   serializedVersion: 5

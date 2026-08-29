@@ -69,6 +69,6 @@ public class Suspect : MonoBehaviour, IInteractable
         DialogueManager dialogueManager = FindAnyObjectByType<DialogueManager>();
         print(currentDialogueTree + ", round: " + round + ", dialoguemanager: " + dialogueManager);
         
-        dialogueManager.StartDialogue(currentDialogueTree.nodes[0]);
+        dialogueManager.StartDialogueTree(currentDialogueTree);
     }
 }

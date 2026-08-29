@@ -78,14 +78,14 @@ public class ClubSceneManager : MonoBehaviour
     // TODO: Figure out game manager singleton thats not in current scene (persist?)
     public void DisplayConfirmationMenu()
     {
-        //confirmationMenu.SetActive(true);
-        //GameManager.instance.PauseGame();
+        confirmationMenu.SetActive(true);
+        Pause();
     }
 
     public void HideConfirmationMenu()
     {
-        //GameManager.instance.PauseGame();
-        //confirmationMenu.SetActive(false);
+        Resume();
+        confirmationMenu.SetActive(false);
     }
 
     public void Pause()

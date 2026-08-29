@@ -40,6 +40,7 @@ public class DialogueManager : MonoBehaviour
     private Node curNode;
     private readonly Queue<string> sentences = new();
     private List<DialogueNode> curUnaskedQuestions;
+    private DialogueTree currentDialogueTree;
 
     // Audio
     private AudioSource source;
@@ -111,6 +112,12 @@ public class DialogueManager : MonoBehaviour
                bribeText != null;
     }
 
+    public void StartDialogueTree(DialogueTree dialogueTree)
+    {
+        currentDialogueTree = dialogueTree;
+        StartDialogue(dialogueTree.nodes[0]);
+    }
+
 
     /// <summary>
     /// Starts displaying the supplied dialogue node and dispatches it
@@ -171,10 +178,10 @@ public class DialogueManager : MonoBehaviour
     /// </summary>
     private void DisplaySimpleNode(SimpleDialogueNode node)
     {
-        if (!TryPrepareDialogueNode(node, out Dialogue dialogue))
+        if (!TryPrepareDialogueNode(node))
             return;
 
-        EnqueueSentences(dialogue);
+        EnqueueSentences(node);
     }
 
 
@@ -195,7 +202,7 @@ public class DialogueManager : MonoBehaviour
             else Debug.LogWarning("Finished Dialogue node is missing");
         }
         
-        if (!TryPrepareDialogueNode(node, out Dialogue dialogue))
+        if (!TryPrepareDialogueNode(node))
             return;
 
         AssignUnaskedQuestions(node);
@@ -204,7 +211,7 @@ public class DialogueManager : MonoBehaviour
         if (curNode != node)
             return;
 
-        EnqueueSentences(dialogue);
+        EnqueueSentences(node);
     }
 
 
@@ -239,33 +246,15 @@ public class DialogueManager : MonoBehaviour
     /// Validates a dialogue node's speaker and prepares the shared UI.
     /// Returns false if the node cannot safely be displayed.
     /// </summary>
-    private bool TryPrepareDialogueNode(
-        DialogueNode node,
-        out Dialogue dialogue)
+    private bool TryPrepareDialogueNode(DialogueNode node)
     {
-        dialogue = null;
-
         if (node == null)
         {
             Debug.LogError("Attempted to display a null dialogue node.");
             return false;
         }
 
-        if (node.speaker == null)
-        {
-            Debug.LogError(
-                $"Dialogue node [{node.name}] has no speaker assigned.",
-                this
-            );
-
-            return false;
-        }
-
-        dialogue = node.speaker;
-
-        RenderUI(dialogue);
-
-        print("try worked");
+        RenderUI();
 
         return true;
     }
@@ -386,11 +375,11 @@ public class DialogueManager : MonoBehaviour
     /// Updates the shared dialogue UI for the supplied speaker
     /// and hides choice-related UI until it is needed.
     /// </summary>
-    private void RenderUI(Dialogue dialogue)
+    private void RenderUI()
     {
-        nameText.text = dialogue.dialogueName;
-        portrait.sprite = dialogue.portrait;
-        talkingClip = dialogue.talkingClip;
+        nameText.text = currentDialogueTree.CharacterName;
+        portrait.sprite = currentDialogueTree.CharacterIcon;
+        talkingClip = currentDialogueTree.TalkingClip;
 
         sentenceText.text = "";
         sentenceText.maxVisibleCharacters = 0;
@@ -441,7 +430,7 @@ public class DialogueManager : MonoBehaviour
 
             optionButtons[i].gameObject.SetActive(true);
             optionText[i].text =
-                question.speaker.questionLeadingToDialogue;
+                question.LeadingQuestion;
             if (question is BribeDialogueNode bribeNode)
             {
                 ShowBribe(bribeNode.bribeAmount);
@@ -484,22 +473,22 @@ public class DialogueManager : MonoBehaviour
     /// Loads a dialogue's sentences into the queue and begins displaying
     /// its first sentence after the dialogue panel has opened.
     /// </summary>
-    private void EnqueueSentences(Dialogue dialogue)
+    private void EnqueueSentences(DialogueNode dialogueNode)
     {
         sentences.Clear();
 
-        if (dialogue.sentences == null ||
-            dialogue.sentences.Length == 0)
+        if (dialogueNode.Sentences == null ||
+            dialogueNode.Sentences.Length == 0)
         {
             Debug.LogWarning(
-                $"Dialogue [{dialogue.dialogueName}] contains no sentences."
+                $"Dialogue [{dialogueNode.name}] contains no sentences."
             );
 
             OnDialogueTextFinished();
             return;
         }
 
-        foreach (string sentence in dialogue.sentences)
+        foreach (string sentence in dialogueNode.Sentences)
         {
             if (!string.IsNullOrEmpty(sentence))
             {
@@ -510,7 +499,7 @@ public class DialogueManager : MonoBehaviour
         if (sentences.Count == 0)
         {
             Debug.LogWarning(
-                $"Dialogue [{dialogue.dialogueName}] contains only empty sentences."
+                $"Dialogue [{dialogueNode.name}] contains only empty sentences."
             );
 
             OnDialogueTextFinished();
@@ -776,6 +765,8 @@ public class DialogueManager : MonoBehaviour
             hidePanelPos,
             panelAnimationTime
         ).SetUpdate(true);
+        
+        currentDialogueTree = null;
         
         clubSceneManager.Resume();
     }
