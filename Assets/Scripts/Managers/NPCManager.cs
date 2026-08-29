@@ -48,6 +48,14 @@ public class NPCManager : MonoBehaviour
     void Start()
     {
         PokerGameManager.Instance.GameStateChanged += SetNPCAction;
+        PokerGameManager.Instance.PerformedPlayerAction += ActionAnimationHandler;
+    }
+
+    public void ActionAnimationHandler(object sender, PokerGameManager.PokerEvent e)
+    {
+        if (e.Player == PokerPosition.Joker || e.Player == PokerPosition.Table) return;
+
+        PokerGameManager.Instance.SetPausedForAnimationEvents(false);
     }
 
     public void BuildPersonalityMap()
