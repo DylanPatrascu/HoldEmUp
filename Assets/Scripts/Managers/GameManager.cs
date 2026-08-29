@@ -19,8 +19,8 @@ public class GameManager : MonoBehaviour
     private static Dictionary<State, string> stateScenes = new()
     {
         [State.Menu] = "Assets/Scenes/MainMenu.unity",
-        [State.InClub] = "Assets/Scenes/TestClubScene.unity",
-        [State.FirstPerson] = "Assets/Scenes/TestFirstPersonScene.unity"
+        [State.InClub] = "Assets/Scenes/PokerScene.unity",
+        [State.FirstPerson] = "Assets/Scenes/PokerScene.unity"
     };
 
     void Awake()
@@ -36,8 +36,6 @@ public class GameManager : MonoBehaviour
 
         Controls = new InputActions();
         
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
         // SceneManager.LoadScene(stateScenes[CurrentState]);
     }
 
