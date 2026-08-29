@@ -21,7 +21,9 @@ public class PokerVisualManager : MonoBehaviour
     [SerializeField] private Transform diamondOpponentHandTransform;
     [SerializeField] private Transform tableCardTransform;
 
-    private const float CARD_MOVEMENT_SPEED = 1f;
+    private const float CARD_MOVEMENT_SPEED = 0.67f;
+    private const float CARD_ORITENTATION_SPEED = 0.5f;
+    private Vector3 CARD_OFFSET = new Vector3(0.7f, 0.1f, 0);
 
 
     private void Awake()
@@ -39,6 +41,12 @@ public class PokerVisualManager : MonoBehaviour
 
         List <KeyValuePair<PokerPosition, List<PlayingCard>>> allHandsFlattened = hands.ToList();
         return allHandsFlattened.OrderBy(c => (int)c.Key).ToList();
+    }
+
+    public IEnumerator DealToCommunityCards()
+    {
+        List<PlayingCard> communityCards;
+        yield return null;
     }
     public IEnumerator DealCardsToEveryone()
     {
@@ -81,32 +89,31 @@ public class PokerVisualManager : MonoBehaviour
                 yield return cardObject.transform.DOMove(playerHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
                 cardObject.transform.SetParent(playerHandTransform);
                 break;
+
             case PokerPosition.Heart:
                 //cardObject = Instantiate(playingCardPrefab, heartOpponentHandTransform);
                 yield return cardObject.transform.DOMove(heartOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
                 cardObject.transform.SetParent(heartOpponentHandTransform);
-
-
                 break;
+
             case PokerPosition.Spade:
                 //cardObject = Instantiate(playingCardPrefab, spadeOpponentHandTransform);
                 yield return cardObject.transform.DOMove(spadeOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
                 cardObject.transform.SetParent(spadeOpponentHandTransform);
-
-
                 break;
+
             case PokerPosition.Club:
                 //cardObject = Instantiate(playingCardPrefab, clubOpponentHandTransform);
                 yield return cardObject.transform.DOMove(clubOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
                 cardObject.transform.SetParent(clubOpponentHandTransform);
-
                 break;
+
             case PokerPosition.Diamond:
                 //cardObject = Instantiate(playingCardPrefab, diamondOpponentHandTransform);
                 yield return cardObject.transform.DOMove(diamondOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
                 cardObject.transform.SetParent(diamondOpponentHandTransform);
-
                 break;
+
             case PokerPosition.Table:
                 yield return cardObject.transform.DOMove(tableCardTransform.position += new Vector3((tableCardTransform.transform.childCount - 1) * 1.1f, 0, 0), CARD_MOVEMENT_SPEED).WaitForCompletion();
                 cardObject.transform.SetParent(tableCardTransform);
@@ -120,28 +127,33 @@ public class PokerVisualManager : MonoBehaviour
 
     public void OffsetCardsInHands()
     {
-        int i = 0;
-        foreach (Transform child in playerHandTransform)
+        for (int i = 0; i <= 1; i++)
         {
-            child.DOLocalMove(Vector3.zero + new Vector3( ++i, 0.05f*i, 0), .5f);
-            child.DOLocalRotate(Vector3.zero, .5f);
-            //child.localRotation = Quaternion.identity;
-            child.gameObject.GetComponent<VisualPlayingCard>().ShowCardData();
+            playerHandTransform.GetChild(i).DOLocalMove(Vector3.zero + (CARD_OFFSET * i), CARD_ORITENTATION_SPEED);
+            playerHandTransform.GetChild(i).DOLocalRotate(Vector3.zero, .5f);
+            playerHandTransform.GetChild(i).GetComponent<VisualPlayingCard>().ShowCardData();
+
         }
-        //playerHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
-        //playerHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
-
-        clubOpponentHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
-        clubOpponentHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
-
-        spadeOpponentHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
-        spadeOpponentHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
-
-        heartOpponentHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
-        heartOpponentHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
-
-        diamondOpponentHandTransform.transform.GetChild(0).localPosition += new Vector3(-0.5f, 0, 0);
-        diamondOpponentHandTransform.transform.GetChild(1).localPosition += new Vector3(0.5f, 0, 0);
+        for (int i = 0; i <= 1; i++)
+        {
+            clubOpponentHandTransform.GetChild(i).DOLocalMove(Vector3.zero + (CARD_OFFSET * i), CARD_ORITENTATION_SPEED);
+            clubOpponentHandTransform.GetChild(i).DOLocalRotate(Vector3.zero, .5f);
+        }
+        for (int i = 0; i <= 1; i++)
+        {
+            spadeOpponentHandTransform.GetChild(i).DOLocalMove(Vector3.zero + (CARD_OFFSET * i), CARD_ORITENTATION_SPEED);
+            spadeOpponentHandTransform.GetChild(i).DOLocalRotate(Vector3.zero, .5f);
+        }
+        for (int i = 0; i <= 1; i++)
+        {
+            heartOpponentHandTransform.GetChild(i).DOLocalMove(Vector3.zero + (CARD_OFFSET * i), CARD_ORITENTATION_SPEED);
+            heartOpponentHandTransform.GetChild(i).DOLocalRotate(Vector3.zero, .5f);
+        }
+        for (int i = 0; i <= 1; i++)
+        {
+            diamondOpponentHandTransform.GetChild(i).DOLocalMove(Vector3.zero + (CARD_OFFSET * i), CARD_ORITENTATION_SPEED);
+            diamondOpponentHandTransform.GetChild(i).DOLocalRotate(Vector3.zero, .5f);
+        }
     }
 
     // Will get replaced with cards being given back to dealer probabky
@@ -150,26 +162,32 @@ public class PokerVisualManager : MonoBehaviour
         // Move them off of a their respective gameobjects, because otherwise it needs to wait until end of frame
         for (int i = tableCardTransform.transform.childCount - 1; i >= 0; i--)
         {
+            //tableCardTransform.transform.DOMove(cardDeckTransform.transform.position, CARD_MOVEMENT_SPEED);
             tableCardTransform.transform.GetChild(i).SetParent(transform);
         }
         for (int i = playerHandTransform.transform.childCount - 1; i >= 0; i--)
         {
+            //playerHandTransform.transform.DOMove(cardDeckTransform.transform.position, CARD_MOVEMENT_SPEED);
             playerHandTransform.transform.GetChild(i).SetParent(transform);
         }
         for (int i = clubOpponentHandTransform.transform.childCount - 1; i >= 0; i--)
         {
+            //clubOpponentHandTransform.transform.DOMove(cardDeckTransform.transform.position, CARD_MOVEMENT_SPEED);
             clubOpponentHandTransform.transform.GetChild(i).SetParent(transform);
         }
         for (int i = spadeOpponentHandTransform.transform.childCount - 1; i >= 0; i--)
         {
+            //spadeOpponentHandTransform.transform.DOMove(cardDeckTransform.transform.position, CARD_MOVEMENT_SPEED);
             spadeOpponentHandTransform.transform.GetChild(i).SetParent(transform);
         }
         for (int i = heartOpponentHandTransform.transform.childCount - 1; i >= 0; i--)
         {
+            //heartOpponentHandTransform.transform.DOMove(cardDeckTransform.transform.position, CARD_MOVEMENT_SPEED);
             heartOpponentHandTransform.transform.GetChild(i).SetParent(transform);
         }
         for (int i = diamondOpponentHandTransform.transform.childCount - 1; i >= 0; i--)
         {
+            //diamondOpponentHandTransform.transform.DOMove(cardDeckTransform.transform.position, CARD_MOVEMENT_SPEED);
             diamondOpponentHandTransform.transform.GetChild(i).SetParent(transform);
         }
         for (int i = transform.childCount - 1; i >= 0; i--)
