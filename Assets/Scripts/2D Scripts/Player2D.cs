@@ -16,6 +16,7 @@ public class Player2D : MonoBehaviour
     
     public void OnMove(InputValue value)
     {
+        print("OnMove");
         moveInput = value.Get<Vector2>();
     }
 
@@ -29,6 +30,12 @@ public class Player2D : MonoBehaviour
                 currentInteractable.Interact();
             }
         }
+    }
+
+    public void OnClick(InputValue value)
+    {
+        print("OnClick");
+        FindAnyObjectByType<DialogueManager>().OnClick();
     }
 
     private void FixedUpdate()
