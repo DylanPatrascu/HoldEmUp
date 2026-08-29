@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class PokerGameManager : MonoBehaviour
@@ -14,6 +13,35 @@ public class PokerGameManager : MonoBehaviour
         EndGame
     }
 
+    private bool PausedForAnimationEvents = false;
+    public void SetPausedForAnimationEvents(bool toggle) => PausedForAnimationEvents = toggle;
+
+    public enum GameAction
+    {
+        Dealing,
+
+    }
+
+    public class PokerEvent : EventArgs
+    {
+        // PlayerAction
+        public PokerPosition Player;
+        public PokerAction Action;
+        public int Amount;
+        public bool IsBluffing;
+
+        public PokerEvent(PokerPosition Player, PokerAction Action, int Amount, bool IsBluffing)
+        {
+            this.Player = Player;
+            this.Action = Action;
+            this.Amount = Amount;
+            this.IsBluffing = IsBluffing;
+        }
+    }
+
+    public EventHandler<PokerEvent> PerformedPlayerAction;
+    public EventHandler<PokerEvent> PerformedGameAction;
+
     public static PokerGameManager Instance { get; private set; } 
 
     public bool awaitingPlayer { get; private set; } = false;
@@ -24,6 +52,7 @@ public class PokerGameManager : MonoBehaviour
     private PokerPosition CurrentPlayer;
 
     private GameState gameState = GameState.StartGame;
+    public EventHandler GameStateChanged;
     public GameState CurrentGameState 
     { 
         get { return gameState; } 
@@ -34,9 +63,6 @@ public class PokerGameManager : MonoBehaviour
             GameStateChanged?.Invoke(this, EventArgs.Empty);
         }
     }
-
-    public EventHandler GameStateChanged;
-
 
     private void Awake()
     {
@@ -50,8 +76,13 @@ public class PokerGameManager : MonoBehaviour
 
     void Start()
     {    
+        PerformedGameAction += DefaultEventHandler;
+        PerformedPlayerAction += DefaultEventHandler;
         StartCoroutine(MainGame());
     }
+
+    private void DefaultEventHandler(object sender, PokerEvent e)
+    { PausedForAnimationEvents = true; }
 
     IEnumerator MainGame()
     {
@@ -117,25 +148,25 @@ public class PokerGameManager : MonoBehaviour
  
                 if (player != PokerPosition.Joker)
                 {
-                    try
-                    {
-                        List<PlayingCard> hand = PokerManager.Instance.GetHand(player);
-                        GameStateChanged?.Invoke(this, EventArgs.Empty); // Done this to force NPCPlayerAction to switch
-                        (PokerAction action, int amount, bool isBluffing) = NPCManager.Instance.GetAction(PokerManager.Instance.communityCards, hand, player, ActivePlayers);
-                        SubmitAction(player, action, amount);
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogError($"[PokerGameManager] Exception while processing NPC action for {player}: {e}");
-                    }
+                    PokerAction action;
+                    int amount;
+                    bool isBluffing;
+
+                    List<PlayingCard> hand = PokerManager.Instance.GetHand(player);
+                    GameStateChanged?.Invoke(this, EventArgs.Empty); // Done this to force NPCPlayerAction to switch
+                    (action, amount, isBluffing) = NPCManager.Instance.GetAction(PokerManager.Instance.communityCards, hand, player, ActivePlayers);
+                    SubmitAction(player, action, amount);
+
+                    PerformedPlayerAction?.Invoke(this, new PokerEvent(player, action, amount, isBluffing));
+                    yield return new WaitUntil(() => !PausedForAnimationEvents);
                     continue;
                 }
 
                 SetAwaitingPlayer(true);
                 GameStateChanged?.Invoke(this, EventArgs.Empty); // Done this to force PlayerAction to switch
                 Debug.Log("[PokerGameManager] Waiting for player input.");
-                // TODO: Add visual cue to let player know
                 yield return new WaitUntil(() => !awaitingPlayer);
+                yield return new WaitUntil(() => !PausedForAnimationEvents);
             }
         } while (!BettingManager.Instance.AreEqualBets(ActivePlayers));
         BettingManager.Instance.SubmitBets(ActivePlayers);

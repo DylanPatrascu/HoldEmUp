@@ -18,6 +18,14 @@ public class PlayerManager : MonoBehaviour
             interactionCamera = Camera.main;
         }
         PokerGameManager.Instance.GameStateChanged += SetPlayerAction;
+        PokerGameManager.Instance.PerformedPlayerAction += ActionAnimationHandler;
+    }
+
+    public void ActionAnimationHandler(object sender, PokerGameManager.PokerEvent e)
+    {
+        if (e.Player != PLAYER_POSITION) return;
+
+        PokerGameManager.Instance.SetPausedForAnimationEvents(false);
     }
 
     void Update()
@@ -88,7 +96,7 @@ public class PlayerManager : MonoBehaviour
         }
     }*/
 
-        private int AmountToCall()
+    private int AmountToCall()
     {
         int highestBet = BettingManager.Instance.GetHighestBet(PokerGameManager.Instance.ActivePlayers);
         int myBet = BettingManager.Instance.GetBet(PLAYER_POSITION);
@@ -99,7 +107,7 @@ public class PlayerManager : MonoBehaviour
  
     private void PerformFold()
     {
-        PokerGameManager.Instance.SubmitAction(PLAYER_POSITION, PokerAction.Fold, 0);
+        EventInvokingSubmitAction(PokerAction.Fold, 0);
         EndTurn();
     }
  
@@ -114,11 +122,11 @@ public class PlayerManager : MonoBehaviour
                 Debug.LogWarning("Checking isn't allowed during preflop betting.");
                 return;
             }
-            PokerGameManager.Instance.SubmitAction(PLAYER_POSITION, PokerAction.Check, 0);
+            EventInvokingSubmitAction(PokerAction.Check, 0);
         }
         else
         {
-            PokerGameManager.Instance.SubmitAction(PLAYER_POSITION, PokerAction.Call, amountToCall);
+            EventInvokingSubmitAction(PokerAction.Call, amountToCall);
         }
  
         EndTurn();
@@ -158,8 +166,15 @@ public class PlayerManager : MonoBehaviour
             action = PokerAction.Raise; // built more than what was owed
         }
  
-        PokerGameManager.Instance.SubmitAction(PLAYER_POSITION, action, builtAmount);
+        EventInvokingSubmitAction(action, builtAmount);
+        
         EndTurn();
+    }
+
+    private void EventInvokingSubmitAction(PokerAction action, int amount)
+    {
+        PokerGameManager.Instance.SubmitAction(PLAYER_POSITION, action, amount);
+        PokerGameManager.Instance.PerformedPlayerAction?.Invoke(this, new PokerGameManager.PokerEvent(PLAYER_POSITION, action, amount, false));
     }
  
     private void EndTurn()
