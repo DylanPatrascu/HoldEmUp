@@ -74,7 +74,7 @@ public class PlayerManager : MonoBehaviour
 
         if (chip.location == ChipLocation.Stack)
         {
-            if (BettingManager.Instance.BetAmount(PLAYER_POSITION, chip.chipValue))
+            if (BettingManager.Instance.BetAmount(PLAYER_POSITION, chip.chipValue, PokerGameManager.Instance.ActivePlayers))
                 BettingVisualManager.Instance.MoveChip(chip, ChipLocation.Table);
         }
         else
@@ -189,7 +189,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (!value.isPressed) return;
 
-        cCam.Priority.Value = cCam.Priority.Value == 0 ? 1 : 0;
+        cCam.Priority.Value = cCam.Priority.Value == 0 ? 3 : 0;
     }
 
     private void EventInvokingSubmitAction(PokerAction action, int amount)

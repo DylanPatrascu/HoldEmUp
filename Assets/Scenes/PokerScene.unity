@@ -660,6 +660,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c35793bbe7fa25d4983195558cdf857b, type: 3}
   - {fileID: 8300000, guid: 36595a78264c975478bf98a8354e1ee0, type: 3}
   - {fileID: 8300000, guid: 7a477fb9c9e39cf4ead9f302e746abb8, type: 3}
+  playingCardFlipClips: []
   audioVolumeRange: {x: 0.8, y: 1.1}
   audioPitchRange: {x: 0.8, y: 1.2}
 --- !u!4 &115624407
@@ -2150,7 +2151,7 @@ MonoBehaviour:
     DefaultMode: 2
   DefaultBlend:
     Style: 1
-    Time: 2
+    Time: 0.67
     CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -5233,7 +5234,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   playerInput: {fileID: 1106444306}
-  cCam: {fileID: 344277828}
+  cCam: {fileID: 662224417}
 --- !u!4 &1106444305
 Transform:
   m_ObjectHideFlags: 0

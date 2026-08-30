@@ -146,7 +146,6 @@ public class PokerVisualManager : MonoBehaviour
                 break;
         }
 
-        OffsetCardsInHands();
         yield return null;
     }
 
