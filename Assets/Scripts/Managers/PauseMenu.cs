@@ -13,11 +13,23 @@ public class PauseMenu : MonoBehaviour
     };
     public Stack<MenuState> PrevStates;
     public MenuState CurrentMenuState = MenuState.PauseMenu;
-
+    public GameObject GetUiComponent(MenuState menuState) => transform.GetChild((int)menuState).gameObject;
     public EventHandler ResumeRequested;
 
     public void ResumeGame()
     { ResumeRequested?.Invoke(this, EventArgs.Empty); }
+
+    void Update()
+    {
+        GameObject uiComponent = GetUiComponent(CurrentMenuState);
+        if (uiComponent.activeSelf) return;
+
+        foreach (MenuState component in Enum.GetValues(typeof(MenuState)))
+            if (GetUiComponent(component).activeSelf)
+                GetUiComponent(component).SetActive(false);
+        
+        uiComponent.SetActive(true);
+    }
 
     public void OpenSettings()
     {

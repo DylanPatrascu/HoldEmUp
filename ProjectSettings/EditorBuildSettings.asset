@@ -9,14 +9,14 @@ EditorBuildSettings:
     path: Assets/Scenes/GameEntrance.unity
     guid: fac2803f5e121324f8c6ca89334d57d0
   - enabled: 1
-    path: Assets/Scenes/PokerScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
-    path: Assets/Scenes/TestClubScene.unity
-    guid: ad55380966e2f7d4a8aa3564671a8824
-  - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 599580045cf428d40a92d1b67d35bd5d
+  - enabled: 1
+    path: Assets/Scenes/ClubScene.unity
+    guid: caaa79c67df80a04fbebb53acd3cba19
+  - enabled: 1
+    path: Assets/Scenes/PokerScene.unity
+    guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Scenes/GameOver.unity
     guid: 61cd8c17eca5441468e55028c689abca

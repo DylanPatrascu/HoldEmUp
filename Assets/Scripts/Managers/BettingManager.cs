@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 
 public class BettingManager : MonoBehaviour
@@ -52,12 +51,15 @@ public class BettingManager : MonoBehaviour
         GameManager.Instance.PlayerBalance += PlayerBet;
         currentBets[PokerPosition.Joker] = 0;
         BettingVisualManager.Instance.UpdateBet(PlayerBet);
+        AudioManager.Instance.PlayAudioClip(AudioSnippet.PokerChip);
     }
 
     // usable by UI and NPCS
-    public bool BetAmount(PokerPosition player, int amount)
+    public bool BetAmount(PokerPosition player, int amount, List<PokerPosition> activePlayers)
     {
-        if (currentBets[player] + amount > MAXIMUM_BET) return false;
+        Debug.Log($"{player} just wanted to bet {amount}");
+        if (currentBets[player] + amount > MAXIMUM_BET ||
+            currentBets[player] + amount < GetHighestBet(activePlayers)) return false;
 
         if (player == PokerPosition.Joker)
         {
@@ -65,7 +67,7 @@ public class BettingManager : MonoBehaviour
             if (GameManager.Instance.PlayerBalance - amount < 0) return false;
             GameManager.Instance.PlayerBalance -= amount;
         }
-
+        AudioManager.Instance.PlayAudioClip(AudioSnippet.PokerChip);
         currentBets[player] += amount;
         Debug.Log($"{player} bet {amount}");
         BettingVisualManager.Instance.UpdateBet(PlayerBet);
@@ -81,6 +83,7 @@ public class BettingManager : MonoBehaviour
             currentBets[PokerPosition.Joker] -= amount;
             GameManager.Instance.PlayerBalance += amount;
             BettingVisualManager.Instance.UpdateBet(PlayerBet);
+            AudioManager.Instance.PlayAudioClip(AudioSnippet.PokerChip);
             return true;
         }
         return false;
@@ -94,6 +97,8 @@ public class BettingManager : MonoBehaviour
             pot += currentBets[player];
             currentBets[player] = 0;
             BettingVisualManager.Instance.UpdateBet(PlayerBet);
+            AudioManager.Instance.PlayAudioClip(AudioSnippet.PokerChip);
+
         }
     }
 

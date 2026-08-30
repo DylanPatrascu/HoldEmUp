@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -10,10 +11,10 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private List<AudioClip> playingCardFoldClips = new List<AudioClip>();
     [SerializeField] private List<AudioClip> playingCardDealClips = new List<AudioClip>();
     [SerializeField] private List<AudioClip> playingCardShuffleClips = new List<AudioClip>();
+    [SerializeField] private List<AudioClip> playingCardFlipClips = new List<AudioClip>();
 
     [SerializeField] Vector2 audioVolumeRange;
     [SerializeField] Vector2 audioPitchRange;
-
     private AudioSource audioSource;
 
     private void Awake()
@@ -44,6 +45,9 @@ public class AudioManager : MonoBehaviour
                 break;
             case AudioSnippet.PlayingCardShuffle:
                 PlaySnippet(playingCardShuffleClips);
+                break;
+            case AudioSnippet.PlayingCardFlip:
+                PlaySnippet(playingCardFlipClips);
                 break;
 
         }
