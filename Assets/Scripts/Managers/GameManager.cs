@@ -213,7 +213,7 @@ public class GameManager : MonoBehaviour
 
     public bool CanAskQuestion()
     {
-        return CurrentQuestionsAskedThisRound < maxQuestionsPerRound[GameManager.Instance.PokerRound - 1];
+        return CurrentQuestionsAskedThisRound < maxQuestionsPerRound[GameManager.Instance.PokerRound];
     }
 
     public bool CanAffordBribe(int bribeAmount)

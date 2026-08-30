@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class PokerGameManager : MonoBehaviour
@@ -99,6 +100,11 @@ public class PokerGameManager : MonoBehaviour
         }
 
         CurrentGameState = GameState.EndGame;
+
+        yield return new WaitForSeconds(7);
+        GameManager.Instance.Fire(Trigger.ToClub);
+
+
     }
 
     private IEnumerator RunSafely(IEnumerator routine, string phaseName)
@@ -242,8 +248,6 @@ public class PokerGameManager : MonoBehaviour
             PokerManager.Instance.BurnCard();
 
             PokerManager.Instance.DrawCard(PokerManager.Instance.communityCards, PokerPosition.Table, numCards);
-            //visual tie in for dealing
-            //get community cards and draw them
         }
         catch (Exception e)
         {
