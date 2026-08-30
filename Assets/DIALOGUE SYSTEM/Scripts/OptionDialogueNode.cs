@@ -5,8 +5,9 @@ using XNode;
 
 public class OptionDialogueNode : DialogueNode
 {
-	public Dialogue responses;
-	
-	[Output] public Node optionA;
-	[Output] public Node optionB;
+	[Output] public DialogueNode optionA;
+	[Output] public DialogueNode optionB;
+	[Output] public DialogueNode optionC;
+	[Output] public DialogueNode finished;
+
 }

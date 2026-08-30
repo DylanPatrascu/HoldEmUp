@@ -5,5 +5,8 @@ using XNode;
 
 [CreateAssetMenu]
 public class DialogueTree : NodeGraph { 
-	
+	public string CharacterName;
+	public Sprite CharacterIcon;
+	public Sprite CharacterLyingIcon;
+	public AudioClip TalkingClip;
 }

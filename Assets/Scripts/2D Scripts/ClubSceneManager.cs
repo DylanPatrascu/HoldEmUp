@@ -18,6 +18,12 @@ public class ClubSceneManager : MonoBehaviour
     public int CurrentQuestionsAskedThisRound { get; private set; }
     public int PokerChipsAvailable { get; private set; }
 
+    public int CurrentClubRound { get; private set; } = 0;
+    private void Awake()
+    {
+        DontDestroyOnLoad(this);
+    }
+
     public void Start()
     {
         // temp until game manager handles this
@@ -30,6 +36,7 @@ public class ClubSceneManager : MonoBehaviour
         CurrentQuestionsAskedThisRound = 0;
         HideConfirmationMenu();
         UpdateText();
+        CurrentClubRound++;
     }
 
     public void EndCurrentClubRound()
@@ -71,13 +78,23 @@ public class ClubSceneManager : MonoBehaviour
     // TODO: Figure out game manager singleton thats not in current scene (persist?)
     public void DisplayConfirmationMenu()
     {
-        //confirmationMenu.SetActive(true);
-        //GameManager.instance.PauseGame();
+        confirmationMenu.SetActive(true);
+        Pause();
     }
 
     public void HideConfirmationMenu()
     {
-        //GameManager.instance.PauseGame();
-        //confirmationMenu.SetActive(false);
+        Resume();
+        confirmationMenu.SetActive(false);
+    }
+
+    public void Pause()
+    {
+        Time.timeScale = 0;
+    }
+
+    public void Resume()
+    {
+        Time.timeScale = 1;
     }
 }

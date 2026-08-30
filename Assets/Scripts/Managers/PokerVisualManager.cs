@@ -1,3 +1,5 @@
+using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 public class PokerVisualManager : MonoBehaviour
 {
@@ -8,12 +10,15 @@ public class PokerVisualManager : MonoBehaviour
     [SerializeField] private GameObject tablePlayingCardPrefab;
 
     [Header("Transforms")]
+    [SerializeField] private Transform cardDeckTransform;
     [SerializeField] private Transform playerHandTransform;
     [SerializeField] private Transform clubOpponentHandTransform;
     [SerializeField] private Transform spadeOpponentHandTransform;
     [SerializeField] private Transform heartOpponentHandTransform;
     [SerializeField] private Transform diamondOpponentHandTransform;
     [SerializeField] private Transform tableCardTransform;
+
+    private const float CARD_MOVEMENT_SPEED = 2f;
 
 
     private void Awake()
@@ -26,34 +31,60 @@ public class PokerVisualManager : MonoBehaviour
         Instance = this;
     }
 
-    public void SpawnCard(PlayingCard card, PokerPosition player)
+    public IEnumerator SpawnCard(PlayingCard card, PokerPosition player)
     {
-        GameObject cardObject;
+        GameObject cardObject = Instantiate(playingCardPrefab, cardDeckTransform);
+        VisualPlayingCard visualCard = cardObject.GetComponent<VisualPlayingCard>();
+        if (player != PokerPosition.Table)
+        {
+            cardObject.transform.rotation *= Quaternion.Euler(0, 180f, 0);
+        }
+        visualCard.PopulateData(card);
+        AudioManager.Instance.PlayAudioClip(AudioSnippet.PlayingCardDeal);
+
         switch (player)
         {
             case PokerPosition.Joker:
             default:
-                cardObject = Instantiate(playingCardPrefab, playerHandTransform);
+                //cardObject = Instantiate(playingCardPrefab, playerHandTransform);
+                cardObject.transform.DOMove(playerHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
+                cardObject.transform.SetParent(playerHandTransform);
                 break;
             case PokerPosition.Heart:
-                cardObject = Instantiate(playingCardPrefab, heartOpponentHandTransform);
+                //cardObject = Instantiate(playingCardPrefab, heartOpponentHandTransform);
+                cardObject.transform.DOMove(heartOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
+                cardObject.transform.SetParent(heartOpponentHandTransform);
+
+
                 break;
             case PokerPosition.Spade:
-                cardObject = Instantiate(playingCardPrefab, spadeOpponentHandTransform);
+                //cardObject = Instantiate(playingCardPrefab, spadeOpponentHandTransform);
+                cardObject.transform.DOMove(spadeOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
+                cardObject.transform.SetParent(spadeOpponentHandTransform);
+
+
                 break;
             case PokerPosition.Club:
-                cardObject = Instantiate(playingCardPrefab, clubOpponentHandTransform);
+                //cardObject = Instantiate(playingCardPrefab, clubOpponentHandTransform);
+                cardObject.transform.DOMove(clubOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
+                cardObject.transform.SetParent(clubOpponentHandTransform);
+
                 break;
             case PokerPosition.Diamond:
-                cardObject = Instantiate(playingCardPrefab, diamondOpponentHandTransform);
+                //cardObject = Instantiate(playingCardPrefab, diamondOpponentHandTransform);
+                cardObject.transform.DOMove(diamondOpponentHandTransform.position, CARD_MOVEMENT_SPEED).WaitForCompletion();
+                cardObject.transform.SetParent(diamondOpponentHandTransform);
+
                 break;
             case PokerPosition.Table:
-                cardObject = Instantiate(tablePlayingCardPrefab, tableCardTransform);
-                cardObject.transform.localPosition += new Vector3((tableCardTransform.transform.childCount - 1) * 1, 0, 0); // To offset the cards on the table
+                cardObject.transform.DOMove(tableCardTransform.position += new Vector3((tableCardTransform.transform.childCount - 1) * 1.1f, 0, 0), CARD_MOVEMENT_SPEED).WaitForCompletion();
+                cardObject.transform.SetParent(tableCardTransform);
+
+                //cardObject = Instantiate(tablePlayingCardPrefab, tableCardTransform);
+                //cardObject.transform.localPosition += new Vector3((tableCardTransform.transform.childCount - 1) * 1.3f, 0, 0); // To offset the cards on the table
                 break;
         }
-        VisualPlayingCard visualCard = cardObject.GetComponent<VisualPlayingCard>();
-        visualCard.PopulateData(card);
+        yield return null;
     }
 
     public void OffsetCardsInHands()
