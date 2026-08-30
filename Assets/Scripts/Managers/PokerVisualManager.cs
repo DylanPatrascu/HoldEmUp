@@ -45,7 +45,22 @@ public class PokerVisualManager : MonoBehaviour
 
     public IEnumerator DealToCommunityCards()
     {
-        List<PlayingCard> communityCards;
+        List<PlayingCard> communityCards = new List<PlayingCard>(PokerManager.Instance.communityCards);
+        if (communityCards.Count == 3)
+        {
+            for (int i = 0; i < communityCards.Count; i++)
+            {
+                yield return StartCoroutine(SpawnCard(communityCards[i], PokerPosition.Table));
+            }
+        }
+        else if (communityCards.Count == 4)
+        {
+            yield return StartCoroutine(SpawnCard(communityCards[3], PokerPosition.Table));
+        }
+        else if (communityCards.Count == 5)
+        {
+            yield return StartCoroutine(SpawnCard(communityCards[4], PokerPosition.Table));
+        }
         yield return null;
     }
     public IEnumerator DealCardsToEveryone()
@@ -115,8 +130,11 @@ public class PokerVisualManager : MonoBehaviour
                 break;
 
             case PokerPosition.Table:
-                yield return cardObject.transform.DOMove(tableCardTransform.position += new Vector3((tableCardTransform.transform.childCount - 1) * 1.1f, 0, 0), CARD_MOVEMENT_SPEED).WaitForCompletion();
+                Vector3 position = tableCardTransform.position + new Vector3(tableCardTransform.childCount * 0.8f, 0, 0);
+                yield return cardObject.transform.DOMove(position, CARD_MOVEMENT_SPEED).WaitForCompletion();
                 cardObject.transform.SetParent(tableCardTransform);
+                yield return cardObject.transform.DORotate(new Vector3(0, 180, 0), 0.3f);
+                visualCard.ShowCardData();
 
                 //cardObject = Instantiate(tablePlayingCardPrefab, tableCardTransform);
                 //cardObject.transform.localPosition += new Vector3((tableCardTransform.transform.childCount - 1) * 1.3f, 0, 0); // To offset the cards on the table
