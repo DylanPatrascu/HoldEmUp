@@ -34,9 +34,6 @@ public class DialogueManager : MonoBehaviour
     public float textSpeed = 0.01f;
     public float talkingSpeed = 8.0f;
 
-    [Header("Club Scene Manager")] public ClubSceneManager clubSceneManager;
-
-
     // Current dialogue state
     private Node curNode;
     private readonly Queue<string> sentences = new();
@@ -197,7 +194,7 @@ public class DialogueManager : MonoBehaviour
     /// </summary>
     private void DisplayOptionNode(OptionDialogueNode node)
     {
-        if (!clubSceneManager.CanAskQuestion())
+        if (!GameManager.Instance.CanAskQuestion())
         {
             NodePort finishedPort =
                 node.GetOutputPort("finished")?.Connection;
@@ -337,11 +334,11 @@ public class DialogueManager : MonoBehaviour
 
         if (selectedQuestion is BribeDialogueNode bN)
         {
-            clubSceneManager.Bribed(bN.bribeAmount);
+            GameManager.Instance.Bribed(bN.bribeAmount);
         }
 
         selectedQuestion.hasBeenAsked = true;
-        if (curNode == currentDialogueTree.nodes[0]) clubSceneManager.AskedAQuestion();
+        if (curNode == currentDialogueTree.nodes[0]) GameManager.Instance.AskedAQuestion();
 
         StartDialogue(selectedQuestion);
     }
@@ -447,7 +444,7 @@ public class DialogueManager : MonoBehaviour
             if (question is BribeDialogueNode bribeNode)
             {
                 ShowBribe(bribeNode.bribeAmount);
-                if (!clubSceneManager.CanAffordBribe(bribeNode.bribeAmount))
+                if (!GameManager.Instance.CanAffordBribe(bribeNode.bribeAmount))
                 {
                     optionButtons[i].interactable = false;
                 }
@@ -532,7 +529,7 @@ public class DialogueManager : MonoBehaviour
                 DisplaySentence();
             });
         
-        clubSceneManager.Pause();
+        GameManager.Instance.GeneralPause();
     }
 
 
@@ -792,7 +789,7 @@ public class DialogueManager : MonoBehaviour
         currentDialogueTree = null;
         active = false;
         
-        clubSceneManager.Resume();
+        GameManager.Instance.GeneralResume();
     }
 
     /// <summary>

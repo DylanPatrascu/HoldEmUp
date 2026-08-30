@@ -209,7 +209,6 @@ public class PokerGameManager : MonoBehaviour
 
             for (int i = 0; i < GameManager.Instance.PokerRound; i++)
                 SmallBlind = NextPlayer(SmallBlind);
-            GameManager.Instance.PokerRound += 1;
 
             CurrentPlayer = NextPlayer(BigBlind);
 

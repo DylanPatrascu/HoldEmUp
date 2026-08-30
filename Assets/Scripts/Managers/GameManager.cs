@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Data;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -18,6 +20,21 @@ public class GameManager : MonoBehaviour
     private GameObject pauseGameUI;
     public PauseMenu PauseGameUI => pauseGameUI.GetComponent<PauseMenu>();
     public bool IsGamePaused { get; private set; } = false;
+
+    // ---- Club round (formerly ClubSceneManager) ----
+    [Space]
+    [Header("Club Round Variables")]
+    [SerializeField] private int maxQuestionsPerRound = 3;
+
+    [Space]
+    [Header("Club Round UI Elements")]
+    [SerializeField] private TMP_Text questionText;
+    [SerializeField] private TMP_Text chipsText;
+    [SerializeField] private GameObject confirmationMenu;
+    [SerializeField] private GameObject TwoDSceneUI;
+
+    public int CurrentQuestionsAskedThisRound { get; private set; }
+    public int PokerChipsAvailable { get; private set; }
 
     // Action map to use for each game state. Centralized here so scene-specific
     // scripts never need to guess which map should be active.
@@ -105,6 +122,15 @@ public class GameManager : MonoBehaviour
             PlayerInputSystem.SwitchCurrentActionMap(targetMap);
         }
 
+        if (e.target == State.InClub)
+        {
+            StartNewClubRound(300);
+            TwoDSceneUI.SetActive(true);
+        } else
+        {
+            TwoDSceneUI.SetActive(false);
+        }
+
         pauseGameUI.SetActive(false);
     }
 
@@ -143,7 +169,7 @@ public class GameManager : MonoBehaviour
     public void PauseGame()
     {
         pauseGameUI.SetActive(true);
-        Time.timeScale = 0f;
+        GeneralPause();
         IsGamePaused = true;
 
         if (CurrentState == State.FirstPerson)
@@ -156,7 +182,7 @@ public class GameManager : MonoBehaviour
     public void ResumeGame()
     {
         pauseGameUI.SetActive(false);
-        Time.timeScale = 1f;
+        GeneralResume();
         IsGamePaused = false;
 
         if (CurrentState == State.FirstPerson)
@@ -166,4 +192,72 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // ---- Club round (formerly ClubSceneManager) ----
+
+    public void StartNewClubRound(int pokerChips)
+    {
+        PokerChipsAvailable = pokerChips;
+        CurrentQuestionsAskedThisRound = 0;
+        HideConfirmationMenu();
+        UpdateClubRoundText();
+        PokerRound++;
+    }
+
+    public void EndCurrentClubRound()
+    {
+        print("End Current Club Round");
+        GeneralResume();
+        Fire(Trigger.ToFirstPerson);
+    }
+
+    public bool CanAskQuestion()
+    {
+        return CurrentQuestionsAskedThisRound < maxQuestionsPerRound;
+    }
+
+    public bool CanAffordBribe(int bribeAmount)
+    {
+        return PokerChipsAvailable >= bribeAmount;
+    }
+
+    public void Bribed(int bribeAmount)
+    {
+        if (!CanAffordBribe(bribeAmount)) Debug.LogError("Can't afford Bribe");
+        PokerChipsAvailable -= bribeAmount;
+        UpdateClubRoundText();
+    }
+
+    public void AskedAQuestion()
+    {
+        CurrentQuestionsAskedThisRound++;
+        UpdateClubRoundText();
+    }
+
+    private void UpdateClubRoundText()
+    {
+        questionText.text = (maxQuestionsPerRound - CurrentQuestionsAskedThisRound).ToString();
+        chipsText.text = PokerChipsAvailable.ToString();
+    }
+
+    public void DisplayConfirmationMenu()
+    {
+        confirmationMenu.SetActive(true);
+        GeneralPause();
+    }
+
+    public void HideConfirmationMenu()
+    {
+        GeneralResume();
+        confirmationMenu.SetActive(false);
+    }
+
+    public void GeneralPause()
+    {
+        Time.timeScale = 0f;
+    }
+
+    public void GeneralResume()
+    {
+        Time.timeScale = 1f;
+    }
 }

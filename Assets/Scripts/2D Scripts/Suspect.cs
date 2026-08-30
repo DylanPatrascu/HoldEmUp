@@ -5,7 +5,6 @@ using UnityEngine.Serialization;
 public class Suspect : MonoBehaviour, IInteractable
 {
     [SerializeField] private GameObject interact;
-    [SerializeField] private ClubSceneManager clubSceneManager;
     
     [Space]
     [Header("Dialogue Trees")]
@@ -36,11 +35,6 @@ public class Suspect : MonoBehaviour, IInteractable
             }
         }
 
-        if (clubSceneManager == null)
-        {
-            throw new Exception(name + ": clubSceneManager is null");
-        }
-
         foreach (DialogueTree tree in _trees)
         {
             foreach (var node in tree.nodes)
@@ -64,7 +58,7 @@ public class Suspect : MonoBehaviour, IInteractable
 
     private void StartDialogue()
     {
-        int round = clubSceneManager.CurrentClubRound;
+        int round = GameManager.Instance.PokerRound;
         DialogueTree currentDialogueTree = _trees[round - 1];
         DialogueManager dialogueManager = FindAnyObjectByType<DialogueManager>();
         print(currentDialogueTree + ", round: " + round + ", dialoguemanager: " + dialogueManager);

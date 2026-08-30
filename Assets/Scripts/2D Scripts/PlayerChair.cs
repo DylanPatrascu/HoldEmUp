@@ -5,15 +5,10 @@ public class PlayerChair : MonoBehaviour, IInteractable
 {
     private bool _interactable = false;
     [SerializeField] private GameObject interact;
-    [SerializeField] private ClubSceneManager manager;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (manager == null)
-        {
-            throw new Exception("PlayerChair: manager is null");
-        }
         if (interact == null)
         {
             throw new Exception("PlayerChair: interactSprite is null");
@@ -34,8 +29,6 @@ public class PlayerChair : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        manager.DisplayConfirmationMenu();
+        GameManager.Instance.DisplayConfirmationMenu();
     }
-    
-    
 }
