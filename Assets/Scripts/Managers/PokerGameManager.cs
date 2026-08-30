@@ -102,6 +102,7 @@ public class PokerGameManager : MonoBehaviour
         try
         {
             PokerManager.Instance.CheckWin();
+            PokerVisualManager.Instance.RevealHands();
         }
         catch (Exception e)
         {

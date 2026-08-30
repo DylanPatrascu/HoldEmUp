@@ -1256,6 +1256,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f54c8589fc466874c952cddcf05d5b07, type: 3}
+--- !u!1 &205350599
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 205350600}
+  m_Layer: 0
+  m_Name: SpadeRevealhand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &205350600
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 205350599}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.6159021, z: 0, w: 0.78782266}
+  m_LocalPosition: {x: 2.776, y: 2.956, z: -1.312}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 76.035, z: 0}
 --- !u!1001 &233578921
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1477,6 +1508,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2805929875842236899, guid: 4fa45698e5a1daf498706046bca759d9, type: 3}
   m_PrefabInstance: {fileID: 253141150}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &255260265
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 255260266}
+  m_Layer: 0
+  m_Name: HeartRevealHand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &255260266
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 255260265}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.14113449, z: 0, w: 0.9899905}
+  m_LocalPosition: {x: -0.599, y: 2.956, z: 0.827}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -16.227, z: 0}
 --- !u!4 &265314125 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ff9c6b57d70799d4088cf2e415d6327f, type: 3}
@@ -6069,6 +6131,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f54c8589fc466874c952cddcf05d5b07, type: 3}
+--- !u!1 &1338957656
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1338957657}
+  m_Layer: 0
+  m_Name: DiamondRevealHand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1338957657
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338957656}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.5837609, z: 0, w: 0.81192565}
+  m_LocalPosition: {x: -2.605, y: 2.956, z: -0.033}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -71.431, z: 0}
 --- !u!1 &1345067244
 GameObject:
   m_ObjectHideFlags: 0
@@ -7027,6 +7120,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1470353858442812187, guid: f3acc8a679020f145b701511de1b72ce, type: 3}
   m_PrefabInstance: {fileID: 1594046220}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1601081489
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1601081490}
+  m_Layer: 0
+  m_Name: ClubRevealHand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1601081490
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1601081489}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.22635382, z: 0, w: 0.9740452}
+  m_LocalPosition: {x: 0.828, y: 2.956, z: 0.624}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 26.165, z: 0}
 --- !u!1 &1606254188
 GameObject:
   m_ObjectHideFlags: 0
@@ -7065,6 +7189,10 @@ MonoBehaviour:
   heartOpponentHandTransform: {fileID: 708821606}
   diamondOpponentHandTransform: {fileID: 954017824}
   tableCardTransform: {fileID: 508467046}
+  clubRevealedTransform: {fileID: 1601081490}
+  spadeRevealedTransform: {fileID: 205350600}
+  heartRevealedTransform: {fileID: 255260266}
+  diamondRevealedTransform: {fileID: 1338957657}
 --- !u!4 &1606254190
 Transform:
   m_ObjectHideFlags: 0
@@ -9275,7 +9403,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 226a7dc7d5f036d448afdd9e6455bf80, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.38546
+      value: 2.249
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 226a7dc7d5f036d448afdd9e6455bf80, type: 3}
       propertyPath: m_LocalPosition.y
@@ -9283,7 +9411,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 226a7dc7d5f036d448afdd9e6455bf80, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.70847
+      value: -1.919
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 226a7dc7d5f036d448afdd9e6455bf80, type: 3}
       propertyPath: m_LocalRotation.w
@@ -10412,6 +10540,10 @@ SceneRoots:
   - {fileID: 155608276}
   - {fileID: 1025439858}
   - {fileID: 1366915840}
+  - {fileID: 1601081490}
+  - {fileID: 205350600}
+  - {fileID: 255260266}
+  - {fileID: 1338957657}
   - {fileID: 511175598}
   - {fileID: 954017824}
   - {fileID: 708821606}
