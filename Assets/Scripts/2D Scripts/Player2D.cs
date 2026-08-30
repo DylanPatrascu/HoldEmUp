@@ -1,21 +1,29 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class Player2D : MonoBehaviour
 {
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 8f;
+    private SpriteRenderer playerSprite;
+    private Animator animator;
     private Rigidbody2D rb;
     private Vector2 moveInput;
     private IInteractable currentInteractable;
+    private bool facingRight = true;
+    private bool isMoving = false;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        playerSprite = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
     
     public void OnMove(InputValue value)
     {
+        print("OnMove");
         moveInput = value.Get<Vector2>();
     }
 
@@ -31,9 +39,27 @@ public class Player2D : MonoBehaviour
         }
     }
 
+    public void OnClick(InputValue value)
+    {
+        print("OnClick");
+        FindAnyObjectByType<DialogueManager>().OnClick();
+    }
+
     private void FixedUpdate()
     {
         rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, moveInput.y * moveSpeed);
+        if (moveInput.x > 0 && !facingRight)
+        {
+            playerSprite.flipX = false;
+            facingRight = true;
+        }
+        else if (moveInput.x < 0 && facingRight)
+        {
+            playerSprite.flipX = true;
+            facingRight = false;
+        }
+        animator.SetFloat("Speed", Mathf.Abs(moveInput.x));
+        
     }    
 
     private void OnTriggerEnter2D(Collider2D other)

@@ -2,6 +2,8 @@ using XNode;
 
 public class DialogueNode : Node
 {
-    public Dialogue speaker;
     [Input] public Node prevNode;
+    public string LeadingQuestion;
+    public string[] Sentences;
+    public bool hasBeenAsked { get; set; } = false;
 }

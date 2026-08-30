@@ -8,49 +8,43 @@ using XNode;
 
 public class DialogueManager : MonoBehaviour
 {
-    [Header("UI Elements")]
-    public TMP_Text nameText;
+    [Header("UI Elements")] public TMP_Text nameText;
     public TMP_Text sentenceText;
 
     public Button optionAButton;
     public Button optionBButton;
+    public Button optionCButton;
 
     public TMP_Text optionAText;
     public TMP_Text optionBText;
+    public TMP_Text optionCText;
 
-    public Image bribeImageA;
-    public Image bribeImageB;
-
-    public TMP_Text bribeTextA;
-    public TMP_Text bribeTextB;
+    public Image bribeImage;
+    public TMP_Text bribeText;
 
     public Image portrait;
     public Image nextElement;
 
-    [Header("Audio")]
-    public AudioClip panelOpen;
+    [Header("Audio")] public AudioClip panelOpen;
     public AudioClip panelClose;
 
-    [Header("Dialogue Settings")]
-    public Vector3 showPanelPos = new Vector3(0, -140, 0);
+    [Header("Dialogue Settings")] public Vector3 showPanelPos = new Vector3(0, -140, 0);
     public Vector3 hidePanelPos = new Vector3(0, -800, 0);
     public float panelAnimationTime = 1f;
     public float textSpeed = 0.01f;
 
-    [Header("Club Scene Manager")]
-    public ClubSceneManager clubSceneManager;
+    [Header("Club Scene Manager")] public ClubSceneManager clubSceneManager;
 
 
     // Current dialogue state
     private Node curNode;
     private readonly Queue<string> sentences = new();
+    private List<DialogueNode> curUnaskedQuestions;
+    private DialogueTree currentDialogueTree;
 
     // Audio
     private AudioSource source;
     private AudioClip talkingClip;
-
-    // Random option pool state
-    private List<RandomDialogueOption> currentRandomOptions;
 
     // Text/page state
     private int currentPage = 1;
@@ -59,12 +53,18 @@ public class DialogueManager : MonoBehaviour
 
     private Coroutine renderCoroutine;
 
+    private Button[] optionButtons;
+    private TMP_Text[] optionText;
+
 
     /// <summary>
     /// Initializes the dialogue manager and verifies its required components.
     /// </summary>
     private void Start()
     {
+        optionButtons = new Button[] { optionAButton, optionBButton, optionCButton };
+        optionText = new TMP_Text[] { optionAText, optionBText, optionCText };
+        curUnaskedQuestions = new List<DialogueNode>();
         source = GetComponent<AudioSource>();
 
         if (source == null)
@@ -89,7 +89,7 @@ public class DialogueManager : MonoBehaviour
         nextElement.enabled = false;
 
         HideOptionButtons();
-        HideBribes();
+        HideBribe();
     }
 
 
@@ -102,14 +102,20 @@ public class DialogueManager : MonoBehaviour
                sentenceText != null &&
                optionAButton != null &&
                optionBButton != null &&
+               optionCButton != null &&
                optionAText != null &&
                optionBText != null &&
+               optionCText != null &&
                portrait != null &&
                nextElement != null &&
-               bribeImageA != null &&
-               bribeImageB != null &&
-               bribeTextA != null &&
-               bribeTextB != null;
+               bribeImage != null &&
+               bribeText != null;
+    }
+
+    public void StartDialogueTree(DialogueTree dialogueTree)
+    {
+        currentDialogueTree = dialogueTree;
+        StartDialogue(dialogueTree.nodes[0]);
     }
 
 
@@ -119,6 +125,8 @@ public class DialogueManager : MonoBehaviour
     /// </summary>
     public void StartDialogue(Node node)
     {
+        curUnaskedQuestions.Clear();
+
         if (node == null)
         {
             Debug.LogError("Cannot start dialogue from a null node.");
@@ -129,19 +137,15 @@ public class DialogueManager : MonoBehaviour
         StopTextRendering();
 
         curNode = node;
-        currentRandomOptions = null;
 
         nextElement.enabled = false;
 
         HideOptionButtons();
-        HideBribes();
+        print("Hid option buttons");
+        HideBribe();
 
         switch (curNode)
         {
-            case RandomOptionPoolNode randomPool:
-                DisplayRandomOptionPoolNode(randomPool);
-                break;
-
             case OptionDialogueNode optionNode:
                 DisplayOptionNode(optionNode);
                 break;
@@ -170,60 +174,14 @@ public class DialogueManager : MonoBehaviour
 
 
     /// <summary>
-    /// Displays a random option pool node, chooses its available questions,
-    /// and prepares their text for the option buttons.
-    /// </summary>
-    private void DisplayRandomOptionPoolNode(RandomOptionPoolNode pool)
-    {
-        if (!TryPrepareDialogueNode(pool, out Dialogue dialogue))
-            return;
-
-        currentRandomOptions = pool.GetRandomOptions();
-
-        if (currentRandomOptions == null)
-        {
-            Debug.LogError(
-                $"Random option pool [{pool.name}] returned a null option list.",
-                this
-            );
-
-            EndDialogue();
-            return;
-        }
-
-        bool noQuestionsRemaining = currentRandomOptions.Count == 0;
-        bool questionLimitReached =
-            clubSceneManager != null &&
-            !clubSceneManager.CanAskQuestion();
-
-        if (noQuestionsRemaining || questionLimitReached)
-        {
-            FollowFinishedPort(pool);
-            return;
-        }
-
-        // Prepare the option text now.
-        // Buttons stay hidden until the dialogue text has finished.
-        optionAText.text = currentRandomOptions[0].Text;
-
-        optionBText.text =
-            currentRandomOptions.Count > 1
-                ? currentRandomOptions[1].Text
-                : "";
-
-        EnqueueSentences(dialogue);
-    }
-
-
-    /// <summary>
     /// Displays a simple dialogue node containing normal sequential dialogue.
     /// </summary>
     private void DisplaySimpleNode(SimpleDialogueNode node)
     {
-        if (!TryPrepareDialogueNode(node, out Dialogue dialogue))
+        if (!TryPrepareDialogueNode(node))
             return;
 
-        EnqueueSentences(dialogue);
+        EnqueueSentences(node);
     }
 
 
@@ -232,26 +190,28 @@ public class DialogueManager : MonoBehaviour
     /// </summary>
     private void DisplayOptionNode(OptionDialogueNode node)
     {
-        if (!TryPrepareDialogueNode(node, out Dialogue dialogue))
-            return;
-
-        if (node.responses == null ||
-            node.responses.sentences == null ||
-            node.responses.sentences.Length < 2)
+        if (!clubSceneManager.CanAskQuestion())
         {
-            Debug.LogError(
-                $"Option node [{node.name}] requires at least two response sentences.",
-                this
-            );
+            NodePort finishedPort =
+                node.GetOutputPort("finished")?.Connection;
 
-            EndDialogue();
-            return;
+            if (finishedPort != null)
+            {
+                StartDialogue(finishedPort.node);
+            }
+            else Debug.LogWarning("Finished Dialogue node is missing");
         }
+        
+        if (!TryPrepareDialogueNode(node))
+            return;
 
-        optionAText.text = node.responses.sentences[0];
-        optionBText.text = node.responses.sentences[1];
+        AssignUnaskedQuestions(node);
 
-        EnqueueSentences(dialogue);
+        // AssignUnaskedQuestions may have moved us to the finished node.
+        if (curNode != node)
+            return;
+
+        EnqueueSentences(node);
     }
 
 
@@ -286,31 +246,15 @@ public class DialogueManager : MonoBehaviour
     /// Validates a dialogue node's speaker and prepares the shared UI.
     /// Returns false if the node cannot safely be displayed.
     /// </summary>
-    private bool TryPrepareDialogueNode(
-        DialogueNode node,
-        out Dialogue dialogue)
+    private bool TryPrepareDialogueNode(DialogueNode node)
     {
-        dialogue = null;
-
         if (node == null)
         {
             Debug.LogError("Attempted to display a null dialogue node.");
             return false;
         }
 
-        if (node.speaker == null)
-        {
-            Debug.LogError(
-                $"Dialogue node [{node.name}] has no speaker assigned.",
-                this
-            );
-
-            return false;
-        }
-
-        dialogue = node.speaker;
-
-        RenderUI(dialogue);
+        RenderUI();
 
         return true;
     }
@@ -369,117 +313,30 @@ public class DialogueManager : MonoBehaviour
     /// Handles selecting option A or B and follows the corresponding
     /// graph connection. Random options are also marked as used.
     /// </summary>
-    public void DisplayNextOption(string option)
+    public void DisplayNextOption(int index)
     {
-        if (option != "A" && option != "B")
+        if (index < 0 || index >= curUnaskedQuestions.Count)
         {
             Debug.LogWarning(
-                $"Invalid dialogue option [{option}]. Expected A or B."
+                $"Invalid dialogue option index [{index}]. " +
+                $"There are {curUnaskedQuestions.Count} available questions."
             );
-
             return;
         }
 
-        if (curNode is RandomOptionPoolNode randomPool)
+        DialogueNode selectedQuestion = curUnaskedQuestions[index];
+
+        if (selectedQuestion is BribeDialogueNode bN)
         {
-            SelectRandomOption(randomPool, option);
-            return;
+            print("Bribed!");
+            clubSceneManager.Bribed(bN.bribeAmount);
         }
 
-        if (curNode is OptionDialogueNode optionNode)
-        {
-            SelectNormalOption(optionNode, option);
-            return;
-        }
+        selectedQuestion.hasBeenAsked = true;
+        clubSceneManager.AskedAQuestion();
 
-        Debug.LogWarning(
-            $"DisplayNextOption was called while current node " +
-            $"[{curNode?.name}] is not an option node."
-        );
+        StartDialogue(selectedQuestion);
     }
-
-
-    /// <summary>
-    /// Selects a question from a random option pool, consumes it,
-    /// processes any bribe cost, and follows its output connection.
-    /// </summary>
-    private void SelectRandomOption(
-        RandomOptionPoolNode pool,
-        string option)
-    {
-        int index = option == "A" ? 0 : 1;
-
-        if (currentRandomOptions == null ||
-            index >= currentRandomOptions.Count)
-        {
-            Debug.LogWarning(
-                $"Random option [{option}] is not currently available."
-            );
-
-            return;
-        }
-
-        RandomDialogueOption selectedOption =
-            currentRandomOptions[index];
-
-        NodePort port =
-            pool.GetOutputPort(selectedOption.PortName)?.Connection;
-
-        if (port == null)
-        {
-            Debug.LogWarning(
-                $"Random option [{selectedOption.Text}] on node " +
-                $"[{pool.name}] has no connected output."
-            );
-
-            return;
-        }
-
-        // Only count the question after confirming it has a valid destination.
-        if (clubSceneManager != null)
-        {
-            clubSceneManager.AskedAQuestion();
-
-            if (port.node is BribeDialogueNode bribeNode)
-            {
-                clubSceneManager.Bribed(bribeNode.bribeAmount);
-            }
-        }
-
-        pool.UseOption(selectedOption);
-
-        StartDialogue(port.node);
-    }
-
-
-    /// <summary>
-    /// Follows option A or B from a standard OptionDialogueNode.
-    /// </summary>
-    private void SelectNormalOption(
-        OptionDialogueNode node,
-        string option)
-    {
-        string portName =
-            option == "A"
-                ? "optionA"
-                : "optionB";
-
-        NodePort port =
-            node.GetOutputPort(portName)?.Connection;
-
-        if (port == null)
-        {
-            Debug.LogWarning(
-                $"Option [{option}] on node [{node.name}] " +
-                $"has no connected output."
-            );
-
-            return;
-        }
-
-        StartDialogue(port.node);
-    }
-
 
     /// <summary>
     /// Advances from a SimpleDialogueNode through its nextNode output.
@@ -509,30 +366,6 @@ public class DialogueManager : MonoBehaviour
         StartDialogue(port.node);
     }
 
-
-    /// <summary>
-    /// Follows the finished output of a random option pool.
-    /// Ends dialogue if no finished connection exists.
-    /// </summary>
-    private void FollowFinishedPort(RandomOptionPoolNode pool)
-    {
-        NodePort port =
-            pool.GetOutputPort("finished")?.Connection;
-
-        if (port == null)
-        {
-            Debug.LogWarning(
-                $"Random option pool [{pool.name}] has no finished connection."
-            );
-
-            EndDialogue();
-            return;
-        }
-
-        StartDialogue(port.node);
-    }
-
-
     // -------------------------------------------------------------------------
     // UI
     // -------------------------------------------------------------------------
@@ -542,11 +375,11 @@ public class DialogueManager : MonoBehaviour
     /// Updates the shared dialogue UI for the supplied speaker
     /// and hides choice-related UI until it is needed.
     /// </summary>
-    private void RenderUI(Dialogue dialogue)
+    private void RenderUI()
     {
-        nameText.text = dialogue.dialogueName;
-        portrait.sprite = dialogue.portrait;
-        talkingClip = dialogue.talkingClip;
+        nameText.text = currentDialogueTree.CharacterName;
+        portrait.sprite = currentDialogueTree.CharacterIcon;
+        talkingClip = currentDialogueTree.TalkingClip;
 
         sentenceText.text = "";
         sentenceText.maxVisibleCharacters = 0;
@@ -565,16 +398,9 @@ public class DialogueManager : MonoBehaviour
     {
         switch (curNode)
         {
-            case RandomOptionPoolNode pool:
+            case OptionDialogueNode node:
                 nextElement.enabled = false;
-
-                ShowRandomOptionButtons();
-                CheckForBribes(pool);
-                break;
-
-            case OptionDialogueNode:
-                nextElement.enabled = false;
-                ShowOptionButtons();
+                ShowOptionButtons(node);
                 break;
 
             case SimpleDialogueNode:
@@ -584,37 +410,37 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-
+    
     /// <summary>
-    /// Shows both standard dialogue option buttons.
+    /// Displays one button for each remaining unasked question.
+    /// Questions that have already been asked are not shown.
     /// </summary>
-    private void ShowOptionButtons()
+    private void ShowOptionButtons(OptionDialogueNode node)
     {
-        optionAButton.gameObject.SetActive(true);
-        optionBButton.gameObject.SetActive(true);
-    }
+        HideOptionButtons();
 
+        int questionCount =
+            Mathf.Min(curUnaskedQuestions.Count, optionButtons.Length);
 
-    /// <summary>
-    /// Shows the currently available random option buttons.
-    /// Option B remains hidden when only one option is available.
-    /// </summary>
-    private void ShowRandomOptionButtons()
-    {
-        if (currentRandomOptions == null ||
-            currentRandomOptions.Count == 0)
+        for (int i = 0; i < questionCount; i++)
         {
-            HideOptionButtons();
-            return;
+            DialogueNode question = curUnaskedQuestions[i];
+            
+            // NOTE: ONLY WORKS WHEN BRIBE IS FIRST OPTION
+
+            optionButtons[i].gameObject.SetActive(true);
+            optionText[i].text =
+                question.LeadingQuestion;
+            if (question is BribeDialogueNode bribeNode)
+            {
+                ShowBribe(bribeNode.bribeAmount);
+                if (!clubSceneManager.CanAffordBribe(bribeNode.bribeAmount))
+                {
+                    optionButtons[i].interactable = false;
+                }
+            }
         }
-
-        optionAButton.gameObject.SetActive(true);
-
-        optionBButton.gameObject.SetActive(
-            currentRandomOptions.Count > 1
-        );
     }
-
 
     /// <summary>
     /// Hides all dialogue option buttons.
@@ -623,6 +449,7 @@ public class DialogueManager : MonoBehaviour
     {
         optionAButton.gameObject.SetActive(false);
         optionBButton.gameObject.SetActive(false);
+        optionCButton.gameObject.SetActive(false);
     }
 
 
@@ -632,7 +459,8 @@ public class DialogueManager : MonoBehaviour
     private bool AreOptionButtonsVisible()
     {
         return optionAButton.gameObject.activeSelf ||
-               optionBButton.gameObject.activeSelf;
+               optionBButton.gameObject.activeSelf ||
+               optionCButton.gameObject.activeSelf;
     }
 
 
@@ -645,22 +473,22 @@ public class DialogueManager : MonoBehaviour
     /// Loads a dialogue's sentences into the queue and begins displaying
     /// its first sentence after the dialogue panel has opened.
     /// </summary>
-    private void EnqueueSentences(Dialogue dialogue)
+    private void EnqueueSentences(DialogueNode dialogueNode)
     {
         sentences.Clear();
 
-        if (dialogue.sentences == null ||
-            dialogue.sentences.Length == 0)
+        if (dialogueNode.Sentences == null ||
+            dialogueNode.Sentences.Length == 0)
         {
             Debug.LogWarning(
-                $"Dialogue [{dialogue.dialogueName}] contains no sentences."
+                $"Dialogue [{dialogueNode.name}] contains no sentences."
             );
 
             OnDialogueTextFinished();
             return;
         }
 
-        foreach (string sentence in dialogue.sentences)
+        foreach (string sentence in dialogueNode.Sentences)
         {
             if (!string.IsNullOrEmpty(sentence))
             {
@@ -671,7 +499,7 @@ public class DialogueManager : MonoBehaviour
         if (sentences.Count == 0)
         {
             Debug.LogWarning(
-                $"Dialogue [{dialogue.dialogueName}] contains only empty sentences."
+                $"Dialogue [{dialogueNode.name}] contains only empty sentences."
             );
 
             OnDialogueTextFinished();
@@ -684,8 +512,10 @@ public class DialogueManager : MonoBehaviour
         }
 
         transform
-            .DOLocalMove(showPanelPos, panelAnimationTime)
+            .DOLocalMove(showPanelPos, panelAnimationTime).SetUpdate(true)
             .OnComplete(DisplaySentence);
+        
+        clubSceneManager.Pause();
     }
 
 
@@ -767,7 +597,7 @@ public class DialogueManager : MonoBehaviour
                 source.PlayOneShot(talkingClip);
             }
 
-            yield return new WaitForSeconds(textSpeed);
+            yield return new WaitForSecondsRealtime(textSpeed);
         }
 
         renderCoroutine = null;
@@ -871,110 +701,25 @@ public class DialogueManager : MonoBehaviour
     // BRIBES
     // -------------------------------------------------------------------------
 
-
-    /// <summary>
-    /// Checks each currently displayed random option to determine whether
-    /// it leads to a bribe node, then displays and validates its cost.
-    /// </summary>
-    private void CheckForBribes(RandomOptionPoolNode pool)
-    {
-        if (currentRandomOptions == null)
-            return;
-
-        ResetOptionInteractability();
-
-        CheckOptionForBribe(
-            pool,
-            0,
-            optionAButton,
-            ShowBribeA
-        );
-
-        CheckOptionForBribe(
-            pool,
-            1,
-            optionBButton,
-            ShowBribeB
-        );
-    }
-
-
-    /// <summary>
-    /// Checks one random option for a BribeDialogueNode and configures
-    /// its bribe UI and button interactability when necessary.
-    /// </summary>
-    private void CheckOptionForBribe(
-        RandomOptionPoolNode pool,
-        int optionIndex,
-        Button button,
-        System.Action<int> showBribe)
-    {
-        if (optionIndex >= currentRandomOptions.Count)
-            return;
-
-        RandomDialogueOption option =
-            currentRandomOptions[optionIndex];
-
-        NodePort port =
-            pool.GetOutputPort(option.PortName)?.Connection;
-
-        if (port == null)
-        {
-            Debug.LogWarning(
-                $"Random option [{option.Text}] on [{pool.name}] " +
-                $"has no connected output."
-            );
-
-            return;
-        }
-
-        if (port.node is not BribeDialogueNode bribeNode)
-            return;
-
-        showBribe(bribeNode.bribeAmount);
-
-        if (clubSceneManager is not null &&
-            !clubSceneManager.CanAffordBribe(bribeNode.bribeAmount))
-        {
-            button.interactable = false;
-        }
-    }
-
-
     /// <summary>
     /// Displays the bribe cost associated with option A.
     /// </summary>
-    private void ShowBribeA(int bribeAmount)
+    private void ShowBribe(int bribeAmount)
     {
-        bribeTextA.text = bribeAmount.ToString();
+        bribeText.text = bribeAmount.ToString();
 
-        bribeImageA.gameObject.SetActive(true);
-        bribeTextA.gameObject.SetActive(true);
-    }
-
-
-    /// <summary>
-    /// Displays the bribe cost associated with option B.
-    /// </summary>
-    private void ShowBribeB(int bribeAmount)
-    {
-        bribeTextB.text = bribeAmount.ToString();
-
-        bribeImageB.gameObject.SetActive(true);
-        bribeTextB.gameObject.SetActive(true);
+        bribeImage.gameObject.SetActive(true);
+        bribeText.gameObject.SetActive(true);
     }
 
 
     /// <summary>
     /// Hides both bribe displays and restores option button interactability.
     /// </summary>
-    private void HideBribes()
+    private void HideBribe()
     {
-        bribeImageA.gameObject.SetActive(false);
-        bribeTextA.gameObject.SetActive(false);
-
-        bribeImageB.gameObject.SetActive(false);
-        bribeTextB.gameObject.SetActive(false);
+        bribeImage.gameObject.SetActive(false);
+        bribeText.gameObject.SetActive(false);
 
         ResetOptionInteractability();
     }
@@ -987,6 +732,7 @@ public class DialogueManager : MonoBehaviour
     {
         optionAButton.interactable = true;
         optionBButton.interactable = true;
+        optionCButton.interactable = true;
     }
 
 
@@ -1004,12 +750,11 @@ public class DialogueManager : MonoBehaviour
         StopTextRendering();
 
         sentences.Clear();
-        currentRandomOptions = null;
 
         nextElement.enabled = false;
 
         HideOptionButtons();
-        HideBribes();
+        HideBribe();
 
         if (source != null && panelClose != null)
         {
@@ -1019,6 +764,63 @@ public class DialogueManager : MonoBehaviour
         transform.DOLocalMove(
             hidePanelPos,
             panelAnimationTime
-        );
+        ).SetUpdate(true);
+        
+        currentDialogueTree = null;
+        
+        clubSceneManager.Resume();
+    }
+
+    /// <summary>
+    /// Finds all connected questions that have not yet been asked.
+    /// Once every question has been asked, follows the finished output.
+    /// </summary>
+    private void AssignUnaskedQuestions(OptionDialogueNode node)
+    {
+        curUnaskedQuestions.Clear();
+
+        AddQuestionIfUnasked(node, "optionA");
+        AddQuestionIfUnasked(node, "optionB");
+        AddQuestionIfUnasked(node, "optionC");
+
+        if (curUnaskedQuestions.Count == 0)
+        {
+            NodePort finishedPort =
+                node.GetOutputPort("finished")?.Connection;
+
+            if (finishedPort != null)
+            {
+                StartDialogue(finishedPort.node);
+            }
+            else
+            {
+                Debug.LogWarning(
+                    $"Option node [{node.name}] has no remaining questions " +
+                    "and no finished node connected."
+                );
+
+                EndDialogue();
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Adds a connected dialogue question to the available-question list
+    /// if it has not already been asked.
+    /// </summary>
+    private void AddQuestionIfUnasked(
+        OptionDialogueNode node,
+        string portName)
+    {
+        NodePort connection =
+            node.GetOutputPort(portName)?.Connection;
+
+        if (connection?.node is not DialogueNode question)
+            return;
+
+        if (!question.hasBeenAsked)
+        {
+            curUnaskedQuestions.Add(question);
+        }
     }
 }
