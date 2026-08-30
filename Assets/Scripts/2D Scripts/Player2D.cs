@@ -10,6 +10,7 @@ public class Player2D : MonoBehaviour
     private Animator animator;
     private Rigidbody2D rb;
     private Vector2 moveInput;
+    private PlayerInput playerInput;
     private IInteractable currentInteractable;
     private bool facingRight = true;
     private bool isMoving = false;
@@ -19,6 +20,23 @@ public class Player2D : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         playerSprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        playerInput = GetComponent<PlayerInput>();
+    }
+
+    public void OnPause(InputValue value)
+    {
+        if (!value.isPressed || GameManager.Instance.IsGamePaused) return;
+
+        GameManager.Instance.PauseGame();
+        playerInput.SwitchCurrentActionMap("UI");
+    }
+
+    public void OnCancel(InputValue value)
+    {
+        if (!value.isPressed || !GameManager.Instance.IsGamePaused) return;
+
+        GameManager.Instance.ResumeGame();
+        playerInput.SwitchCurrentActionMap("Player");
     }
     
     public void OnMove(InputValue value)
