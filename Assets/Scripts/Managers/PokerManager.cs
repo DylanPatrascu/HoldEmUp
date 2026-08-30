@@ -172,21 +172,22 @@ public class PokerManager : MonoBehaviour
                 winners.Add(allScores[i].Position);
             }
         }
- 
+
+        Dictionary<PokerPosition, string> playerNames = new Dictionary<PokerPosition, string> { [PokerPosition.Joker] = "Joker", [PokerPosition.Club] = "Berghain", [PokerPosition.Heart] = "Valentine", [PokerPosition.Spade] = "Trowel", [PokerPosition.Diamond] = "Almaz" };
+        Dictionary<PokerHand, string> pokerHand = new Dictionary<PokerHand, string> { [PokerHand.RoyalFlush] = "Royal Flush", [PokerHand.StraightFlush] = "Straight Flush", [PokerHand.FourOfAKind] = "Four of a Kind", [PokerHand.FullHouse] = "Full House", [PokerHand.Flush] = "Flush", [PokerHand.Straight] = "Straight", [PokerHand.ThreeOfAKind] = "Three of a Kind", [PokerHand.TwoPair] = "Two Pair", [PokerHand.HighCard] = "High Card" };
+
         //output
         if (winners.Count == 1)
         {
             // ONE winner
             Debug.Log($"WINNER NAME: {winners[0]} | " + $"HAND: {winningScore.pokerHand} | " + $"SCORE: {string.Join(", ", winningScore.pokerCards)}");
+            PokerVisualManager.Instance.DisplaySentence($"{playerNames[winners[0]]} wins with {pokerHand[winningScore.pokerHand]}.");
         }
         else
         {
             // tie
             Debug.Log($"TIE! HAND: {winningScore.pokerHand} | " + $"SCORE: {string.Join(", ", winningScore.pokerCards)}");
-            foreach (PokerPosition position in winners)
-            {
-                Debug.Log($"{position}");
-            }
+            PokerVisualManager.Instance.DisplaySentence($"{string.Join(",", winners)} tie with {pokerHand[winningScore.pokerHand]}");
         }
     }
 

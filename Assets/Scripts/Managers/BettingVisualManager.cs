@@ -52,7 +52,7 @@ public class BettingVisualManager : MonoBehaviour
                 playerName = "Joker";
                 break;
             case PokerPosition.Club:
-                playerName = "Berghaim";
+                playerName = "Berghain";
                 break;
             case PokerPosition.Spade:
                 playerName = "Trowel";
