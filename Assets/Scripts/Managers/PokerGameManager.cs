@@ -13,14 +13,8 @@ public class PokerGameManager : MonoBehaviour
         EndGame
     }
 
-    private bool PausedForAnimationEvents = false;
+    public bool PausedForAnimationEvents { get; private set; } = false;
     public void SetPausedForAnimationEvents(bool toggle) => PausedForAnimationEvents = toggle;
-
-    public enum GameAction
-    {
-        Dealing,
-
-    }
 
     public class PokerEvent : EventArgs
     {
@@ -46,8 +40,8 @@ public class PokerGameManager : MonoBehaviour
 
     public bool awaitingPlayer { get; private set; } = false;
     public List<PokerPosition> ActivePlayers = new();
-    private PokerPosition NextPlayer(PokerPosition current) => (PokerPosition)(((int)current + 1) % 5);
-    private PokerPosition SmallBlind = PokerPosition.Spade;
+    public PokerPosition NextPlayer(PokerPosition current) => (PokerPosition)(((int)current + 1) % 5);
+    public PokerPosition SmallBlind = PokerPosition.Spade;
     private PokerPosition BigBlind => NextPlayer(SmallBlind);
     private PokerPosition CurrentPlayer;
 
@@ -76,13 +70,8 @@ public class PokerGameManager : MonoBehaviour
 
     void Start()
     {    
-        PerformedGameAction += DefaultEventHandler;
-        PerformedPlayerAction += DefaultEventHandler;
         StartCoroutine(MainGame());
     }
-
-    private void DefaultEventHandler(object sender, PokerEvent e)
-    { PausedForAnimationEvents = true; }
 
     IEnumerator MainGame()
     {
@@ -102,6 +91,7 @@ public class PokerGameManager : MonoBehaviour
         try
         {
             PokerManager.Instance.CheckWin();
+            PokerVisualManager.Instance.RevealHands();
         }
         catch (Exception e)
         {
@@ -135,7 +125,9 @@ public class PokerGameManager : MonoBehaviour
 
     IEnumerator BettingRound()
     {
-        do
+        bool isFirstRound = true;
+
+        while (!BettingManager.Instance.AreEqualBets(ActivePlayers) || isFirstRound)
         {
             BettingVisualManager.Instance.SpawnChips(BettingManager.Instance.PlayerBet, ChipLocation.Table, true);
             BettingVisualManager.Instance.SpawnChips(GameManager.Instance.PlayerBalance, ChipLocation.Stack);
@@ -152,11 +144,14 @@ public class PokerGameManager : MonoBehaviour
                     int amount;
                     bool isBluffing;
 
-                    List<PlayingCard> hand = PokerManager.Instance.GetHand(player);
-                    GameStateChanged?.Invoke(this, EventArgs.Empty); // Done this to force NPCPlayerAction to switch
-                    (action, amount, isBluffing) = NPCManager.Instance.GetAction(PokerManager.Instance.communityCards, hand, player, ActivePlayers);
-                    SubmitAction(player, action, amount);
+                    do
+                    {
+                        List<PlayingCard> hand = PokerManager.Instance.GetHand(player);
+                        GameStateChanged?.Invoke(this, EventArgs.Empty); // Done this to force NPCPlayerAction to switch
+                        (action, amount, isBluffing) = NPCManager.Instance.GetAction(PokerManager.Instance.communityCards, hand, player, ActivePlayers);
+                    } while (!SubmitAction(player, action, amount));
 
+                    SetPausedForAnimationEvents(true);
                     PerformedPlayerAction?.Invoke(this, new PokerEvent(player, action, amount, isBluffing));
                     yield return new WaitUntil(() => !PausedForAnimationEvents);
                     continue;
@@ -167,12 +162,13 @@ public class PokerGameManager : MonoBehaviour
                 Debug.Log("[PokerGameManager] Waiting for player input.");
                 yield return new WaitUntil(() => !awaitingPlayer);
                 yield return new WaitUntil(() => !PausedForAnimationEvents);
+                isFirstRound = false;
             }
-        } while (!BettingManager.Instance.AreEqualBets(ActivePlayers));
+        } 
         BettingManager.Instance.SubmitBets(ActivePlayers);
     }
 
-    public void SubmitAction(PokerPosition player, PokerAction action, int amount)
+    public bool SubmitAction(PokerPosition player, PokerAction action, int amount)
     {
         try
         {
@@ -190,8 +186,9 @@ public class PokerGameManager : MonoBehaviour
                 case PokerAction.Call:
                 case PokerAction.Bet:
                 case PokerAction.Raise:
-                    BettingManager.Instance.BetAmount(player, amount);
                     Debug.Log($"[PokerGameManager] {player} {action.ToString().ToLower()}s {amount}.");
+                    if (player != PokerPosition.Joker || action == PokerAction.Call)
+                        return BettingManager.Instance.BetAmount(player, amount, ActivePlayers);
                     break;
             }
         }
@@ -199,6 +196,7 @@ public class PokerGameManager : MonoBehaviour
         {
             Debug.LogError($"[PokerGameManager] Exception in SubmitAction for {player}, action {action}, amount {amount}: {e}");
         }
+        return true;
     }
 
     IEnumerator PreflopPhase()
@@ -224,17 +222,15 @@ public class PokerGameManager : MonoBehaviour
 
             // Rotation of the button
             SmallBlind = NextPlayer(SmallBlind);
-            BettingManager.Instance.BetAmount(SmallBlind, BettingManager.MINIMUM_BET);
-            BettingManager.Instance.BetAmount(BigBlind, BettingManager.MINIMUM_BET * 2);
-
-            PokerManager.Instance.DealCards();
-
-            PokerVisualManager.Instance.OffsetCardsInHands();
+            BettingManager.Instance.BetAmount(SmallBlind, BettingManager.MINIMUM_BET, ActivePlayers);
+            BettingManager.Instance.BetAmount(BigBlind, BettingManager.MINIMUM_BET * 2, ActivePlayers);
         }
         catch (Exception e)
         {
             Debug.LogWarning($"[PokerGameManager] There was an exception in PreflopPhase: {e}");
         }
+
+        yield return PokerManager.Instance.DealCards();
 
         yield return StartCoroutine(RunSafely(BettingRound(), "PreflopPhase.BettingRound"));
     }
@@ -247,11 +243,15 @@ public class PokerGameManager : MonoBehaviour
             PokerManager.Instance.BurnCard();
 
             PokerManager.Instance.DrawCard(PokerManager.Instance.communityCards, PokerPosition.Table, numCards);
+            //visual tie in for dealing
+            //get community cards and draw them
         }
         catch (Exception e)
         {
             Debug.LogWarning($"[PokerGameManager] There was an exception in PostFlopPhase (numCards={numCards}): {e}");
         }
+
+        yield return StartCoroutine(PokerVisualManager.Instance.DealToCommunityCards());
 
         //starts following betting round
         yield return StartCoroutine(RunSafely(BettingRound(), "PostFlopPhase.BettingRound"));

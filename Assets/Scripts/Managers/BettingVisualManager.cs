@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -34,7 +35,48 @@ public class BettingVisualManager : MonoBehaviour
         }
         Instance = this;
     }
+    private void Start()
+    {
+        PokerGameManager.Instance.PerformedPlayerAction += PlaySounds;
+        PokerGameManager.Instance.PerformedPlayerAction += DisplaySentence;
 
+    }
+
+    private void DisplaySentence(object sender, PokerGameManager.PokerEvent e)
+    {
+        switch (e.Action)
+        {
+            case PokerAction.Fold:
+                PokerVisualManager.Instance.DisplaySentence($"{e.Player} folded.");
+                break;
+            case PokerAction.Check:
+                PokerVisualManager.Instance.DisplaySentence($"{e.Player} checked.");
+                break;
+            case PokerAction.Bet:
+                PokerVisualManager.Instance.DisplaySentence($"{e.Player} bet {e.Amount} chips.");
+                break;
+            case PokerAction.Raise:
+                PokerVisualManager.Instance.DisplaySentence($"{e.Player} raised {e.Amount} chips.");
+                break;
+            case PokerAction.Call:
+                PokerVisualManager.Instance.DisplaySentence($"{e.Player} called.");
+                break;
+        }
+    }
+
+    private void PlaySounds(object sender, PokerGameManager.PokerEvent e)
+    {
+        if (e.Player == PokerPosition.Joker || e.Player == PokerPosition.Table) return;
+        if (e.Action == PokerAction.Fold)
+        {
+            AudioManager.Instance.PlayAudioClip(AudioSnippet.PlayingCardFold);
+        }
+        else
+        {
+            AudioManager.Instance.PlayAudioClip(AudioSnippet.PokerChip);
+        } 
+    }
+    
     public void UpdateBet(int bet)
     {
         currentBetText.text = bet.ToString();

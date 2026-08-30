@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class VisualPlayingCard : MonoBehaviour
@@ -8,6 +9,7 @@ public class VisualPlayingCard : MonoBehaviour
 
     private Material cardFrontMaterial;
     private Material cardBackMaterial;
+
     public void PopulateData(PlayingCard card)
     {
         cardData = card;
@@ -19,5 +21,21 @@ public class VisualPlayingCard : MonoBehaviour
 
         cardFront.material = cardFrontMaterial;
         cardBack.material = cardBackMaterial;
+    }
+
+    public void HideCardData()
+    {
+        cardFrontMaterial.mainTexture = cardData.cardBackSprite;
+    }
+
+    public void ShowCardData()
+    {
+        cardFrontMaterial.mainTexture = cardData.cardFrontSprite;
+    }
+
+    public void ShowCommunityCardData()
+    {
+        cardFrontMaterial.mainTexture = cardData.cardBackSprite;
+        cardBackMaterial.mainTexture = cardData.cardFrontSprite;
     }
 }
