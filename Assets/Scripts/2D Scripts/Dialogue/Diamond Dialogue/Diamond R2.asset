@@ -32,7 +32,7 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences: []
-  overrideImage: {fileID: 0}
+  lying: 0
   dialogueControl: 0
 --- !u!114 &-5052113073301134110
 MonoBehaviour:
@@ -79,7 +79,7 @@ MonoBehaviour:
   LeadingQuestion: option
   Sentences:
   - option picked
-  overrideImage: {fileID: 0}
+  lying: 0
   nextNode: {fileID: 0}
 --- !u!114 &-4735133880971800591
 MonoBehaviour:
@@ -157,7 +157,7 @@ MonoBehaviour:
   LeadingQuestion: 
   Sentences:
   - hello
-  overrideImage: {fileID: 0}
+  lying: 0
   optionA: {fileID: 0}
   optionB: {fileID: 0}
   optionC: {fileID: 0}
@@ -194,7 +194,7 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences: []
-  overrideImage: {fileID: 0}
+  lying: 0
   dialogueControl: 0
 --- !u!114 &11400000
 MonoBehaviour:
@@ -216,6 +216,7 @@ MonoBehaviour:
   - {fileID: -9064737258140723430}
   CharacterName: Diamond
   CharacterIcon: {fileID: 21300000, guid: 01775c09a5a26a9448f7a20e4dd86c01, type: 3}
+  CharacterLyingIcon: {fileID: 21300000, guid: 3c53879203a97e44a909a8e644c88f3a, type: 3}
   TalkingClip: {fileID: 0}
 --- !u!114 &6918125378994987000
 MonoBehaviour:
@@ -262,5 +263,5 @@ MonoBehaviour:
   LeadingQuestion: 
   Sentences:
   - finished
-  overrideImage: {fileID: 0}
+  lying: 0
   nextNode: {fileID: 0}

@@ -32,7 +32,7 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences: []
-  overrideImage: {fileID: 0}
+  lying: 0
   dialogueControl: 0
 --- !u!114 &-5052113073301134110
 MonoBehaviour:
@@ -79,7 +79,7 @@ MonoBehaviour:
   LeadingQuestion: option
   Sentences:
   - option picked
-  overrideImage: {fileID: 0}
+  lying: 0
   nextNode: {fileID: 0}
 --- !u!114 &-4735133880971800591
 MonoBehaviour:
@@ -157,7 +157,7 @@ MonoBehaviour:
   LeadingQuestion: 
   Sentences:
   - hello
-  overrideImage: {fileID: 0}
+  lying: 0
   optionA: {fileID: 0}
   optionB: {fileID: 0}
   optionC: {fileID: 0}
@@ -194,7 +194,7 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences: []
-  overrideImage: {fileID: 0}
+  lying: 0
   dialogueControl: 0
 --- !u!114 &11400000
 MonoBehaviour:
@@ -216,6 +216,7 @@ MonoBehaviour:
   - {fileID: -9064737258140723430}
   CharacterName: Heart
   CharacterIcon: {fileID: 21300000, guid: 2cebc8638d7a85144a5538e275f71103, type: 3}
+  CharacterLyingIcon: {fileID: 21300000, guid: 4008430bfbadb574bab73972d127c816, type: 3}
   TalkingClip: {fileID: 0}
 --- !u!114 &6918125378994987000
 MonoBehaviour:
@@ -262,5 +263,5 @@ MonoBehaviour:
   LeadingQuestion: 
   Sentences:
   - finished
-  overrideImage: {fileID: 0}
+  lying: 0
   nextNode: {fileID: 0}

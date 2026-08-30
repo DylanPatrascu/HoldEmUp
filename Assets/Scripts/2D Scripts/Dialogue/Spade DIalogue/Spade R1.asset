@@ -32,7 +32,7 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences: []
-  overrideImage: {fileID: 0}
+  lying: 0
   dialogueControl: 0
 --- !u!114 &-4735133880971800591
 MonoBehaviour:
@@ -116,7 +116,7 @@ MonoBehaviour:
   LeadingQuestion: 
   Sentences:
   - Yes?
-  overrideImage: {fileID: 0}
+  lying: 0
   optionA: {fileID: 0}
   optionB: {fileID: 0}
   optionC: {fileID: 0}
@@ -153,7 +153,7 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences: []
-  overrideImage: {fileID: 0}
+  lying: 0
   dialogueControl: 0
 --- !u!114 &11400000
 MonoBehaviour:
@@ -180,6 +180,7 @@ MonoBehaviour:
   - {fileID: 2665039883344587654}
   CharacterName: Spade
   CharacterIcon: {fileID: 21300000, guid: 0c31e8abbf0055b40a57312a3f24b2f8, type: 3}
+  CharacterLyingIcon: {fileID: 21300000, guid: ea47ae858b11f1e49b8d959c43d62961, type: 3}
   TalkingClip: {fileID: 0}
 --- !u!114 &292376442984364586
 MonoBehaviour:
@@ -213,7 +214,7 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences: []
-  overrideImage: {fileID: 0}
+  lying: 0
   dialogueControl: 0
 --- !u!114 &846297194121120968
 MonoBehaviour:
@@ -247,7 +248,7 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences: []
-  overrideImage: {fileID: 0}
+  lying: 0
   dialogueControl: 0
 --- !u!114 &2665039883344587654
 MonoBehaviour:
@@ -294,7 +295,7 @@ MonoBehaviour:
   LeadingQuestion: Are you a family man?
   Sentences:
   - 'Family? No, It''s just me and my dog at home. That''s how I like it. '
-  overrideImage: {fileID: 21300000, guid: ea47ae858b11f1e49b8d959c43d62961, type: 3}
+  lying: 1
   nextNode: {fileID: 0}
 --- !u!114 &2863107290380939018
 MonoBehaviour:
@@ -373,7 +374,7 @@ MonoBehaviour:
   Sentences:
   - 'Whaddya wanna know? I''m a simple guy... I work hard and enjoy a poker game
     or two on my night off. '
-  overrideImage: {fileID: 0}
+  lying: 0
   optionA: {fileID: 0}
   optionB: {fileID: 0}
   optionC: {fileID: 0}
@@ -423,7 +424,7 @@ MonoBehaviour:
   LeadingQuestion: 
   Sentences:
   - I'd like to be alone until the next round if that's alright...
-  overrideImage: {fileID: 0}
+  lying: 0
   nextNode: {fileID: 0}
 --- !u!114 &8183701078095263486
 MonoBehaviour:
@@ -470,7 +471,7 @@ MonoBehaviour:
   LeadingQuestion: About your job?
   Sentences:
   - 'I manage the local law firm. '
-  overrideImage: {fileID: 0}
+  lying: 0
   nextNode: {fileID: 0}
 --- !u!114 &9077612129671985369
 MonoBehaviour:
@@ -517,5 +518,5 @@ MonoBehaviour:
   LeadingQuestion: Why play poker?
   Sentences:
   - 'Play it safe and you might go home with a full wallet. '
-  overrideImage: {fileID: 0}
+  lying: 0
   nextNode: {fileID: 0}

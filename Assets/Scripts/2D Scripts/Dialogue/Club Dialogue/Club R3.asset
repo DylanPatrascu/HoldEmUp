@@ -76,7 +76,7 @@ MonoBehaviour:
   LeadingQuestion: 
   Sentences:
   - Hi Im Club
-  overrideImage: {fileID: 0}
+  lying: 0
   optionA: {fileID: 0}
   optionB: {fileID: 0}
   optionC: {fileID: 0}
@@ -113,7 +113,7 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences: []
-  overrideImage: {fileID: 0}
+  lying: 0
   dialogueControl: 0
 --- !u!114 &-3269215010916731358
 MonoBehaviour:
@@ -160,7 +160,7 @@ MonoBehaviour:
   LeadingQuestion: Path 1?
   Sentences:
   - This is path 1.
-  overrideImage: {fileID: 0}
+  lying: 0
   nextNode: {fileID: 0}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -182,6 +182,7 @@ MonoBehaviour:
   - {fileID: -6030492788390981365}
   CharacterName: Club
   CharacterIcon: {fileID: 21300000, guid: 41d7ecdb8492ece49b3505c91d124d30, type: 3}
+  CharacterLyingIcon: {fileID: 21300000, guid: 3c53879203a97e44a909a8e644c88f3a, type: 3}
   TalkingClip: {fileID: 0}
 --- !u!114 &4540367918941388896
 MonoBehaviour:
@@ -228,7 +229,7 @@ MonoBehaviour:
   LeadingQuestion: 
   Sentences:
   - Finished
-  overrideImage: {fileID: 0}
+  lying: 0
   nextNode: {fileID: 0}
 --- !u!114 &9001387695486318046
 MonoBehaviour:
@@ -262,5 +263,5 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences: []
-  overrideImage: {fileID: 0}
+  lying: 0
   dialogueControl: 0
