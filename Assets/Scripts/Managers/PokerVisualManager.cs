@@ -109,7 +109,7 @@ public class PokerVisualManager : MonoBehaviour
             var curr = flattenedHands[i % flattenedHands.Count];
             yield return StartCoroutine(SpawnCard(curr.Value[1], curr.Key));
         }
-
+        //yield return new WaitForEndOfFrame();
         OffsetCardsInHands();
         yield return null;
     }

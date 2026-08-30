@@ -146,8 +146,8 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: How did you know <b><color=red>Motley</color></b>?
   Sentences:
-  - He was a real <b><color=red>big drinker</color></b>. We would have a glass together
-    after the game sometimes, but he <b><color=red>always went a bit too far</color?></b>.
+  - He was a real <b><color=red>big drinker</color</b>. We would have a glass together
+    after the game sometimes, but he <b><color=red>always went a bit too far</color></b>.
     Bartender had to cut him off more than once.
   lying: 0
   nextNode: {fileID: 0}
@@ -232,7 +232,7 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences:
-  - Hows it going honey.
+  - Hows it going honey?
   lying: 0
   optionA: {fileID: 0}
   optionB: {fileID: 0}
