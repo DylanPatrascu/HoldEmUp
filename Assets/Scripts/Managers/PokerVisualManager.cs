@@ -193,7 +193,7 @@ public class PokerVisualManager : MonoBehaviour
 
             position = spadeChild.position + new Vector3(spadeRevealedTransform.childCount * 0.8f, 0, 0);
             spadeChild.DOLocalMoveX(-0.5f * (spadeRevealedTransform.childCount - 1), CARD_MOVEMENT_SPEED);
-
+            AudioManager.Instance.PlayAudioClip(AudioSnippet.PlayingCardFlip);
         }
     }
     public void OffsetCardsInHands()
