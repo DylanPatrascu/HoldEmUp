@@ -23,13 +23,11 @@ public class Player2D : MonoBehaviour
     
     public void OnMove(InputValue value)
     {
-        print("OnMove");
         moveInput = value.Get<Vector2>();
     }
 
     public void OnChipInteract(InputValue value)
     {
-        print(currentInteractable);
         if (value.isPressed)
         {
             if (currentInteractable != null)
@@ -41,7 +39,6 @@ public class Player2D : MonoBehaviour
 
     public void OnClick(InputValue value)
     {
-        print("OnClick");
         FindAnyObjectByType<DialogueManager>().OnClick();
     }
 
