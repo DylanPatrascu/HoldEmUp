@@ -1154,7 +1154,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 1.325
+  orthographic size: 0.9
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -3699,9 +3699,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   maxQuestionsPerRound: 12
-  questionText: {fileID: 412940509}
-  chipsText: {fileID: 2039186651}
-  confirmationMenu: {fileID: 1509940190}
+  questionText: {fileID: 1556080995}
+  chipsText: {fileID: 85371592}
+  confirmationMenu: {fileID: 1100828747}
+  CurrentClubRound: 2
 --- !u!4 &719768048
 Transform:
   m_ObjectHideFlags: 0

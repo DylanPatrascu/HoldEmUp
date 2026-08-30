@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Option Dialogue
   m_EditorClassIdentifier: Assembly-CSharp::OptionDialogueNode
   graph: {fileID: 11400000}
-  position: {x: -157.66666, y: -13.3333435}
+  position: {x: -776, y: -200}
   ports:
     keys:
     - optionA
@@ -38,7 +38,10 @@ MonoBehaviour:
       _node: {fileID: -8322534981969707784}
       _typeQualifiedName: DialogueNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-      connections: []
+      connections:
+      - fieldName: prevNode
+        node: {fileID: -5582905092220022940}
+        reroutePoints: []
       _direction: 1
       _connectionType: 0
       _typeConstraint: 0
@@ -47,7 +50,10 @@ MonoBehaviour:
       _node: {fileID: -8322534981969707784}
       _typeQualifiedName: DialogueNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-      connections: []
+      connections:
+      - fieldName: prevNode
+        node: {fileID: -2963512307464597845}
+        reroutePoints: []
       _direction: 1
       _connectionType: 0
       _typeConstraint: 0
@@ -75,12 +81,46 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences:
-  - Hi Im Club
+  - ... what.
   lying: 0
   optionA: {fileID: 0}
   optionB: {fileID: 0}
   optionC: {fileID: 0}
   finished: {fileID: 0}
+--- !u!114 &-8229976388068148183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee761853634e270489202ec9035cbef8, type: 3}
+  m_Name: Dialogue Control
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueControlNode
+  graph: {fileID: 11400000}
+  position: {x: 88, y: 152}
+  ports:
+    keys:
+    - prevNode
+    values:
+    - _fieldName: prevNode
+      _node: {fileID: -8229976388068148183}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: nextNode
+        node: {fileID: -2963512307464597845}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  prevNode: {fileID: 0}
+  LeadingQuestion: 
+  Sentences: []
+  lying: 0
+  dialogueControl: 0
 --- !u!114 &-6030492788390981365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,7 +134,7 @@ MonoBehaviour:
   m_Name: Dialogue Control
   m_EditorClassIdentifier: Assembly-CSharp::DialogueControlNode
   graph: {fileID: 11400000}
-  position: {x: 328, y: 152}
+  position: {x: 264, y: 312}
   ports:
     keys:
     - prevNode
@@ -115,6 +155,53 @@ MonoBehaviour:
   Sentences: []
   lying: 0
   dialogueControl: 0
+--- !u!114 &-5582905092220022940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91a9c21b70cb1a448918862bd6025e21, type: 3}
+  m_Name: Simple Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleDialogueNode
+  graph: {fileID: 11400000}
+  position: {x: -216, y: -104}
+  ports:
+    keys:
+    - nextNode
+    - prevNode
+    values:
+    - _fieldName: nextNode
+      _node: {fileID: -5582905092220022940}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: prevNode
+        node: {fileID: 9210789351155354372}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: prevNode
+      _node: {fileID: -5582905092220022940}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: optionB
+        node: {fileID: -8322534981969707784}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  prevNode: {fileID: 0}
+  LeadingQuestion: About <b><color=#4d65b4>Trowel</color></b> <sprite=1>?
+  Sentences:
+  - ' He is nice. '
+  lying: 0
+  nextNode: {fileID: 0}
 --- !u!114 &-3269215010916731358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,7 +215,7 @@ MonoBehaviour:
   m_Name: Simple Dialogue
   m_EditorClassIdentifier: Assembly-CSharp::SimpleDialogueNode
   graph: {fileID: 11400000}
-  position: {x: 88, y: -120}
+  position: {x: -232, y: -328}
   ports:
     keys:
     - nextNode
@@ -157,9 +244,56 @@ MonoBehaviour:
       _typeConstraint: 0
       _dynamic: 0
   prevNode: {fileID: 0}
-  LeadingQuestion: Path 1?
+  LeadingQuestion: About <b><color=#cf657f>Valentine</color></b> <sprite=2>?
   Sentences:
-  - This is path 1.
+  - ' Talks too much. '
+  lying: 0
+  nextNode: {fileID: 0}
+--- !u!114 &-2963512307464597845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91a9c21b70cb1a448918862bd6025e21, type: 3}
+  m_Name: Simple Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleDialogueNode
+  graph: {fileID: 11400000}
+  position: {x: -184, y: 72}
+  ports:
+    keys:
+    - nextNode
+    - prevNode
+    values:
+    - _fieldName: nextNode
+      _node: {fileID: -2963512307464597845}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: prevNode
+        node: {fileID: -8229976388068148183}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: prevNode
+      _node: {fileID: -2963512307464597845}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: optionC
+        node: {fileID: -8322534981969707784}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  prevNode: {fileID: 0}
+  LeadingQuestion: About <b><color=#f9c22b>Almaz</color></b> <sprite=3>?
+  Sentences:
+  - He is a sore loser.
   lying: 0
   nextNode: {fileID: 0}
 --- !u!114 &11400000
@@ -180,10 +314,14 @@ MonoBehaviour:
   - {fileID: 4540367918941388896}
   - {fileID: 9001387695486318046}
   - {fileID: -6030492788390981365}
+  - {fileID: -5582905092220022940}
+  - {fileID: 9210789351155354372}
+  - {fileID: -2963512307464597845}
+  - {fileID: -8229976388068148183}
   CharacterName: Club
   CharacterIcon: {fileID: 21300000, guid: 41d7ecdb8492ece49b3505c91d124d30, type: 3}
-  CharacterLyingIcon: {fileID: 21300000, guid: 9a3c35f80efdf6644805c94c88edf65f, type: 3}
-  TalkingClip: {fileID: 8300000, guid: fbd3eab309d198b46b45524c2db2800a, type: 3}
+  CharacterLyingIcon: {fileID: 0}
+  TalkingClip: {fileID: 0}
 --- !u!114 &4540367918941388896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,7 +335,7 @@ MonoBehaviour:
   m_Name: Simple Dialogue
   m_EditorClassIdentifier: Assembly-CSharp::SimpleDialogueNode
   graph: {fileID: 11400000}
-  position: {x: 88, y: 152}
+  position: {x: -152, y: 312}
   ports:
     keys:
     - nextNode
@@ -228,7 +366,7 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences:
-  - Finished
+  - ...
   lying: 0
   nextNode: {fileID: 0}
 --- !u!114 &9001387695486318046
@@ -244,7 +382,7 @@ MonoBehaviour:
   m_Name: Dialogue Control
   m_EditorClassIdentifier: Assembly-CSharp::DialogueControlNode
   graph: {fileID: 11400000}
-  position: {x: 312, y: 8}
+  position: {x: 168, y: -296}
   ports:
     keys:
     - prevNode
@@ -255,6 +393,40 @@ MonoBehaviour:
       connections:
       - fieldName: nextNode
         node: {fileID: -3269215010916731358}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  prevNode: {fileID: 0}
+  LeadingQuestion: 
+  Sentences: []
+  lying: 0
+  dialogueControl: 0
+--- !u!114 &9210789351155354372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee761853634e270489202ec9035cbef8, type: 3}
+  m_Name: Dialogue Control
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueControlNode
+  graph: {fileID: 11400000}
+  position: {x: 249.60004, y: 3.7999878}
+  ports:
+    keys:
+    - prevNode
+    values:
+    - _fieldName: prevNode
+      _node: {fileID: 9210789351155354372}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: nextNode
+        node: {fileID: -5582905092220022940}
         reroutePoints: []
       _direction: 0
       _connectionType: 0

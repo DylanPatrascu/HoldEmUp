@@ -12,10 +12,11 @@ public class MainMenuScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.Log("hehehe");
     }
     public void _load_game()
     {
+
         GameManager._stateMachine.Fire(Trigger.ToClub);
     }
     public void _quit_game()

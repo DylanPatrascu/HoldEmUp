@@ -18,7 +18,7 @@ public class ClubSceneManager : MonoBehaviour
     public int CurrentQuestionsAskedThisRound { get; private set; }
     public int PokerChipsAvailable { get; private set; }
 
-    public int CurrentClubRound { get; private set; } = 0;
+    [SerializeField] public int CurrentClubRound = 0;
     private void Awake()
     {
         DontDestroyOnLoad(this);
