@@ -97,6 +97,7 @@ public class PokerGameManager : MonoBehaviour
         try
         {
             PokerManager.Instance.CheckWin();
+            PokerVisualManager.Instance.RevealHands();
         }
         catch (Exception e)
         {
@@ -241,7 +242,7 @@ public class PokerGameManager : MonoBehaviour
             PokerManager.Instance.BurnCard();
 
             PokerManager.Instance.DrawCard(PokerManager.Instance.communityCards, PokerPosition.Table, numCards);
-            //StartCoroutine(PokerVisualManager.Instance.DealToCommunityCards());
+            StartCoroutine(PokerVisualManager.Instance.DealToCommunityCards());
             //visual tie in for dealing
             //get community cards and draw them
         }

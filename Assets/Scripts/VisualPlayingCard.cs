@@ -32,4 +32,10 @@ public class VisualPlayingCard : MonoBehaviour
     {
         cardFrontMaterial.mainTexture = cardData.cardFrontSprite;
     }
+
+    public void ShowCommunityCardData()
+    {
+        cardFrontMaterial.mainTexture = cardData.cardBackSprite;
+        cardBackMaterial.mainTexture = cardData.cardFrontSprite;
+    }
 }
