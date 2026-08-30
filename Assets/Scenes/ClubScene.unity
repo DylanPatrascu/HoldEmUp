@@ -2889,7 +2889,7 @@ MonoBehaviour:
   questionText: {fileID: 1556080995}
   chipsText: {fileID: 85371592}
   confirmationMenu: {fileID: 1100828747}
-  CurrentClubRound: 1
+  CurrentClubRound: 2
 --- !u!4 &719768048
 Transform:
   m_ObjectHideFlags: 0
