@@ -471,8 +471,8 @@ MonoBehaviour:
   - {fileID: -2243249661418914333}
   CharacterName: Diamond
   CharacterIcon: {fileID: 21300000, guid: 01775c09a5a26a9448f7a20e4dd86c01, type: 3}
-  CharacterLyingIcon: {fileID: 0}
-  TalkingClip: {fileID: 0}
+  CharacterLyingIcon: {fileID: 21300000, guid: 3c53879203a97e44a909a8e644c88f3a, type: 3}
+  TalkingClip: {fileID: 8300000, guid: ca3b7bf77f04c70439976c01ba94f0b6, type: 3}
 --- !u!114 &5073036757318074978
 MonoBehaviour:
   m_ObjectHideFlags: 0

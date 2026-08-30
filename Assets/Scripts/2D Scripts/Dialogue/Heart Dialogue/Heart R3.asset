@@ -297,8 +297,8 @@ MonoBehaviour:
   - {fileID: -5541308693036224659}
   CharacterName: Heart
   CharacterIcon: {fileID: 21300000, guid: 2cebc8638d7a85144a5538e275f71103, type: 3}
-  CharacterLyingIcon: {fileID: 0}
-  TalkingClip: {fileID: 0}
+  CharacterLyingIcon: {fileID: 21300000, guid: 4008430bfbadb574bab73972d127c816, type: 3}
+  TalkingClip: {fileID: 8300000, guid: 6a18a0b6317b2ff4997b1fcb8bfa9838, type: 3}
 --- !u!114 &2671839874354232042
 MonoBehaviour:
   m_ObjectHideFlags: 0
