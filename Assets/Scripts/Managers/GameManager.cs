@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     public PauseMenu PauseGameUI => pauseGameUI.GetComponent<PauseMenu>();
     public bool IsGamePaused { get; private set; } = false;
 
+    // Action map to use for each game state. Centralized here so scene-specific
+    // scripts never need to guess which map should be active.
     private static readonly Dictionary<State, string> stateActionMaps = new()
     {
         [State.Menu] = "UI",
@@ -37,6 +39,9 @@ public class GameManager : MonoBehaviour
     // since GameManager is never destroyed once Instance is set.
     private InputAction pauseAction;
     private InputAction cancelAction;
+
+    private float lastPauseToggleTime = -1f;
+    private const float PAUSE_TOGGLE_COOLDOWN = 0.2f;
 
     void Awake()
     {
@@ -57,6 +62,9 @@ public class GameManager : MonoBehaviour
         if (pauseAction != null) pauseAction.performed += OnPausePerformed;
         if (cancelAction != null) cancelAction.performed += OnCancelPerformed;
 
+        pauseGameUI = Instantiate(pauseGameUI, transform);
+        pauseGameUI.SetActive(false);
+
         SceneManager.LoadScene(stateScenes[CurrentState]);
     }
 
@@ -72,8 +80,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         _stateMachine.Enter += handleSceneChange;
-
-        _stateMachine.Fire(Trigger.ToClub);
     }
 
     public void handleSceneChange(object sender, StateEventArgs e)
@@ -93,9 +99,12 @@ public class GameManager : MonoBehaviour
         string sceneToLoad = stateScenes[e.target];
         SceneManager.LoadScene(sceneToLoad);
 
-        PlayerInputSystem.SwitchCurrentActionMap(stateActionMaps[e.target]);
+        string targetMap = stateActionMaps[e.target];
+        if (PlayerInputSystem.currentActionMap == null || PlayerInputSystem.currentActionMap.name != targetMap)
+        {
+            PlayerInputSystem.SwitchCurrentActionMap(targetMap);
+        }
 
-        pauseGameUI = Instantiate(pauseGameUI, GameObject.Find("Canvas").transform);
         pauseGameUI.SetActive(false);
     }
 
@@ -104,7 +113,8 @@ public class GameManager : MonoBehaviour
         try
         {
             _stateMachine.Fire(trigger);
-        } catch (System.InvalidOperationException exception)
+        }
+        catch (System.InvalidOperationException exception)
         {
             Debug.LogWarning(exception.Message);
         }
@@ -113,6 +123,8 @@ public class GameManager : MonoBehaviour
     private void OnPausePerformed(InputAction.CallbackContext ctx)
     {
         if (IsGamePaused) return;
+        if (Time.unscaledTime - lastPauseToggleTime < PAUSE_TOGGLE_COOLDOWN) return;
+        lastPauseToggleTime = Time.unscaledTime;
 
         PauseGame();
         PlayerInputSystem.SwitchCurrentActionMap("UI");
@@ -121,6 +133,8 @@ public class GameManager : MonoBehaviour
     private void OnCancelPerformed(InputAction.CallbackContext ctx)
     {
         if (!IsGamePaused) return;
+        if (Time.unscaledTime - lastPauseToggleTime < PAUSE_TOGGLE_COOLDOWN) return;
+        lastPauseToggleTime = Time.unscaledTime;
 
         ResumeGame();
         PlayerInputSystem.SwitchCurrentActionMap(stateActionMaps[CurrentState]);
