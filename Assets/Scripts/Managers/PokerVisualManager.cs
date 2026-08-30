@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 public class PokerVisualManager : MonoBehaviour
 {
@@ -30,6 +31,14 @@ public class PokerVisualManager : MonoBehaviour
     private const float CARD_MOVEMENT_SPEED = 0.67f;
     private const float CARD_ORITENTATION_SPEED = 0.5f;
     private Vector3 CARD_OFFSET = new Vector3(0.7f, 0.1f, 0);
+
+    [SerializeField] private TMP_Text sentenceText;
+    [SerializeField] private float textSpeed;
+
+    private Queue<string> messageQueue = new Queue<string>();
+        private bool isDisplayingMessage = false;
+
+
 
 
     private void Awake()
@@ -252,6 +261,62 @@ public class PokerVisualManager : MonoBehaviour
         for (int i = transform.childCount - 1; i >= 0; i--)
         {
             Destroy(transform.GetChild(i).gameObject);
+        }
+    }
+
+    public void DisplaySentence(string sentence)
+    {
+        messageQueue.Enqueue(sentence);
+        if (!isDisplayingMessage)
+        {
+            StartCoroutine(ProcessQueue());
+        }
+    }
+
+    private IEnumerator ProcessQueue()
+    {
+        isDisplayingMessage = true;
+
+        while (messageQueue.Count > 0)
+        {
+            string currentSentence = messageQueue.Dequeue();
+            yield return StartCoroutine(RenderSentence(currentSentence));
+
+            // Small pause between messages
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        isDisplayingMessage = false;
+    }
+
+    private IEnumerator RenderSentence(string sentence)
+    {
+        // Keep existing text, then append the new sentence on a new line.
+        string previousText = sentenceText.text;
+        if (!string.IsNullOrEmpty(previousText))
+            previousText += "\n";
+
+        sentenceText.text = previousText;
+
+        foreach (char letter in sentence)
+        {
+            sentenceText.text += letter;
+
+            // After adding a letter, check line count
+            TrimLines(5);
+
+            yield return new WaitForSeconds(textSpeed);
+        }
+    }
+
+    private void TrimLines(int maxLines)
+    {
+        string[] lines = sentenceText.text.Split('\n');
+        if (lines.Length > maxLines)
+        {
+            // Remove oldest line(s)
+            int excess = lines.Length - maxLines;
+            sentenceText.text = string.Join("\n", lines, excess, lines.Length - excess);
         }
     }
 
