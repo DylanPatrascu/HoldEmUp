@@ -11,42 +11,57 @@ public class PauseMenu : MonoBehaviour
         Hands,
         CaseFile,
     };
-    public Stack<MenuState> PrevStates;
+    public List<MenuState> PrevStates;
     public MenuState CurrentMenuState = MenuState.PauseMenu;
-    public GameObject GetUiComponent(MenuState menuState) => transform.GetChild((int)menuState).gameObject;
+
+    [Serializable]
+    public struct MenuObject
+    {
+        public MenuState Menu;
+        public GameObject UIComponent;
+    }
+
+    [SerializeField]
+    private List<MenuObject> options;
+
     public EventHandler ResumeRequested;
 
     public void ResumeGame()
     { ResumeRequested?.Invoke(this, EventArgs.Empty); }
 
-    void Update()
+    private void ActivateCurrentObject()
     {
-        GameObject uiComponent = GetUiComponent(CurrentMenuState);
-        if (uiComponent.activeSelf) return;
-
-        foreach (MenuState component in Enum.GetValues(typeof(MenuState)))
-            if (GetUiComponent(component).activeSelf)
-                GetUiComponent(component).SetActive(false);
-        
-        uiComponent.SetActive(true);
+        foreach (MenuObject m in options)
+        {
+            if (m.Menu == CurrentMenuState && !m.UIComponent.activeSelf)
+                m.UIComponent.SetActive(true);
+            else if (m.Menu != CurrentMenuState && m.UIComponent.activeSelf)
+                m.UIComponent.SetActive(false);
+        }
     }
 
     public void OpenSettings()
     {
-        PrevStates.Push(CurrentMenuState);
+        PrevStates.Add(CurrentMenuState);
         CurrentMenuState = MenuState.Settings;
+
+        ActivateCurrentObject();
     }
 
     public void OpenHands()
     {
-        PrevStates.Push(CurrentMenuState);
+        PrevStates.Add(CurrentMenuState);
         CurrentMenuState = MenuState.Hands;
+
+        ActivateCurrentObject();
     }
 
     public void OpenCaseFile()
     {
-        PrevStates.Push(CurrentMenuState);
+        PrevStates.Add(CurrentMenuState);
         CurrentMenuState = MenuState.CaseFile;
+
+        ActivateCurrentObject();
     }
 
     public void GoToMainMenu()
@@ -56,6 +71,9 @@ public class PauseMenu : MonoBehaviour
 
     public void GoBack()
     {
-        CurrentMenuState = PrevStates.Pop();
+        CurrentMenuState = PrevStates[0];
+        PrevStates.RemoveAt(0);
+
+        ActivateCurrentObject();
     }
 }

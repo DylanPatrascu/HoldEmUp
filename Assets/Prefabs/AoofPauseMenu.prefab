@@ -1232,6 +1232,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenu
   CurrentMenuState: 0
+  options:
+  - Menu: 0
+    UIComponent: {fileID: 3876635351449208698}
+  - Menu: 1
+    UIComponent: {fileID: 9135021194266328503}
+  - Menu: 2
+    UIComponent: {fileID: 987285210701348939}
+  - Menu: 3
+    UIComponent: {fileID: 8263489405719932605}
 --- !u!1 &1733593012356821889
 GameObject:
   m_ObjectHideFlags: 0
