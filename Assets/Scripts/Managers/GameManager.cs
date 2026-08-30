@@ -207,6 +207,7 @@ public class GameManager : MonoBehaviour
     {
         print("End Current Club Round");
         GeneralResume();
+        HideConfirmationMenu();
         Fire(Trigger.ToFirstPerson);
     }
 

@@ -42,11 +42,11 @@ public class PlayerManager : MonoBehaviour
 
         var actions = GameManager.Instance.PlayerInputSystem.actions;
 
-        chipInteractAction = actions.FindAction("ChipInteract");
+        chipInteractAction = actions.FindAction("Chip Interact");
         foldAction = actions.FindAction("Fold");
-        checkOrCallAction = actions.FindAction("CheckOrCall");
-        submitBetAction = actions.FindAction("SubmitBet");
-        switchCameraAction = actions.FindAction("SwitchCamera");
+        checkOrCallAction = actions.FindAction("Check or Call");
+        submitBetAction = actions.FindAction("Submit Bet");
+        switchCameraAction = actions.FindAction("Switch Camera");
 
         if (chipInteractAction != null) chipInteractAction.performed += OnChipInteractPerformed;
         if (foldAction != null) foldAction.performed += OnFoldPerformed;
@@ -94,6 +94,7 @@ public class PlayerManager : MonoBehaviour
 
     private void OnChipInteractPerformed(InputAction.CallbackContext ctx)
     {
+        Debug.Log($"Player is trying to interact with chip with action mode: {actionMode}");
         if (actionMode == PlayerActionMode.Waiting) return;
 
         Chip chip = RaycastForChip();

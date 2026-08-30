@@ -207,7 +207,7 @@ public class PokerGameManager : MonoBehaviour
             PokerManager.Instance.DestroyCards();
             BettingManager.Instance.ResetGame();
 
-            for (int i = 0; i < GameManager.Instance.PokerRound; i++)
+            for (int i = 0; i < GameManager.Instance.PokerRound - 1; i++)
                 SmallBlind = NextPlayer(SmallBlind);
 
             CurrentPlayer = NextPlayer(BigBlind);

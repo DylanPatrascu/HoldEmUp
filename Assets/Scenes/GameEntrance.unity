@@ -613,8 +613,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ClubSceneManager, Assembly-CSharp
+      - m_Target: {fileID: 1886447298}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: HideConfirmationMenu
         m_Mode: 1
         m_Arguments:
@@ -1392,8 +1392,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ClubSceneManager, Assembly-CSharp
+      - m_Target: {fileID: 1886447298}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: EndCurrentClubRound
         m_Mode: 1
         m_Arguments:
