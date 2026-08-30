@@ -1596,7 +1596,7 @@ MonoBehaviour:
   PokerRound: 0
   PlayerInputSystem: {fileID: 1886447299}
   pauseGameUI: {fileID: 3465864385050294749, guid: 326aeeb36396c4d22901ac2e2aa69e88, type: 3}
-  maxQuestionsPerRound: 3
+  maxQuestionsPerRound: 080000000800000006000000040000000200000001000000
   questionText: {fileID: 164787}
   chipsText: {fileID: 339900920}
   confirmationMenu: {fileID: 1580673222}

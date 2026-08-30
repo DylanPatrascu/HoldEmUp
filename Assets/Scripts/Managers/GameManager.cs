@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     // ---- Club round (formerly ClubSceneManager) ----
     [Space]
     [Header("Club Round Variables")]
-    [SerializeField] private int maxQuestionsPerRound = 3;
+    [SerializeField] private List<int> maxQuestionsPerRound = new List<int>();
 
     [Space]
     [Header("Club Round UI Elements")]
@@ -213,7 +213,7 @@ public class GameManager : MonoBehaviour
 
     public bool CanAskQuestion()
     {
-        return CurrentQuestionsAskedThisRound < maxQuestionsPerRound;
+        return CurrentQuestionsAskedThisRound < maxQuestionsPerRound[GameManager.Instance.PokerRound - 1];
     }
 
     public bool CanAffordBribe(int bribeAmount)
@@ -236,7 +236,8 @@ public class GameManager : MonoBehaviour
 
     private void UpdateClubRoundText()
     {
-        questionText.text = (maxQuestionsPerRound - CurrentQuestionsAskedThisRound).ToString();
+        questionText.text = (maxQuestionsPerRound[GameManager.Instance.PokerRound] - CurrentQuestionsAskedThisRound).ToString();
+        Debug.Log($"{maxQuestionsPerRound[GameManager.Instance.PokerRound]} / {CurrentQuestionsAskedThisRound}");
         chipsText.text = PokerChipsAvailable.ToString();
     }
 
