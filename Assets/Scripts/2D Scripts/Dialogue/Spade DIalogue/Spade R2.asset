@@ -217,7 +217,7 @@ MonoBehaviour:
   CharacterName: Spade
   CharacterIcon: {fileID: 21300000, guid: 0c31e8abbf0055b40a57312a3f24b2f8, type: 3}
   CharacterLyingIcon: {fileID: 21300000, guid: ea47ae858b11f1e49b8d959c43d62961, type: 3}
-  TalkingClip: {fileID: 0}
+  TalkingClip: {fileID: 8300000, guid: bc810412a78cea643ace8127849d2ac8, type: 3}
 --- !u!114 &6918125378994987000
 MonoBehaviour:
   m_ObjectHideFlags: 0
