@@ -44,22 +44,42 @@ public class BettingVisualManager : MonoBehaviour
 
     private void DisplaySentence(object sender, PokerGameManager.PokerEvent e)
     {
+        string playerName;
+        switch (e.Player)
+        {
+            case PokerPosition.Joker:
+            default:
+                playerName = "Joker";
+                break;
+            case PokerPosition.Club:
+                playerName = "Berghaim";
+                break;
+            case PokerPosition.Spade:
+                playerName = "Trowel";
+                break;
+            case PokerPosition.Heart:
+                playerName = "Valentine";
+                break;
+            case PokerPosition.Diamond:
+                playerName = "Almaz";
+                break;
+        }
         switch (e.Action)
         {
             case PokerAction.Fold:
-                PokerVisualManager.Instance.DisplaySentence($"{e.Player} folded.");
+                PokerVisualManager.Instance.DisplaySentence($"{playerName} folded.");
                 break;
             case PokerAction.Check:
-                PokerVisualManager.Instance.DisplaySentence($"{e.Player} checked.");
+                PokerVisualManager.Instance.DisplaySentence($"{playerName} checked.");
                 break;
             case PokerAction.Bet:
-                PokerVisualManager.Instance.DisplaySentence($"{e.Player} bet {e.Amount} chips.");
+                PokerVisualManager.Instance.DisplaySentence($"{playerName} bet {e.Amount} chips.");
                 break;
             case PokerAction.Raise:
-                PokerVisualManager.Instance.DisplaySentence($"{e.Player} raised {e.Amount} chips.");
+                PokerVisualManager.Instance.DisplaySentence($"{playerName} raised {e.Amount} chips.");
                 break;
             case PokerAction.Call:
-                PokerVisualManager.Instance.DisplaySentence($"{e.Player} called.");
+                PokerVisualManager.Instance.DisplaySentence($"{playerName} called.");
                 break;
         }
     }
