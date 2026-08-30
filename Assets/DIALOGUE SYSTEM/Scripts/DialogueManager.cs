@@ -32,6 +32,7 @@ public class DialogueManager : MonoBehaviour
     public Vector3 hidePanelPos = new Vector3(0, -800, 0);
     public float panelAnimationTime = 1f;
     public float textSpeed = 0.01f;
+    public float talkingSpeed = 8.0f;
 
     [Header("Club Scene Manager")] public ClubSceneManager clubSceneManager;
 
@@ -606,7 +607,7 @@ public class DialogueManager : MonoBehaviour
         {
             sentenceText.maxVisibleCharacters = i + 1;
 
-            if (i % 4 == 0 &&
+            if (i % talkingSpeed == 0 &&
                 source != null &&
                 talkingClip != null)
             {

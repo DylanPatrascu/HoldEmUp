@@ -182,8 +182,8 @@ MonoBehaviour:
   - {fileID: -6030492788390981365}
   CharacterName: Club
   CharacterIcon: {fileID: 21300000, guid: 41d7ecdb8492ece49b3505c91d124d30, type: 3}
-  CharacterLyingIcon: {fileID: 21300000, guid: 3c53879203a97e44a909a8e644c88f3a, type: 3}
-  TalkingClip: {fileID: 0}
+  CharacterLyingIcon: {fileID: 21300000, guid: 9a3c35f80efdf6644805c94c88edf65f, type: 3}
+  TalkingClip: {fileID: 8300000, guid: fbd3eab309d198b46b45524c2db2800a, type: 3}
 --- !u!114 &4540367918941388896
 MonoBehaviour:
   m_ObjectHideFlags: 0
