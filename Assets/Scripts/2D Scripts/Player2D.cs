@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class Player2D : MonoBehaviour
 {
@@ -8,61 +7,61 @@ public class Player2D : MonoBehaviour
     [SerializeField] private float moveSpeed = 8f;
     private SpriteRenderer playerSprite;
     private Animator animator;
-    private PlayerInput playerInput;
     private Rigidbody2D rb;
     private Vector2 moveInput;
-    private PlayerInput playerInput;
     private IInteractable currentInteractable;
     private bool facingRight = true;
     private bool isMoving = false;
+
+    private InputAction moveAction;
+    private InputAction interactAction;
+    private InputAction clickAction;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         playerSprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        playerInput = GetComponent<PlayerInput>();
     }
 
-    public void OnPause(InputValue value)
+    private void OnEnable()
     {
-        if (!value.isPressed || GameManager.Instance.IsGamePaused) return;
-
-        GameManager.Instance.PauseGame();
-        playerInput.SwitchCurrentActionMap("UI");
-    }
-
-    public void OnCancel(InputValue value)
-    {
-        if (!value.isPressed || !GameManager.Instance.IsGamePaused) return;
-
-        GameManager.Instance.ResumeGame();
-        playerInput.SwitchCurrentActionMap("Player");
-    }
-    
-    public void OnMove(InputValue value)
-    {
-        moveInput = value.Get<Vector2>();
-    }
-
-    public void OnChipInteract(InputValue value)
-    {
-        if (value.isPressed)
+        if (GameManager.Instance == null || GameManager.Instance.PlayerInputSystem == null)
         {
-            if (currentInteractable != null)
-            {
-                currentInteractable.Interact();
-            }
+            Debug.LogWarning("Player2D enabled before GameManager/PlayerInput was ready.");
+            return;
         }
+
+        var actions = GameManager.Instance.PlayerInputSystem.actions;
+
+        moveAction = actions.FindAction("Move");
+        interactAction = actions.FindAction("Interact");
+        clickAction = actions.FindAction("Click");
+
+        if (interactAction != null) interactAction.performed += OnInteractPerformed;
+        if (clickAction != null) clickAction.performed += OnClickPerformed;
     }
 
-    public void OnClick(InputValue value)
+    private void OnDisable()
     {
-        FindAnyObjectByType<DialogueManager>().OnClick();
+        if (interactAction != null) interactAction.performed -= OnInteractPerformed;
+        if (clickAction != null) clickAction.performed -= OnClickPerformed;
+    }
+
+    private void OnInteractPerformed(InputAction.CallbackContext ctx)
+    {
+        currentInteractable?.Interact();
+    }
+
+    private void OnClickPerformed(InputAction.CallbackContext ctx)
+    {
+        FindAnyObjectByType<DialogueManager>()?.OnClick();
     }
 
     private void FixedUpdate()
     {
+        moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
+
         rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, moveInput.y * moveSpeed);
         if (moveInput.x > 0 && !facingRight)
         {
@@ -74,9 +73,10 @@ public class Player2D : MonoBehaviour
             playerSprite.flipX = true;
             facingRight = false;
         }
+        isMoving = moveInput.sqrMagnitude > 0f;
         animator.SetFloat("Speed", Mathf.Abs(moveInput.x));
-        
-    }    
+
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -96,7 +96,7 @@ public class Player2D : MonoBehaviour
             currentInteractable.SetInteractable(true);
         }
     }
-    
+
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.TryGetComponent<IInteractable>(out var interactable))

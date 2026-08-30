@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     public int PlayerBalance = BettingManager.STARTING_BALANCE;
     public int PokerRound = 0;
-
+    public PlayerInput PlayerInputSystem;
     public static GameManager Instance;
 
     [SerializeField]
@@ -19,12 +19,24 @@ public class GameManager : MonoBehaviour
     public PauseMenu PauseGameUI => pauseGameUI.GetComponent<PauseMenu>();
     public bool IsGamePaused { get; private set; } = false;
 
+    private static readonly Dictionary<State, string> stateActionMaps = new()
+    {
+        [State.Menu] = "UI",
+        [State.InClub] = "Player",
+        [State.FirstPerson] = "Player"
+    };
+
     private static Dictionary<State, string> stateScenes = new()
     {
         [State.Menu] = "Assets/Scenes/MainMenu.unity",
         [State.InClub] = "Assets/Scenes/ClubScene.unity",
         [State.FirstPerson] = "Assets/Scenes/PokerScene.unity"
     };
+
+    // Cached so we can unsubscribe cleanly; these live for the app's lifetime
+    // since GameManager is never destroyed once Instance is set.
+    private InputAction pauseAction;
+    private InputAction cancelAction;
 
     void Awake()
     {
@@ -37,7 +49,23 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
+        if (PlayerInputSystem == null) PlayerInputSystem = GetComponent<PlayerInput>();
+
+        pauseAction = PlayerInputSystem.actions.FindAction("Pause");
+        cancelAction = PlayerInputSystem.actions.FindAction("Cancel");
+
+        if (pauseAction != null) pauseAction.performed += OnPausePerformed;
+        if (cancelAction != null) cancelAction.performed += OnCancelPerformed;
+
         SceneManager.LoadScene(stateScenes[CurrentState]);
+    }
+
+    void OnDestroy()
+    {
+        if (Instance != this) return;
+
+        if (pauseAction != null) pauseAction.performed -= OnPausePerformed;
+        if (cancelAction != null) cancelAction.performed -= OnCancelPerformed;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -55,7 +83,8 @@ public class GameManager : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-        } else
+        }
+        else
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -63,6 +92,8 @@ public class GameManager : MonoBehaviour
 
         string sceneToLoad = stateScenes[e.target];
         SceneManager.LoadScene(sceneToLoad);
+
+        PlayerInputSystem.SwitchCurrentActionMap(stateActionMaps[e.target]);
 
         pauseGameUI = Instantiate(pauseGameUI, GameObject.Find("Canvas").transform);
         pauseGameUI.SetActive(false);
@@ -77,6 +108,22 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning(exception.Message);
         }
+    }
+
+    private void OnPausePerformed(InputAction.CallbackContext ctx)
+    {
+        if (IsGamePaused) return;
+
+        PauseGame();
+        PlayerInputSystem.SwitchCurrentActionMap("UI");
+    }
+
+    private void OnCancelPerformed(InputAction.CallbackContext ctx)
+    {
+        if (!IsGamePaused) return;
+
+        ResumeGame();
+        PlayerInputSystem.SwitchCurrentActionMap(stateActionMaps[CurrentState]);
     }
 
     public void PauseGame()
@@ -104,5 +151,5 @@ public class GameManager : MonoBehaviour
             Cursor.visible = false;
         }
     }
-    
+
 }
