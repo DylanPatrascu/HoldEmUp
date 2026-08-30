@@ -71,8 +71,8 @@ public class ClubSceneManager : MonoBehaviour
 
     private void UpdateText()
     {
-        questionText.text = "Q's Remaining: " + (maxQuestionsPerRound - CurrentQuestionsAskedThisRound);
-        chipsText.text = "Chips: " + PokerChipsAvailable;
+        questionText.text = (maxQuestionsPerRound - CurrentQuestionsAskedThisRound).ToString();
+        chipsText.text = PokerChipsAvailable.ToString();
     }
 
     // TODO: Figure out game manager singleton thats not in current scene (persist?)
