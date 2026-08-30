@@ -353,7 +353,7 @@ MonoBehaviour:
   m_text: 000
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
-  m_sharedMaterial: {fileID: 5783243548683915312, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
+  m_sharedMaterial: {fileID: 102238019589011574, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -623,7 +623,7 @@ MonoBehaviour:
   m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
-  m_sharedMaterial: {fileID: 5783243548683915312, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
+  m_sharedMaterial: {fileID: 102238019589011574, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1996,6 +1996,8 @@ GameObject:
   - component: {fileID: 289042975}
   - component: {fileID: 289042974}
   - component: {fileID: 289042973}
+  - component: {fileID: 289042977}
+  - component: {fileID: 289042978}
   m_Layer: 0
   m_Name: Spade
   m_TagString: Untagged
@@ -2097,6 +2099,45 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: -180, z: 300}
+--- !u!95 &289042977
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 289042972}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7655d266b96a34531bccaf73772f87c5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &289042978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 289042972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 181309ee56e6d4a33b2c5bf086425e71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  pokerPosition: 4
+  meshRenderer: {fileID: 289042974}
+  animator: {fileID: 289042977}
+  staticTexture: {fileID: 2800000, guid: 9ea0f5f8ab3f50e449c7317ecd464f98, type: 3}
+  TwoFrameAnimation: {fileID: 9100000, guid: 7655d266b96a34531bccaf73772f87c5, type: 2}
 --- !u!1 &299979925
 GameObject:
   m_ObjectHideFlags: 0
@@ -2157,7 +2198,7 @@ MonoBehaviour:
   m_text: 000
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
-  m_sharedMaterial: {fileID: 5783243548683915312, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
+  m_sharedMaterial: {fileID: 102238019589011574, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3819,53 +3860,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f54c8589fc466874c952cddcf05d5b07, type: 3}
   m_PrefabInstance: {fileID: 695211522}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &497380837
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 497380839}
-  - component: {fileID: 497380838}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &497380838
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 497380837}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3ebda61640154ec487af536a1302d82, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  PlayerBalance: 100
-  PokerRound: 0
-  pauseGameUI: {fileID: 1713815092604908967, guid: 5dee235ff9836498dafe2a88cd6115cf, type: 3}
---- !u!4 &497380839
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 497380837}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &508467045
 GameObject:
   m_ObjectHideFlags: 0
@@ -4644,7 +4638,7 @@ MonoBehaviour:
   m_text: 000
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
-  m_sharedMaterial: {fileID: 5783243548683915312, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
+  m_sharedMaterial: {fileID: 102238019589011574, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4781,7 +4775,7 @@ MonoBehaviour:
   m_text: 100
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
-  m_sharedMaterial: {fileID: 5783243548683915312, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
+  m_sharedMaterial: {fileID: 102238019589011574, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5672,7 +5666,7 @@ MonoBehaviour:
   m_text: 000
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
-  m_sharedMaterial: {fileID: 5783243548683915312, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
+  m_sharedMaterial: {fileID: 102238019589011574, guid: 1a062ba1358d72142adbfebd4448f740, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7069,6 +7063,8 @@ GameObject:
   - component: {fileID: 1221020566}
   - component: {fileID: 1221020565}
   - component: {fileID: 1221020564}
+  - component: {fileID: 1221020569}
+  - component: {fileID: 1221020568}
   m_Layer: 0
   m_Name: Club
   m_TagString: Untagged
@@ -7170,6 +7166,45 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: -180, z: 345}
+--- !u!114 &1221020568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1221020563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 181309ee56e6d4a33b2c5bf086425e71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  pokerPosition: 3
+  meshRenderer: {fileID: 1221020565}
+  animator: {fileID: 1221020569}
+  staticTexture: {fileID: 2800000, guid: d6a6f94e10e2e774691cfed8faec8342, type: 3}
+  TwoFrameAnimation: {fileID: 9100000, guid: 286d6364eb1c544bd990f3315ba56de7, type: 2}
+--- !u!95 &1221020569
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1221020563}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 286d6364eb1c544bd990f3315ba56de7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &1257266588
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8422,7 +8457,6 @@ RectTransform:
   m_Children:
   - {fileID: 1851704845}
   - {fileID: 795662616}
-  - {fileID: 654195956}
   - {fileID: 53081741}
   - {fileID: 533639547}
   m_Father: {fileID: 0}
@@ -8550,6 +8584,8 @@ GameObject:
   - component: {fileID: 1546967505}
   - component: {fileID: 1546967504}
   - component: {fileID: 1546967503}
+  - component: {fileID: 1546967507}
+  - component: {fileID: 1546967508}
   m_Layer: 0
   m_Name: Heart
   m_TagString: Untagged
@@ -8651,6 +8687,45 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: -180, z: 15}
+--- !u!95 &1546967507
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546967502}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ec513995daf194732837d7dd4ff86988, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1546967508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546967502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 181309ee56e6d4a33b2c5bf086425e71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  pokerPosition: 2
+  meshRenderer: {fileID: 1546967504}
+  animator: {fileID: 1546967507}
+  staticTexture: {fileID: 2800000, guid: c88cc44951675cc41a7f02dad569ba15, type: 3}
+  TwoFrameAnimation: {fileID: 9100000, guid: ec513995daf194732837d7dd4ff86988, type: 2}
 --- !u!1001 &1550099642
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10956,6 +11031,8 @@ GameObject:
   - component: {fileID: 2053191238}
   - component: {fileID: 2053191237}
   - component: {fileID: 2053191236}
+  - component: {fileID: 2053191240}
+  - component: {fileID: 2053191241}
   m_Layer: 0
   m_Name: Diamond
   m_TagString: Untagged
@@ -11057,6 +11134,45 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: -180, z: 60}
+--- !u!95 &2053191240
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2053191235}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ebf5f4bbd046e45d39e55795784617d8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2053191241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2053191235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 181309ee56e6d4a33b2c5bf086425e71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  pokerPosition: 1
+  meshRenderer: {fileID: 2053191237}
+  animator: {fileID: 2053191240}
+  staticTexture: {fileID: 2800000, guid: e63dfb0b3201cc84da1dab541b52e9c6, type: 3}
+  TwoFrameAnimation: {fileID: 9100000, guid: ebf5f4bbd046e45d39e55795784617d8, type: 2}
 --- !u!4 &2055118008 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f54c8589fc466874c952cddcf05d5b07, type: 3}
@@ -11541,7 +11657,6 @@ SceneRoots:
   - {fileID: 662224418}
   - {fileID: 1918033131}
   - {fileID: 1106444305}
-  - {fileID: 497380839}
   - {fileID: 832575519}
   - {fileID: 1497831262}
   - {fileID: 4398954}

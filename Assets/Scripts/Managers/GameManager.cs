@@ -17,7 +17,6 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject pauseGameUI;
     public PauseMenu PauseGameUI => pauseGameUI.GetComponent<PauseMenu>();
-
     public bool IsGamePaused { get; private set; } = false;
 
     private static Dictionary<State, string> stateScenes = new()
@@ -38,22 +37,18 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        pauseGameUI = Instantiate(pauseGameUI, GameObject.Find("Canvas").transform);
-        pauseGameUI.SetActive(false);
-
-        // SceneManager.LoadScene(stateScenes[CurrentState]);
+        SceneManager.LoadScene(stateScenes[CurrentState]);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _stateMachine.Enter += handleSceneChange;
-        _stateMachine.Exit  += handleSceneChange;
-        
-        // _stateMachine.Fire(Trigger.ToFirstPerson);
+
+        _stateMachine.Fire(Trigger.ToClub);
     }
 
-    public static void handleSceneChange(object sender, StateEventArgs e)
+    public void handleSceneChange(object sender, StateEventArgs e)
     {
         // Handle Cursor Locks
         if (e.target == State.FirstPerson)
@@ -67,14 +62,10 @@ public class GameManager : MonoBehaviour
         }
 
         string sceneToLoad = stateScenes[e.target];
-        SceneManager.LoadSceneAsync(sceneToLoad);
-    }
+        SceneManager.LoadScene(sceneToLoad);
 
-    public static void handleSceneUnload(object sender, StateEventArgs e)
-    {
-        string sceneToUnload = stateScenes[e.target];
-        SceneManager.UnloadSceneAsync(sceneToUnload);
-        Debug.Log($"Unloaded scene {e.target}");
+        pauseGameUI = Instantiate(pauseGameUI, GameObject.Find("Canvas").transform);
+        pauseGameUI.SetActive(false);
     }
 
     public void Fire(Trigger trigger)

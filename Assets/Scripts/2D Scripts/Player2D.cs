@@ -8,6 +8,7 @@ public class Player2D : MonoBehaviour
     [SerializeField] private float moveSpeed = 8f;
     private SpriteRenderer playerSprite;
     private Animator animator;
+    private PlayerInput playerInput;
     private Rigidbody2D rb;
     private Vector2 moveInput;
     private PlayerInput playerInput;

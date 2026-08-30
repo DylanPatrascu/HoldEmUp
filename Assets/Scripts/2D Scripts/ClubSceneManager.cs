@@ -42,8 +42,7 @@ public class ClubSceneManager : MonoBehaviour
     public void EndCurrentClubRound()
     {
         print("End Current Club Round");
-        // Give current balance to PokerGameManager
-        // Switch scenes to 3D
+        GameManager.Instance.Fire(Trigger.ToFirstPerson);
     }
 
     public bool CanAskQuestion()
