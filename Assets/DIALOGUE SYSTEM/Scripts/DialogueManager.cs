@@ -55,6 +55,8 @@ public class DialogueManager : MonoBehaviour
 
     private Button[] optionButtons;
     private TMP_Text[] optionText;
+    private Tween panelTween;
+    private bool active = false;
 
 
     /// <summary>
@@ -114,8 +116,10 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogueTree(DialogueTree dialogueTree)
     {
+        if (active) return;
         currentDialogueTree = dialogueTree;
         StartDialogue(dialogueTree.nodes[0]);
+        active = true;
     }
 
 
@@ -126,6 +130,9 @@ public class DialogueManager : MonoBehaviour
     public void StartDialogue(Node node)
     {
         curUnaskedQuestions.Clear();
+        
+        panelTween?.Kill();
+        panelTween = null;
 
         if (node == null)
         {
@@ -141,7 +148,6 @@ public class DialogueManager : MonoBehaviour
         nextElement.enabled = false;
 
         HideOptionButtons();
-        print("Hid option buttons");
         HideBribe();
 
         switch (curNode)
@@ -200,6 +206,8 @@ public class DialogueManager : MonoBehaviour
                 StartDialogue(finishedPort.node);
             }
             else Debug.LogWarning("Finished Dialogue node is missing");
+
+            return;
         }
         
         if (!TryPrepareDialogueNode(node))
@@ -328,12 +336,11 @@ public class DialogueManager : MonoBehaviour
 
         if (selectedQuestion is BribeDialogueNode bN)
         {
-            print("Bribed!");
             clubSceneManager.Bribed(bN.bribeAmount);
         }
 
         selectedQuestion.hasBeenAsked = true;
-        clubSceneManager.AskedAQuestion();
+        if (curNode == currentDialogueTree.nodes[0]) clubSceneManager.AskedAQuestion();
 
         StartDialogue(selectedQuestion);
     }
@@ -378,7 +385,12 @@ public class DialogueManager : MonoBehaviour
     private void RenderUI()
     {
         nameText.text = currentDialogueTree.CharacterName;
-        portrait.sprite = currentDialogueTree.CharacterIcon;
+        if (curNode is DialogueNode dN && dN.lying)
+        {
+            print("portrait wasnt null");
+            portrait.sprite = currentDialogueTree.CharacterLyingIcon;
+        }
+        else portrait.sprite = currentDialogueTree.CharacterIcon;
         talkingClip = currentDialogueTree.TalkingClip;
 
         sentenceText.text = "";
@@ -511,9 +523,13 @@ public class DialogueManager : MonoBehaviour
             source.PlayOneShot(panelOpen);
         }
 
-        transform
+        panelTween = transform
             .DOLocalMove(showPanelPos, panelAnimationTime).SetUpdate(true)
-            .OnComplete(DisplaySentence);
+            .OnComplete(() =>
+            {
+                panelTween = null;
+                DisplaySentence();
+            });
         
         clubSceneManager.Pause();
     }
@@ -613,6 +629,7 @@ public class DialogueManager : MonoBehaviour
     /// </summary>
     private void FinishCurrentPage()
     {
+        print("TRYING TO FINISH PAGE");
         StopTextRendering();
 
         if (!TryGetCurrentPageInfo(out TMP_PageInfo pageInfo))
@@ -748,8 +765,13 @@ public class DialogueManager : MonoBehaviour
     public void EndDialogue()
     {
         StopTextRendering();
+        
+        panelTween?.Kill();
+        panelTween = null;
 
         sentences.Clear();
+        
+        sentenceText.text = "";
 
         nextElement.enabled = false;
 
@@ -761,12 +783,13 @@ public class DialogueManager : MonoBehaviour
             source.PlayOneShot(panelClose);
         }
 
-        transform.DOLocalMove(
+        panelTween = transform.DOLocalMove(
             hidePanelPos,
             panelAnimationTime
-        ).SetUpdate(true);
+        ).SetUpdate(true).OnComplete(() => { panelTween = null; });
         
         currentDialogueTree = null;
+        active = false;
         
         clubSceneManager.Resume();
     }

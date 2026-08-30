@@ -38,7 +38,10 @@ MonoBehaviour:
       _node: {fileID: -8322534981969707784}
       _typeQualifiedName: DialogueNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-      connections: []
+      connections:
+      - fieldName: prevNode
+        node: {fileID: -1280370531653562918}
+        reroutePoints: []
       _direction: 1
       _connectionType: 0
       _typeConstraint: 0
@@ -47,7 +50,10 @@ MonoBehaviour:
       _node: {fileID: -8322534981969707784}
       _typeQualifiedName: DialogueNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-      connections: []
+      connections:
+      - fieldName: prevNode
+        node: {fileID: 1211889623719225342}
+        reroutePoints: []
       _direction: 1
       _connectionType: 0
       _typeConstraint: 0
@@ -75,7 +81,8 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences:
-  - Hi Im Club
+  - ...
+  overrideImage: {fileID: 0}
   optionA: {fileID: 0}
   optionB: {fileID: 0}
   optionC: {fileID: 0}
@@ -93,7 +100,7 @@ MonoBehaviour:
   m_Name: Dialogue Control
   m_EditorClassIdentifier: Assembly-CSharp::DialogueControlNode
   graph: {fileID: 11400000}
-  position: {x: 328, y: 152}
+  position: {x: 408, y: 456}
   ports:
     keys:
     - prevNode
@@ -112,6 +119,7 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences: []
+  overrideImage: {fileID: 0}
   dialogueControl: 0
 --- !u!114 &-3269215010916731358
 MonoBehaviour:
@@ -126,7 +134,7 @@ MonoBehaviour:
   m_Name: Simple Dialogue
   m_EditorClassIdentifier: Assembly-CSharp::SimpleDialogueNode
   graph: {fileID: 11400000}
-  position: {x: 88, y: -120}
+  position: {x: 168, y: -216}
   ports:
     keys:
     - nextNode
@@ -155,10 +163,92 @@ MonoBehaviour:
       _typeConstraint: 0
       _dynamic: 0
   prevNode: {fileID: 0}
-  LeadingQuestion: Path 1?
+  LeadingQuestion: About yourself?
   Sentences:
-  - This is path 1.
+  - ...
+  overrideImage: {fileID: 21300000, guid: 9a3c35f80efdf6644805c94c88edf65f, type: 3}
   nextNode: {fileID: 0}
+--- !u!114 &-1280370531653562918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91a9c21b70cb1a448918862bd6025e21, type: 3}
+  m_Name: Simple Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleDialogueNode
+  graph: {fileID: 11400000}
+  position: {x: 200, y: -8}
+  ports:
+    keys:
+    - nextNode
+    - prevNode
+    values:
+    - _fieldName: nextNode
+      _node: {fileID: -1280370531653562918}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: prevNode
+        node: {fileID: 9074317449657920538}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: prevNode
+      _node: {fileID: -1280370531653562918}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: optionB
+        node: {fileID: -8322534981969707784}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  prevNode: {fileID: 0}
+  LeadingQuestion: 'About your job? '
+  Sentences:
+  - ...
+  overrideImage: {fileID: 0}
+  nextNode: {fileID: 0}
+--- !u!114 &-347563673378154435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee761853634e270489202ec9035cbef8, type: 3}
+  m_Name: Dialogue Control
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueControlNode
+  graph: {fileID: 11400000}
+  position: {x: 408, y: 216}
+  ports:
+    keys:
+    - prevNode
+    values:
+    - _fieldName: prevNode
+      _node: {fileID: -347563673378154435}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: nextNode
+        node: {fileID: 1211889623719225342}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  prevNode: {fileID: 0}
+  LeadingQuestion: 
+  Sentences: []
+  overrideImage: {fileID: 0}
+  dialogueControl: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,9 +267,60 @@ MonoBehaviour:
   - {fileID: 4540367918941388896}
   - {fileID: 9001387695486318046}
   - {fileID: -6030492788390981365}
+  - {fileID: -1280370531653562918}
+  - {fileID: 9074317449657920538}
+  - {fileID: 1211889623719225342}
+  - {fileID: -347563673378154435}
   CharacterName: Club
-  CharacterIcon: {fileID: 21300000, guid: 7b4b3a99378073f4a8f7cde60a605630, type: 3}
+  CharacterIcon: {fileID: 21300000, guid: 41d7ecdb8492ece49b3505c91d124d30, type: 3}
   TalkingClip: {fileID: 0}
+--- !u!114 &1211889623719225342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91a9c21b70cb1a448918862bd6025e21, type: 3}
+  m_Name: Simple Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleDialogueNode
+  graph: {fileID: 11400000}
+  position: {x: 152, y: 184}
+  ports:
+    keys:
+    - nextNode
+    - prevNode
+    values:
+    - _fieldName: nextNode
+      _node: {fileID: 1211889623719225342}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: prevNode
+        node: {fileID: -347563673378154435}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: prevNode
+      _node: {fileID: 1211889623719225342}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: optionC
+        node: {fileID: -8322534981969707784}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  prevNode: {fileID: 0}
+  LeadingQuestion: Why play poker?
+  Sentences:
+  - 'It is fun to win. '
+  overrideImage: {fileID: 0}
+  nextNode: {fileID: 0}
 --- !u!114 &4540367918941388896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,7 +334,7 @@ MonoBehaviour:
   m_Name: Simple Dialogue
   m_EditorClassIdentifier: Assembly-CSharp::SimpleDialogueNode
   graph: {fileID: 11400000}
-  position: {x: 88, y: 152}
+  position: {x: 168, y: 424}
   ports:
     keys:
     - nextNode
@@ -224,7 +365,8 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences:
-  - Finished
+  - ...
+  overrideImage: {fileID: 0}
   nextNode: {fileID: 0}
 --- !u!114 &9001387695486318046
 MonoBehaviour:
@@ -239,7 +381,7 @@ MonoBehaviour:
   m_Name: Dialogue Control
   m_EditorClassIdentifier: Assembly-CSharp::DialogueControlNode
   graph: {fileID: 11400000}
-  position: {x: 312, y: 8}
+  position: {x: 472, y: -200}
   ports:
     keys:
     - prevNode
@@ -258,4 +400,39 @@ MonoBehaviour:
   prevNode: {fileID: 0}
   LeadingQuestion: 
   Sentences: []
+  overrideImage: {fileID: 0}
+  dialogueControl: 0
+--- !u!114 &9074317449657920538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee761853634e270489202ec9035cbef8, type: 3}
+  m_Name: Dialogue Control
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueControlNode
+  graph: {fileID: 11400000}
+  position: {x: 456, y: 24}
+  ports:
+    keys:
+    - prevNode
+    values:
+    - _fieldName: prevNode
+      _node: {fileID: 9074317449657920538}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: nextNode
+        node: {fileID: -1280370531653562918}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  prevNode: {fileID: 0}
+  LeadingQuestion: 
+  Sentences: []
+  overrideImage: {fileID: 0}
   dialogueControl: 0
