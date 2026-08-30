@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 public class PokerVisualManager : MonoBehaviour
 {
@@ -23,11 +24,21 @@ public class PokerVisualManager : MonoBehaviour
     [SerializeField] private Transform tableCardTransform;
 
     [Header("Revealed Hands")]
-
     [SerializeField] private Transform clubRevealedTransform;
     [SerializeField] private Transform spadeRevealedTransform;
     [SerializeField] private Transform heartRevealedTransform;
     [SerializeField] private Transform diamondRevealedTransform;
+
+    [Header("Current Bets")]
+    [SerializeField] private GameObject spadesBets;
+    [SerializeField] private TMP_Text spadesCurrentBetText;
+    [SerializeField] private GameObject diamondsBets;
+    [SerializeField] private TMP_Text diamondsCurrentBetText;
+    [SerializeField] private GameObject heartsBets;
+    [SerializeField] private TMP_Text heartsCurrentBetText;
+    [SerializeField] private GameObject clubsBets;
+    [SerializeField] private TMP_Text clubsCurrentBetText;
+
     private const float CARD_MOVEMENT_SPEED = 0.67f;
     private const float CARD_ORITENTATION_SPEED = 0.5f;
     private Vector3 CARD_OFFSET = new Vector3(0.7f, 0.1f, 0);
@@ -39,8 +50,6 @@ public class PokerVisualManager : MonoBehaviour
         private bool isDisplayingMessage = false;
 
 
-
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -50,6 +59,12 @@ public class PokerVisualManager : MonoBehaviour
         }
         Instance = this;
     }
+
+    private void Start()
+    {
+        PokerGameManager.Instance.PerformedPlayerAction += UpdateCurrentBets;
+    }
+
     private List<KeyValuePair<PokerPosition, List<PlayingCard>>> GetHandsFlattened()
     {
         Dictionary<PokerPosition, List<PlayingCard>> hands = new Dictionary<PokerPosition,List<PlayingCard>>(PokerManager.Instance.allH);
@@ -264,6 +279,83 @@ public class PokerVisualManager : MonoBehaviour
         }
     }
 
+    public void UpdateCurrentBets(object sender, PokerGameManager.PokerEvent e)
+    {
+        if (e.Action == PokerAction.Fold)
+        {
+            switch (e.Player)
+            {
+                case PokerPosition.Heart:
+                    heartsBets.SetActive(false);
+                    break;
+                case PokerPosition.Diamond:
+                    diamondsBets.SetActive(false);
+                    break;
+                case PokerPosition.Spade:
+                    spadesBets.SetActive(false);
+                    break;
+                case PokerPosition.Club:
+                    clubsBets.SetActive(false);
+                    break;
+            }
+        }
+        else if (e.Action == PokerAction.Call)
+        {
+            switch (e.Player)
+            {
+                case PokerPosition.Heart:
+                    heartsCurrentBetText.text = BettingManager.Instance.GetHighestBet(PokerGameManager.Instance.ActivePlayers.ToList()).ToString();
+                    break;
+                case PokerPosition.Diamond:
+                    diamondsCurrentBetText.text = BettingManager.Instance.GetHighestBet(PokerGameManager.Instance.ActivePlayers.ToList()).ToString(); ;
+                    break;
+                case PokerPosition.Spade:
+                    spadesCurrentBetText.text = BettingManager.Instance.GetHighestBet(PokerGameManager.Instance.ActivePlayers.ToList()).ToString(); ;
+                    break;
+                case PokerPosition.Club:
+                    clubsCurrentBetText.text = BettingManager.Instance.GetHighestBet(PokerGameManager.Instance.ActivePlayers.ToList()).ToString(); ;
+                    break;
+            }
+        }
+        else if (e.Action == PokerAction.Check)
+        {
+            switch (e.Player)
+            {
+                case PokerPosition.Heart:
+                    heartsCurrentBetText.text = "0";
+                    break;
+                case PokerPosition.Diamond:
+                    diamondsCurrentBetText.text = "0";
+                    break;
+                case PokerPosition.Spade:
+                    spadesCurrentBetText.text = "0";
+                    break;
+                case PokerPosition.Club:
+                    clubsCurrentBetText.text = "0";
+                    break;
+            }
+        }
+        else if (e.Action != PokerAction.Fold && e.Action != PokerAction.Check)
+        {
+            switch (e.Player)
+            {
+                case PokerPosition.Heart:
+                    heartsCurrentBetText.text = e.Amount.ToString();
+                    break;
+                case PokerPosition.Diamond:
+                    diamondsCurrentBetText.text = e.Amount.ToString();
+                    break;
+                case PokerPosition.Spade:
+                    spadesCurrentBetText.text = e.Amount.ToString();
+                    break;
+                case PokerPosition.Club:
+                    clubsCurrentBetText.text = e.Amount.ToString();
+                    break;
+            }
+        }
+    }
+
+    #region Event Log
     public void DisplaySentence(string sentence)
     {
         messageQueue.Enqueue(sentence);
@@ -319,5 +411,7 @@ public class PokerVisualManager : MonoBehaviour
             sentenceText.text = string.Join("\n", lines, excess, lines.Length - excess);
         }
     }
+    #endregion
+
 
 }
