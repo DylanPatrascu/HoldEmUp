@@ -8229,7 +8229,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7a477fb9c9e39cf4ead9f302e746abb8, type: 3}
   playingCardFlipClips:
   - {fileID: 8300000, guid: 7089411404e0a464ead57d6fcc64092a, type: 3}
-  - {fileID: 8300000, guid: d7a467b83aeeff4438ba0819f90418dc, type: 3}
   audioVolumeRange: {x: 0.8, y: 1.1}
   audioPitchRange: {x: 0.8, y: 1.2}
 --- !u!1 &1637442132
