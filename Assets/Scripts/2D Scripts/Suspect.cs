@@ -12,7 +12,9 @@ public class Suspect : MonoBehaviour, IInteractable
     [SerializeField] private DialogueTree roundTwoDialogueTree;
     [SerializeField] private DialogueTree roundThreeDialogueTree;
     [SerializeField] private DialogueTree roundFourDialogueTree;
-    
+    [SerializeField] private DialogueTree roundFiveDialogueTree;
+
+
     private bool _interactable = false;
     private DialogueTree[] _trees;
 
@@ -20,7 +22,7 @@ public class Suspect : MonoBehaviour, IInteractable
     protected void Start()
     {
         _trees = new DialogueTree[]
-            { roundOneDialogueTree, roundTwoDialogueTree, roundThreeDialogueTree, roundFourDialogueTree };
+            { roundOneDialogueTree, roundTwoDialogueTree, roundThreeDialogueTree, roundFourDialogueTree, roundFiveDialogueTree };
         
         if (interact == null)
         {

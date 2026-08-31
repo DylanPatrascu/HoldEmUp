@@ -1,0 +1,267 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-923160586684429852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee761853634e270489202ec9035cbef8, type: 3}
+  m_Name: Dialogue Control
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueControlNode
+  graph: {fileID: 11400000}
+  position: {x: 328, y: -120}
+  ports:
+    keys:
+    - prevNode
+    values:
+    - _fieldName: prevNode
+      _node: {fileID: -923160586684429852}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: nextNode
+        node: {fileID: 9114080833832258629}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  prevNode: {fileID: 0}
+  LeadingQuestion: 
+  Sentences: []
+  lying: 0
+  dialogueControl: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7793c6a5fcbd50c4cb0ecab6dc6aedcb, type: 3}
+  m_Name: Spade R5
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueTree
+  nodes:
+  - {fileID: 2801456166548441918}
+  - {fileID: 9114080833832258629}
+  - {fileID: -923160586684429852}
+  - {fileID: 1199862403142979197}
+  CharacterName: Trowel
+  CharacterIcon: {fileID: 21300000, guid: 0c31e8abbf0055b40a57312a3f24b2f8, type: 3}
+  CharacterLyingIcon: {fileID: 21300000, guid: ea47ae858b11f1e49b8d959c43d62961, type: 3}
+  TalkingClip: {fileID: 8300000, guid: bc810412a78cea643ace8127849d2ac8, type: 3}
+--- !u!114 &1199862403142979197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 364cd6da4a1f0614db391e2d45e3ac3e, type: 3}
+  m_Name: Option Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::OptionDialogueNode
+  graph: {fileID: 11400000}
+  position: {x: -152, y: -200}
+  ports:
+    keys:
+    - optionA
+    - optionB
+    - optionC
+    - finished
+    - prevNode
+    values:
+    - _fieldName: optionA
+      _node: {fileID: 1199862403142979197}
+      _typeQualifiedName: DialogueNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: prevNode
+        node: {fileID: 9114080833832258629}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: optionB
+      _node: {fileID: 1199862403142979197}
+      _typeQualifiedName: DialogueNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: optionC
+      _node: {fileID: 1199862403142979197}
+      _typeQualifiedName: DialogueNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: finished
+      _node: {fileID: 1199862403142979197}
+      _typeQualifiedName: DialogueNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: prevNode
+      _node: {fileID: 1199862403142979197}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: optionA
+        node: {fileID: 2801456166548441918}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  prevNode: {fileID: 0}
+  LeadingQuestion: Did you do it?
+  Sentences:
+  - Did I... What? Of course not!
+  lying: 0
+  optionA: {fileID: 0}
+  optionB: {fileID: 0}
+  optionC: {fileID: 0}
+  finished: {fileID: 0}
+--- !u!114 &2801456166548441918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 364cd6da4a1f0614db391e2d45e3ac3e, type: 3}
+  m_Name: Option Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::OptionDialogueNode
+  graph: {fileID: 11400000}
+  position: {x: -456, y: 56}
+  ports:
+    keys:
+    - optionA
+    - optionB
+    - optionC
+    - finished
+    - prevNode
+    values:
+    - _fieldName: optionA
+      _node: {fileID: 2801456166548441918}
+      _typeQualifiedName: DialogueNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: prevNode
+        node: {fileID: 1199862403142979197}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: optionB
+      _node: {fileID: 2801456166548441918}
+      _typeQualifiedName: DialogueNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: optionC
+      _node: {fileID: 2801456166548441918}
+      _typeQualifiedName: DialogueNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: finished
+      _node: {fileID: 2801456166548441918}
+      _typeQualifiedName: DialogueNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: prevNode
+      _node: {fileID: 2801456166548441918}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  prevNode: {fileID: 0}
+  LeadingQuestion: 
+  Sentences:
+  - Yes?
+  lying: 0
+  optionA: {fileID: 0}
+  optionB: {fileID: 0}
+  optionC: {fileID: 0}
+  finished: {fileID: 0}
+--- !u!114 &9114080833832258629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91a9c21b70cb1a448918862bd6025e21, type: 3}
+  m_Name: Simple Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleDialogueNode
+  graph: {fileID: 11400000}
+  position: {x: 88, y: -168}
+  ports:
+    keys:
+    - nextNode
+    - prevNode
+    values:
+    - _fieldName: nextNode
+      _node: {fileID: 9114080833832258629}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: prevNode
+        node: {fileID: -923160586684429852}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: prevNode
+      _node: {fileID: 9114080833832258629}
+      _typeQualifiedName: XNode.Node, XNode, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: optionA
+        node: {fileID: 1199862403142979197}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  prevNode: {fileID: 0}
+  LeadingQuestion: <b><color=red>Motley</color></b> wanted to go public with your
+    relationship, and you couldn't let that get out.
+  Sentences:
+  - I can't believe this... I... I loved him. I wouldn't. Please don't tell anyone
+    I said that...
+  - YOU BLEW YOUR COVER. <b><color=#4d65b4>Trowel</color></b> <sprite=1> was not
+    the killer... Try again?
+  lying: 0
+  nextNode: {fileID: 0}
