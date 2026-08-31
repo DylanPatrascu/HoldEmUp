@@ -234,7 +234,7 @@ public class GameManager : MonoBehaviour
         UpdateClubRoundText();
     }
 
-    private void UpdateClubRoundText()
+    public void UpdateClubRoundText()
     {
         questionText.text = (maxQuestionsPerRound[GameManager.Instance.PokerRound] - CurrentQuestionsAskedThisRound).ToString();
         Debug.Log($"{maxQuestionsPerRound[GameManager.Instance.PokerRound]} / {CurrentQuestionsAskedThisRound}");
