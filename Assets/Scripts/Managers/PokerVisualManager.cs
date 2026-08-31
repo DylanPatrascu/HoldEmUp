@@ -95,23 +95,37 @@ public class PokerVisualManager : MonoBehaviour
     }
     public IEnumerator DealCardsToEveryone()
     {
-        PokerPosition player = PokerGameManager.Instance.SmallBlind;
+        PokerPosition smallBlind = PokerGameManager.Instance.SmallBlind;
+
         List<KeyValuePair<PokerPosition, List<PlayingCard>>> flattenedHands = GetHandsFlattened();
 
-        for (int i = (int)player; i < flattenedHands.Count; i++)
+        int startIndex = flattenedHands.FindIndex(x => x.Key == smallBlind);
+
+        if (startIndex == -1)
         {
-            var curr = flattenedHands[i % flattenedHands.Count];
+            Debug.LogError($"Could not find Small Blind {smallBlind} in flattenedHands.");
+            yield break;
+        }
+
+        // First card
+        for (int i = 0; i < flattenedHands.Count; i++)
+        {
+            int index = (startIndex + i) % flattenedHands.Count;
+            var curr = flattenedHands[index];
+
             yield return StartCoroutine(SpawnCard(curr.Value[0], curr.Key));
         }
 
-        for (int i = (int)player; i < flattenedHands.Count; i++)
+        // Second card
+        for (int i = 0; i < flattenedHands.Count; i++)
         {
-            var curr = flattenedHands[i % flattenedHands.Count];
+            int index = (startIndex + i) % flattenedHands.Count;
+            var curr = flattenedHands[index];
+
             yield return StartCoroutine(SpawnCard(curr.Value[1], curr.Key));
         }
-        //yield return new WaitForEndOfFrame();
+
         OffsetCardsInHands();
-        yield return null;
     }
     public IEnumerator SpawnCard(PlayingCard card, PokerPosition player)
     {
@@ -222,7 +236,8 @@ public class PokerVisualManager : MonoBehaviour
     }
     public void OffsetCardsInHands()
     {
-        for (int i = 0; i <= 1; i++)
+        Debug.Log("hwheahew" + playerHandTransform.childCount);
+        for (int i = 0; i <= playerHandTransform.childCount - 1; i++)
         {
             playerHandTransform.GetChild(i).DOLocalMove(Vector3.zero + (CARD_OFFSET * i), CARD_ORITENTATION_SPEED);
             playerHandTransform.GetChild(i).DOLocalRotate(Vector3.zero, .5f);

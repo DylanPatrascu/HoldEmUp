@@ -135,7 +135,7 @@ public class PokerManager : MonoBehaviour
         }
 
         Dictionary<PokerPosition, string> playerNames = new Dictionary<PokerPosition, string> { [PokerPosition.Joker] = "Joker", [PokerPosition.Club] = "Berghain", [PokerPosition.Heart] = "Valentine", [PokerPosition.Spade] = "Trowel", [PokerPosition.Diamond] = "Almaz" };
-        Dictionary<PokerHand, string> pokerHand = new Dictionary<PokerHand, string> { [PokerHand.RoyalFlush] = "Royal Flush", [PokerHand.StraightFlush] = "Straight Flush", [PokerHand.FourOfAKind] = "Four of a Kind", [PokerHand.FullHouse] = "Full House", [PokerHand.Flush] = "Flush", [PokerHand.Straight] = "Straight", [PokerHand.ThreeOfAKind] = "Three of a Kind", [PokerHand.TwoPair] = "Two Pair", [PokerHand.HighCard] = "High Card" };
+        Dictionary<PokerHand, string> pokerHand = new Dictionary<PokerHand, string> { [PokerHand.RoyalFlush] = "Royal Flush", [PokerHand.StraightFlush] = "Straight Flush", [PokerHand.FourOfAKind] = "Four of a Kind", [PokerHand.FullHouse] = "Full House", [PokerHand.Flush] = "Flush", [PokerHand.Straight] = "Straight", [PokerHand.ThreeOfAKind] = "Three of a Kind", [PokerHand.TwoPair] = "Two Pair", [PokerHand.OnePair] = "One Pair", [PokerHand.HighCard] = "High Card" };
 
         //output
         if (winners.Count == 1)
