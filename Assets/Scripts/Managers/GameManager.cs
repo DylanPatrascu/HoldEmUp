@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
         if (pauseAction != null) pauseAction.performed += OnPausePerformed;
         if (cancelAction != null) cancelAction.performed += OnCancelPerformed;
 
-        pauseGameUI.SetActive(false);
+        if (pauseGameUI != null) pauseGameUI.SetActive(false);
 
         SceneManager.LoadScene(stateScenes[CurrentState]);
     }
@@ -240,7 +240,7 @@ public class GameManager : MonoBehaviour
 
     public void PauseGame()
     {
-        pauseGameUI.SetActive(true);
+        if (pauseGameUI != null) pauseGameUI.SetActive(true);
         GeneralPause();
         IsGamePaused = true;
 
@@ -253,7 +253,7 @@ public class GameManager : MonoBehaviour
 
     public void ResumeGame()
     {
-        pauseGameUI.SetActive(false);
+        if (pauseGameUI != null) pauseGameUI.SetActive(false);
         GeneralResume();
         IsGamePaused = false;
 

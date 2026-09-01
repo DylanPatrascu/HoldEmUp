@@ -11,7 +11,7 @@ public class PauseMenu : MonoBehaviour
         Hands,
         CaseFile,
     };
-    public List<MenuState> PrevStates;
+    public List<MenuState> PrevStates = new List<MenuState>();
     public MenuState CurrentMenuState = MenuState.PauseMenu;
 
     [Serializable]
@@ -28,9 +28,14 @@ public class PauseMenu : MonoBehaviour
 
     void OnEnable()
     {
+        if (options == null) return;
+
         foreach (MenuObject m in options)
-            if (m.Menu == MenuState.Hands)
-                m.UIComponent.SetActive(GameManager.Instance.CurrentState == State.FirstPerson); 
+        {
+            if (m.UIComponent == null) continue;
+            if (m.Menu == MenuState.Hands && GameManager.Instance != null)
+                m.UIComponent.SetActive(GameManager.Instance.CurrentState == State.FirstPerson);
+        }
     }
 
     public void ResumeGame()
@@ -38,8 +43,12 @@ public class PauseMenu : MonoBehaviour
 
     private void ActivateCurrentObject()
     {
+        if (options == null) return;
+
         foreach (MenuObject m in options)
         {
+            if (m.UIComponent == null) continue;
+
             if (m.Menu == CurrentMenuState && !m.UIComponent.activeSelf)
                 m.UIComponent.SetActive(true);
             else if (m.Menu != CurrentMenuState && m.UIComponent.activeSelf)
@@ -49,6 +58,7 @@ public class PauseMenu : MonoBehaviour
 
     public void OpenSettings()
     {
+        if (PrevStates == null) PrevStates = new List<MenuState>();
         PrevStates.Add(CurrentMenuState);
         CurrentMenuState = MenuState.Settings;
 
@@ -57,6 +67,7 @@ public class PauseMenu : MonoBehaviour
 
     public void OpenHands()
     {
+        if (PrevStates == null) PrevStates = new List<MenuState>();
         PrevStates.Add(CurrentMenuState);
         CurrentMenuState = MenuState.Hands;
 
@@ -65,6 +76,7 @@ public class PauseMenu : MonoBehaviour
 
     public void OpenCaseFile()
     {
+        if (PrevStates == null) PrevStates = new List<MenuState>();
         PrevStates.Add(CurrentMenuState);
         CurrentMenuState = MenuState.CaseFile;
 
@@ -78,6 +90,13 @@ public class PauseMenu : MonoBehaviour
 
     public void GoBack()
     {
+        if (PrevStates == null || PrevStates.Count == 0)
+        {
+            CurrentMenuState = MenuState.PauseMenu;
+            ActivateCurrentObject();
+            return;
+        }
+
         CurrentMenuState = PrevStates[0];
         PrevStates.RemoveAt(0);
 
