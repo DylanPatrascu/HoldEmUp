@@ -36,7 +36,8 @@ public class GameManager : MonoBehaviour
 
     [Space]
     [SerializeField] private GameObject FaderObject;
-    private Image FaderImage => FaderObject.GetComponent<Image>();
+    [SerializeField] private SceneTransitionController sceneTransitionController;
+    private Image FaderImage => FaderObject != null ? FaderObject.GetComponent<Image>() : null;
 
     public int CurrentQuestionsAskedThisRound { get; private set; }
     public int PokerChipsAvailable { get; private set; }
@@ -81,6 +82,21 @@ public class GameManager : MonoBehaviour
         }
 
         pauseSystem.Initialize(this, PlayerInputSystem, pauseGameUI, state => stateActionMaps[state]);
+
+        if (sceneTransitionController == null)
+        {
+            sceneTransitionController = GetComponent<SceneTransitionController>();
+        }
+
+        if (sceneTransitionController == null)
+        {
+            sceneTransitionController = gameObject.AddComponent<SceneTransitionController>();
+        }
+
+        if (FaderObject != null)
+        {
+            sceneTransitionController.Initialize(FaderObject);
+        }
 
         if (pauseGameUI != null) pauseGameUI.SetActive(false);
 
@@ -131,21 +147,28 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator LoadNextScene(State target)
     {
-        if (CurrentState != State.Menu) {
-            SetFaderActive(true);
-            yield return StartCoroutine(SceneTransition("fadeIn", 1f));
-        } else {
-            SetFaderActive(true, true);
-            SetChipActive(true);
+        if (sceneTransitionController != null)
+        {
+            if (CurrentState != State.Menu)
+            {
+                sceneTransitionController.SetFaderActive(true);
+                yield return StartCoroutine(sceneTransitionController.SceneTransition("fadeIn", 1f));
+            }
+            else
+            {
+                sceneTransitionController.SetFaderActive(true, true);
+                sceneTransitionController.SetChipActive(true);
+            }
         }
 
         if (target == State.InClub)
         {
             StartNewClubRound(PlayerBalance);
-            TwoDSceneUI.SetActive(true);
-        } else
+            if (TwoDSceneUI != null) TwoDSceneUI.SetActive(true);
+        }
+        else
         {
-            TwoDSceneUI.SetActive(false);
+            if (TwoDSceneUI != null) TwoDSceneUI.SetActive(false);
         }
 
         string sceneToLoad = stateScenes[target];
@@ -158,59 +181,11 @@ public class GameManager : MonoBehaviour
 
         while (!operation.isDone) yield return null;
 
-        yield return StartCoroutine(SceneTransition("fadeOut", 1f));
-        SetFaderActive(false);
-
-    }
-
-    void SetChipActive(bool active) 
-    {
-        Transform loadingChip = FaderObject.transform.Find("LoadingChip");
-        if (loadingChip) loadingChip.gameObject.SetActive(active);
-    }
-
-    void SetFaderActive(bool active, bool overrideAlpha = false)
-    {
-        if (FaderImage != null)
+        if (sceneTransitionController != null)
         {
-            Color c = FaderImage.color;
-            c.a = Mathf.Clamp01(active && !overrideAlpha ? 0f : 1f);
-            FaderImage.color = c;
+            yield return StartCoroutine(sceneTransitionController.SceneTransition("fadeOut", 1f));
+            sceneTransitionController.SetFaderActive(false);
         }
-        FaderObject.SetActive(active);
-        SetChipActive(!active);
-    }
-
-    IEnumerator SceneTransition(string animationType, float duration)
-    {
-        bool isFadeIn = animationType == "fadeIn";
-        float startAlpha = isFadeIn ? 0f : 1f;
-        float endAlpha = isFadeIn ? 1f : 0f;
-
-        yield return StartCoroutine(FadeUI(startAlpha, endAlpha, duration));
-
-        SetChipActive(isFadeIn);
-    }
-
-    private IEnumerator FadeUI(float startAlpha, float endAlpha, float duration)
-    {
-        float time = 0f;
-        while (time < duration)
-        {
-            time += Time.deltaTime;
-            if (FaderImage == null) yield break;
-
-            Color color = FaderImage.color;
-            color.a = Mathf.Lerp(startAlpha, endAlpha, time / duration);
-            FaderImage.color = color;
-            yield return null;
-        }
-
-        if (FaderImage == null) yield break;
-
-        Color finalColor = FaderImage.color;
-        finalColor.a = endAlpha;
-        FaderImage.color = finalColor;
     }
 
     public void Fire(Trigger trigger)

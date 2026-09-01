@@ -2006,8 +2006,9 @@ GameObject:
   - component: {fileID: 1886447299}
   - component: {fileID: 1886447300}
   - component: {fileID: 1886447301}
+  - component: {fileID: 1886447302}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: UniversalSoul
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2046,13 +2047,14 @@ MonoBehaviour:
   GameRound: 0
   PlayerInputSystem: {fileID: 1886447299}
   pauseGameUI: {fileID: 1178545699}
-  pauseSystem: {fileID: 0}
+  pauseSystem: {fileID: 1886447301}
   maxQuestionsPerRound: 080000000800000006000000040000000200000001000000
   questionText: {fileID: 164787}
   chipsText: {fileID: 339900920}
   confirmationMenu: {fileID: 1580673222}
   TwoDSceneUI: {fileID: 1414005593}
   FaderObject: {fileID: 844574004}
+  sceneTransitionController: {fileID: 1886447302}
 --- !u!114 &1886447299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2103,6 +2105,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cc1a5ccc1a12c644be7f91c8bd9433a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseSystem
+--- !u!114 &1886447302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886447296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94ba144409c99aa488022259c949fde0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneTransitionController
+  faderObject: {fileID: 844574004}
 --- !u!1 &2096303274
 GameObject:
   m_ObjectHideFlags: 0
