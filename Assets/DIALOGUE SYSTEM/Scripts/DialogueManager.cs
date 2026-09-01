@@ -55,6 +55,7 @@ public class DialogueManager : MonoBehaviour
     private TMP_Text[] optionText;
     private Tween panelTween;
     private bool active = false;
+    private bool? pendingRoundFiveOutcome = null;
 
 
     /// <summary>
@@ -114,7 +115,18 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogueTree(DialogueTree dialogueTree)
     {
-        if (active) return;
+        if (dialogueTree == null)
+        {
+            Debug.LogWarning("Attempted to start a null dialogue tree.");
+            return;
+        }
+
+        if (active)
+        {
+            Debug.LogWarning("Dialogue already active; ignoring new dialogue request.");
+            return;
+        }
+
         currentDialogueTree = dialogueTree;
         StartDialogue(dialogueTree.nodes[0]);
         active = true;
@@ -127,17 +139,23 @@ public class DialogueManager : MonoBehaviour
     /// </summary>
     public void StartDialogue(Node node)
     {
-        curUnaskedQuestions.Clear();
-        
-        panelTween?.Kill();
-        panelTween = null;
-
         if (node == null)
         {
             Debug.LogError("Cannot start dialogue from a null node.");
             EndDialogue();
             return;
         }
+
+        if (curNode == node && (isRenderingText || renderCoroutine != null || sentences.Count > 0 || panelTween != null))
+        {
+            Debug.LogWarning($"Ignoring re-entrant dialogue request for [{node.name}] while it is already active.");
+            return;
+        }
+
+        curUnaskedQuestions.Clear();
+
+        panelTween?.Kill();
+        panelTween = null;
 
         StopTextRendering();
 
@@ -281,6 +299,11 @@ public class DialogueManager : MonoBehaviour
     /// </summary>
     public void OnClick()
     {
+        if (!active || currentDialogueTree == null || curNode == null)
+        {
+            return;
+        }
+
         // Ignore general dialogue clicks while the player
         // is expected to choose an option.
         if (AreOptionButtonsVisible())
@@ -341,7 +364,14 @@ public class DialogueManager : MonoBehaviour
         }
 
         selectedQuestion.hasBeenAsked = true;
-        if (curNode == currentDialogueTree.nodes[0]) GameManager.Instance.AskedAQuestion();
+        if (curNode == currentDialogueTree.nodes[0])
+        {
+            GameManager.Instance.AskedAQuestion();
+            if (GameManager.Instance.GameRound == 5 && !GameManager.Instance.CanAskQuestion())
+            {
+                pendingRoundFiveOutcome = GameManager.Instance.IsCurrentDialogueTreeWinCondition ? true : false;
+            }
+        }
 
         StartDialogue(selectedQuestion);
     }
@@ -791,8 +821,30 @@ public class DialogueManager : MonoBehaviour
         
         currentDialogueTree = null;
         active = false;
-        
+
+        bool shouldFinishRoundFive = pendingRoundFiveOutcome.HasValue;
+        bool shouldWin = pendingRoundFiveOutcome == true;
+        pendingRoundFiveOutcome = null;
+
         GameManager.Instance.GeneralResume();
+
+        if (shouldFinishRoundFive)
+        {
+            StartCoroutine(FinishRoundFiveAfterDialogue(shouldWin));
+        }
+    }
+
+    private IEnumerator FinishRoundFiveAfterDialogue(bool shouldWin)
+    {
+        while (panelTween != null)
+        {
+            yield return null;
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.LoadGameOverScene(shouldWin);
+        }
     }
 
     /// <summary>

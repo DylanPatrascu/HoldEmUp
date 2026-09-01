@@ -36,6 +36,8 @@ public class PokerGameManager : MonoBehaviour
 
     public EventHandler<PokerEvent> PerformedPlayerAction;
 
+    private bool isEndingHand = false;
+
     public static PokerGameManager Instance { get; private set; } 
 
     public bool awaitingPlayer { get; private set; } = false;
@@ -73,12 +75,42 @@ public class PokerGameManager : MonoBehaviour
         StartCoroutine(MainGame());
     }
 
+    private IEnumerator EndHandTransition()
+    {
+        if (isEndingHand) yield break;
+        isEndingHand = true;
+
+        CurrentGameState = GameState.EndGame;
+        PokerVisualManager.Instance.ResetNpcBetUI();
+        yield return new WaitForSeconds(6);
+
+        if (GameManager.Instance == null)
+        {
+            yield break;
+        }
+
+        if (GameManager.Instance.PlayerBalance <= 0)
+        {
+            GameManager.Instance.LoadGameOverScene(false);
+            yield break;
+        }
+
+        if (GameManager.Instance.GameRound >= 5)
+        {
+            GameManager.Instance.LoadGameOverScene(true);
+            yield break;
+        }
+
+        GameManager.Instance.Fire(Trigger.ToClub);
+    }
+
     IEnumerator MainGame()
     {
         CurrentGameState = GameState.Preflop;
         yield return StartCoroutine(RunSafely(PreflopPhase(), "PreflopPhase"));
         if (CurrentGameState == GameState.EndGame)
         {
+            yield return StartCoroutine(EndHandTransition());
             yield break;
         }
 
@@ -86,6 +118,7 @@ public class PokerGameManager : MonoBehaviour
         yield return StartCoroutine(RunSafely(PostFlopPhase(3), "PostFlopPhase(Flop)"));
         if (CurrentGameState == GameState.EndGame)
         {
+            yield return StartCoroutine(EndHandTransition());
             yield break;
         }
 
@@ -93,6 +126,7 @@ public class PokerGameManager : MonoBehaviour
         yield return StartCoroutine(RunSafely(PostFlopPhase(1), "PostFlopPhase(Turn)"));
         if (CurrentGameState == GameState.EndGame)
         {
+            yield return StartCoroutine(EndHandTransition());
             yield break;
         }
 
@@ -100,6 +134,7 @@ public class PokerGameManager : MonoBehaviour
         yield return StartCoroutine(RunSafely(PostFlopPhase(1), "PostFlopPhase(River)"));
         if (CurrentGameState == GameState.EndGame)
         {
+            yield return StartCoroutine(EndHandTransition());
             yield break;
         }
 
@@ -114,12 +149,7 @@ public class PokerGameManager : MonoBehaviour
             Debug.LogError($"[PokerGameManager] Exception during CheckWin (Showdown): {e}");
         }
 
-        CurrentGameState = GameState.EndGame;
-
-        yield return new WaitForSeconds(7);
-        GameManager.Instance.Fire(Trigger.ToClub);
-
-
+        yield return StartCoroutine(EndHandTransition());
     }
 
     private IEnumerator RunSafely(IEnumerator routine, string phaseName)
@@ -146,32 +176,46 @@ public class PokerGameManager : MonoBehaviour
 
     private void ResolveEarlyFoldWin()
     {
-        List<PokerPosition> winnerList = ActivePlayers.Count > 0 ? new List<PokerPosition>(ActivePlayers) : Enum.GetValues(typeof(PokerPosition))
-            .Cast<PokerPosition>()
-            .Where(player => player != PokerPosition.Table)
-            .ToList();
+        if (ActivePlayers.Count != 1)
+        {
+            Debug.LogWarning($"[PokerGameManager] Early fold resolution skipped: active players = {ActivePlayers.Count}. Need exactly 1 player left.");
+            return;
+        }
 
+        List<PokerPosition> winnerList = new List<PokerPosition>(ActivePlayers);
         var activePlayers = Enum.GetValues(typeof(PokerPosition))
             .Cast<PokerPosition>()
             .Where(player => player != PokerPosition.Table)
             .ToList();
 
+        PokerVisualManager.Instance.SyncActivePlayerUI(ActivePlayers);
         BettingManager.Instance.SubmitBets(activePlayers);
         BettingManager.Instance.AwardPot(winnerList);
 
         CurrentGameState = GameState.EndGame;
         Debug.Log($"[PokerGameManager] Early fold resolution: {string.Join(", ", winnerList)} wins the pot.");
+        StartCoroutine(EndHandTransition());
+    }
+
+    private void ResetCharacterSprites()
+    {
+        foreach (Enemy enemy in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
+        {
+            enemy.SetToStatic();
+        }
     }
 
     IEnumerator BettingRound()
     {
+        ResetCharacterSprites();
+
         bool isFirstRound = true;
         int maxRoundIterations = Mathf.Max(10, ActivePlayers.Count * 8);
         int iterationCount = 0;
 
         while (!BettingManager.Instance.AreEqualBets(ActivePlayers) || isFirstRound)
         {
-            if (ActivePlayers.Count <= 1)
+            if (ActivePlayers.Count == 1)
             {
                 ResolveEarlyFoldWin();
                 yield break;
@@ -229,7 +273,7 @@ public class PokerGameManager : MonoBehaviour
                         SubmitAction(player, action, amount);
                     }
 
-                    if (ActivePlayers.Count <= 1)
+                    if (ActivePlayers.Count == 1)
                     {
                         ResolveEarlyFoldWin();
                         yield break;
@@ -250,7 +294,7 @@ public class PokerGameManager : MonoBehaviour
                 yield return new WaitUntil(() => !PausedForAnimationEvents);
                 isFirstRound = false;
 
-                if (ActivePlayers.Count <= 1)
+                if (ActivePlayers.Count == 1)
                 {
                     ResolveEarlyFoldWin();
                     yield break;
@@ -264,7 +308,7 @@ public class PokerGameManager : MonoBehaviour
             }
         }
 
-        if (ActivePlayers.Count <= 1)
+        if (ActivePlayers.Count == 1)
         {
             ResolveEarlyFoldWin();
             yield break;
@@ -281,6 +325,7 @@ public class PokerGameManager : MonoBehaviour
             {
                 case PokerAction.Fold:
                     ActivePlayers.Remove(player);
+                    PokerVisualManager.Instance.HidePlayerBetUI(player);
                     Debug.Log($"[PokerGameManager] {player} folds.");
                     return true;
  
@@ -345,6 +390,9 @@ public class PokerGameManager : MonoBehaviour
                 if (player == PokerPosition.Table) continue;
                 ActivePlayers.Add(player);
             }
+
+            PokerVisualManager.Instance.ResetNpcBetUI();
+            PokerVisualManager.Instance.SyncActivePlayerUI(ActivePlayers);
 
             // Rotation of the button
             SmallBlind = NextPlayer(SmallBlind);

@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
 {
     public static StateMachine _stateMachine = new();
 
+    public static bool DEBUG = true;
+
     public State CurrentState { get { return _stateMachine.CurrentState; } }
 
     public int PlayerBalance = BettingManager.STARTING_BALANCE;
@@ -37,10 +39,12 @@ public class GameManager : MonoBehaviour
     [Space]
     [SerializeField] private GameObject FaderObject;
     [SerializeField] private SceneTransitionController sceneTransitionController;
+    public DialogueTree winConditionTree;
     private Image FaderImage => FaderObject != null ? FaderObject.GetComponent<Image>() : null;
 
     public int CurrentQuestionsAskedThisRound { get; private set; }
     public int PokerChipsAvailable { get; private set; }
+    public bool IsCurrentDialogueTreeWinCondition { get; private set; }
 
     // Action map to use for each game state. Centralized here so scene-specific
     // scripts never need to guess which map should be active.
@@ -142,6 +146,11 @@ public class GameManager : MonoBehaviour
             GameRound = 0;
         }
 
+        if (e.target == State.InClub)
+        {
+            UpdateClubRoundText();
+        }
+
         StartCoroutine(LoadNextScene(e.target));
     }
 
@@ -163,8 +172,8 @@ public class GameManager : MonoBehaviour
 
         if (target == State.InClub)
         {
-            StartNewClubRound(PlayerBalance);
             if (TwoDSceneUI != null) TwoDSceneUI.SetActive(true);
+            StartNewClubRound(PlayerBalance);
         }
         else
         {
@@ -198,6 +207,43 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning(exception.Message);
         }
+    }
+
+    public void LoadGameOverScene(bool playerWon)
+    {
+        string sceneName = playerWon ? "GameOverWin" : "GameOverL";
+
+        if (sceneTransitionController != null)
+        {
+            StartCoroutine(LoadSceneWithTransition(sceneName));
+            return;
+        }
+
+        SceneManager.LoadScene(sceneName);
+    }
+
+    private IEnumerator LoadSceneWithTransition(string sceneName)
+    {
+        sceneTransitionController.SetFaderActive(true);
+        yield return StartCoroutine(sceneTransitionController.SceneTransition("fadeIn", 1f));
+
+        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
+        operation.allowSceneActivation = false;
+
+        while (operation.progress < 0.9f)
+        {
+            yield return null;
+        }
+
+        operation.allowSceneActivation = true;
+
+        while (!operation.isDone)
+        {
+            yield return null;
+        }
+
+        yield return StartCoroutine(sceneTransitionController.SceneTransition("fadeOut", 1f));
+        sceneTransitionController.SetFaderActive(false);
     }
 
     public void PauseGame()
@@ -255,6 +301,11 @@ public class GameManager : MonoBehaviour
         Fire(Trigger.ToFirstPerson);
     }
 
+    public void SetCurrentDialogueWinCondition(bool isWinCondition)
+    {
+        IsCurrentDialogueTreeWinCondition = isWinCondition;
+    }
+
     public bool CanAskQuestion()
     {
         return CurrentQuestionsAskedThisRound < GetCurrentRoundQuestionLimit();
@@ -295,9 +346,17 @@ public class GameManager : MonoBehaviour
     public void UpdateClubRoundText()
     {
         int questionLimit = GetCurrentRoundQuestionLimit();
-        questionText.text = (questionLimit - CurrentQuestionsAskedThisRound).ToString();
+        if (questionText != null)
+        {
+            questionText.text = (questionLimit - CurrentQuestionsAskedThisRound).ToString();
+        }
+
+        if (chipsText != null)
+        {
+            chipsText.text = PokerChipsAvailable.ToString();
+        }
+
         Debug.Log($"{questionLimit} / {CurrentQuestionsAskedThisRound}");
-        chipsText.text = PokerChipsAvailable.ToString();
     }
 
     public void DisplayConfirmationMenu(string textToShow = "Ready to keep playing?")

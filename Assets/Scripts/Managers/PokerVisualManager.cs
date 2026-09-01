@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -292,41 +293,82 @@ public class PokerVisualManager : MonoBehaviour
         }
     }
 
+    private void SetBetDisplay(PokerPosition player, bool isVisible, int amount = 0)
+    {
+        switch (player)
+        {
+            case PokerPosition.Heart:
+                heartsBets.SetActive(isVisible);
+                heartsCurrentBetText.text = amount.ToString();
+                break;
+            case PokerPosition.Diamond:
+                diamondsBets.SetActive(isVisible);
+                diamondsCurrentBetText.text = amount.ToString();
+                break;
+            case PokerPosition.Spade:
+                spadesBets.SetActive(isVisible);
+                spadesCurrentBetText.text = amount.ToString();
+                break;
+            case PokerPosition.Club:
+                clubsBets.SetActive(isVisible);
+                clubsCurrentBetText.text = amount.ToString();
+                break;
+        }
+    }
+
+    public void HidePlayerBetUI(PokerPosition player)
+    {
+        SetBetDisplay(player, false, 0);
+    }
+
+    public void SyncActivePlayerUI(List<PokerPosition> activePlayers)
+    {
+        foreach (PokerPosition player in Enum.GetValues(typeof(PokerPosition)).Cast<PokerPosition>())
+        {
+            if (player == PokerPosition.Table || player == PokerPosition.Joker)
+                continue;
+
+            bool isActive = activePlayers != null && activePlayers.Contains(player);
+            SetBetDisplay(player, isActive, isActive ? 0 : 0);
+        }
+    }
+
+    public void ResetNpcBetUI()
+    {
+        foreach (PokerPosition player in Enum.GetValues(typeof(PokerPosition)).Cast<PokerPosition>())
+        {
+            if (player == PokerPosition.Table || player == PokerPosition.Joker)
+                continue;
+
+            HidePlayerBetUI(player);
+        }
+    }
+
     public void UpdateCurrentBets(object sender, PokerGameManager.PokerEvent e)
     {
         if (e.Action == PokerAction.Fold)
         {
-            switch (e.Player)
-            {
-                case PokerPosition.Heart:
-                    heartsBets.SetActive(false);
-                    break;
-                case PokerPosition.Diamond:
-                    diamondsBets.SetActive(false);
-                    break;
-                case PokerPosition.Spade:
-                    spadesBets.SetActive(false);
-                    break;
-                case PokerPosition.Club:
-                    clubsBets.SetActive(false);
-                    break;
-            }
+            HidePlayerBetUI(e.Player);
         }
         else if (e.Action == PokerAction.Call)
         {
             switch (e.Player)
             {
                 case PokerPosition.Heart:
+                    heartsBets.SetActive(true);
                     heartsCurrentBetText.text = BettingManager.Instance.GetHighestBet(PokerGameManager.Instance.ActivePlayers.ToList()).ToString();
                     break;
                 case PokerPosition.Diamond:
-                    diamondsCurrentBetText.text = BettingManager.Instance.GetHighestBet(PokerGameManager.Instance.ActivePlayers.ToList()).ToString(); ;
+                    diamondsBets.SetActive(true);
+                    diamondsCurrentBetText.text = BettingManager.Instance.GetHighestBet(PokerGameManager.Instance.ActivePlayers.ToList()).ToString();
                     break;
                 case PokerPosition.Spade:
-                    spadesCurrentBetText.text = BettingManager.Instance.GetHighestBet(PokerGameManager.Instance.ActivePlayers.ToList()).ToString(); ;
+                    spadesBets.SetActive(true);
+                    spadesCurrentBetText.text = BettingManager.Instance.GetHighestBet(PokerGameManager.Instance.ActivePlayers.ToList()).ToString();
                     break;
                 case PokerPosition.Club:
-                    clubsCurrentBetText.text = BettingManager.Instance.GetHighestBet(PokerGameManager.Instance.ActivePlayers.ToList()).ToString(); ;
+                    clubsBets.SetActive(true);
+                    clubsCurrentBetText.text = BettingManager.Instance.GetHighestBet(PokerGameManager.Instance.ActivePlayers.ToList()).ToString();
                     break;
             }
         }
@@ -335,15 +377,19 @@ public class PokerVisualManager : MonoBehaviour
             switch (e.Player)
             {
                 case PokerPosition.Heart:
+                    heartsBets.SetActive(true);
                     heartsCurrentBetText.text = "0";
                     break;
                 case PokerPosition.Diamond:
+                    diamondsBets.SetActive(true);
                     diamondsCurrentBetText.text = "0";
                     break;
                 case PokerPosition.Spade:
+                    spadesBets.SetActive(true);
                     spadesCurrentBetText.text = "0";
                     break;
                 case PokerPosition.Club:
+                    clubsBets.SetActive(true);
                     clubsCurrentBetText.text = "0";
                     break;
             }
@@ -353,15 +399,19 @@ public class PokerVisualManager : MonoBehaviour
             switch (e.Player)
             {
                 case PokerPosition.Heart:
+                    heartsBets.SetActive(true);
                     heartsCurrentBetText.text = e.Amount.ToString();
                     break;
                 case PokerPosition.Diamond:
+                    diamondsBets.SetActive(true);
                     diamondsCurrentBetText.text = e.Amount.ToString();
                     break;
                 case PokerPosition.Spade:
+                    spadesBets.SetActive(true);
                     spadesCurrentBetText.text = e.Amount.ToString();
                     break;
                 case PokerPosition.Club:
+                    clubsBets.SetActive(true);
                     clubsCurrentBetText.text = e.Amount.ToString();
                     break;
             }

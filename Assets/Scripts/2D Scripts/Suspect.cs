@@ -13,7 +13,6 @@ public class Suspect : MonoBehaviour, IInteractable
     [SerializeField] private DialogueTree roundFourDialogueTree;
     [SerializeField] private DialogueTree roundFiveDialogueTree;
 
-
     private bool _interactable = false;
     private DialogueTree[] _trees;
 
@@ -69,7 +68,12 @@ public class Suspect : MonoBehaviour, IInteractable
         DialogueTree currentDialogueTree = _trees[round - 1];
         DialogueManager dialogueManager = FindAnyObjectByType<DialogueManager>();
         print(currentDialogueTree + ", round: " + round + ", dialoguemanager: " + dialogueManager);
-        
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.SetCurrentDialogueWinCondition(currentDialogueTree == GameManager.Instance.winConditionTree);
+        }
+
         dialogueManager.StartDialogueTree(currentDialogueTree);
     }
 }

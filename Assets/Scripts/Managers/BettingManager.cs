@@ -78,22 +78,23 @@ public class BettingManager : MonoBehaviour
             return false;
 
         int currentPlayerBet = GetBet(player);
-        int highestBet = GetHighestBet(activePlayers);
         int totalAfterBet = currentPlayerBet + amount;
 
-        Debug.Log($"{player} just wanted to bet {amount} (current {currentPlayerBet}, highest {highestBet})");
-        if (totalAfterBet > MAXIMUM_BET ||
-            totalAfterBet < highestBet) return false;
+        Debug.Log($"{player} just wanted to bet {amount} (current total {currentPlayerBet})");
+
+        if (totalAfterBet > MAXIMUM_BET)
+            return false;
 
         if (player == PokerPosition.Joker)
         {
-            if (GameManager.Instance.PlayerBalance < amount) return false;
+            if (GameManager.Instance.PlayerBalance < amount)
+                return false;
             GameManager.Instance.PlayerBalance -= amount;
         }
 
         AudioManager.Instance.PlayAudioClip(AudioSnippet.PokerChip);
         currentBets[player] = totalAfterBet;
-        Debug.Log($"{player} bet {amount}");
+        Debug.Log($"{player} added {amount} to their current bet");
         BettingVisualManager.Instance.UpdateBet(PlayerBet);
         return true;
     }

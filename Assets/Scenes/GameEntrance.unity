@@ -2048,13 +2048,14 @@ MonoBehaviour:
   PlayerInputSystem: {fileID: 1886447299}
   pauseGameUI: {fileID: 1178545699}
   pauseSystem: {fileID: 1886447301}
-  maxQuestionsPerRound: 080000000800000006000000040000000200000001000000
+  maxQuestionsPerRound: 0800000008000000060000000400000001000000
   questionText: {fileID: 164787}
   chipsText: {fileID: 339900920}
   confirmationMenu: {fileID: 1580673222}
   TwoDSceneUI: {fileID: 1414005593}
   FaderObject: {fileID: 844574004}
   sceneTransitionController: {fileID: 1886447302}
+  winConditionTree: {fileID: 11400000, guid: 1454861c67d5bb54e8881822c06cca53, type: 2}
 --- !u!114 &1886447299
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -48,6 +48,8 @@ public class PlayerManager : MonoBehaviour
         submitBetAction = actions.FindAction("Submit Bet");
         switchCameraAction = actions.FindAction("Switch Camera");
 
+        if (GameManager.DEBUG) switchCameraAction = actions.FindAction("Debug"); 
+
         if (chipInteractAction != null) chipInteractAction.performed += OnChipInteractPerformed;
         if (foldAction != null) foldAction.performed += OnFoldPerformed;
         if (checkOrCallAction != null) checkOrCallAction.performed += OnCheckOrCallPerformed;
@@ -186,9 +188,8 @@ public class PlayerManager : MonoBehaviour
             return;
         }
 
-        // Not enough to even match the current bet - block rather than
-        // silently under-calling.
-        if (builtAmount < amountToCall)
+        // The minimum only matters when the player finalizes their decision.
+        if (amountToCall > 0 && builtAmount < amountToCall)
         {
             Debug.LogWarning("Not enough chips on the table to call - add more, or pull them back and fold instead.");
             return;
@@ -220,6 +221,10 @@ public class PlayerManager : MonoBehaviour
 
     private void OnSwitchCameraPerformed(InputAction.CallbackContext ctx)
     {
+        if (GameManager.DEBUG) {
+            GameManager.Instance.Fire(Trigger.ToClub);
+            Debug.Log("Sending player to Club early");
+        }
         cCam.Priority.Value = cCam.Priority.Value == 0 ? 3 : 0;
     }
 

@@ -1,24 +1,38 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameOverScript : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private bool playerWon = false;
+    [SerializeField] private Button returnButton;
+
+    private void Awake()
     {
-        
+        if (returnButton != null)
+        {
+            returnButton.onClick.AddListener(ReturnToMainMenu);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetOutcome(bool won)
     {
-        
+        playerWon = won;
     }
 
+    public void ReturnToMainMenu()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.Fire(Trigger.ToMainMenu);
+            return;
+        }
 
-    //On button clicked, return to main menu
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+    }
+
+    // Legacy Unity button callback support.
     public void _return_to_menu()
     {
-
+        ReturnToMainMenu();
     }
 }

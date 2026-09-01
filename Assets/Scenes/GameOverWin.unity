@@ -798,6 +798,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb2878c6b767538408de9af0ab589058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  playerWon: 0
+  returnButton: {fileID: 1755928683}
 --- !u!4 &1899143366
 Transform:
   m_ObjectHideFlags: 0
