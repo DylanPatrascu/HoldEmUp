@@ -18,8 +18,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     [SerializeField] private GameObject pauseGameUI;
-    public PauseMenu PauseGameUI => pauseGameUI.GetComponent<PauseMenu>();
-    public bool IsGamePaused { get; private set; } = false;
+    [SerializeField] private PauseSystem pauseSystem;
+    public PauseMenu PauseGameUI => pauseGameUI != null ? pauseGameUI.GetComponent<PauseMenu>() : null;
+    public bool IsGamePaused => pauseSystem != null ? pauseSystem.IsPaused : false;
 
     // ---- Club round (formerly ClubSceneManager) ----
     [Space]
@@ -56,14 +57,6 @@ public class GameManager : MonoBehaviour
         [State.FirstPerson] = "Assets/Scenes/PokerScene.unity"
     };
 
-    // Cached so we can unsubscribe cleanly; these live for the app's lifetime
-    // since GameManager is never destroyed once Instance is set.
-    private InputAction pauseAction;
-    private InputAction cancelAction;
-
-    private float lastPauseToggleTime = -1f;
-    private const float PAUSE_TOGGLE_COOLDOWN = 0.2f;
-
     void Awake()
     {
         if (Instance != null)
@@ -77,23 +70,27 @@ public class GameManager : MonoBehaviour
 
         if (PlayerInputSystem == null) PlayerInputSystem = GetComponent<PlayerInput>();
 
-        pauseAction = PlayerInputSystem.actions.FindActionMap("Player").FindAction("Pause");
-        cancelAction = PlayerInputSystem.actions.FindActionMap("UI").FindAction("Cancel");
+        if (pauseSystem == null)
+        {
+            pauseSystem = GetComponent<PauseSystem>();
+        }
 
-        if (pauseAction != null) pauseAction.performed += OnPausePerformed;
-        if (cancelAction != null) cancelAction.performed += OnCancelPerformed;
+        if (pauseSystem == null)
+        {
+            pauseSystem = gameObject.AddComponent<PauseSystem>();
+        }
+
+        pauseSystem.Initialize(this, PlayerInputSystem, pauseGameUI, state => stateActionMaps[state]);
 
         if (pauseGameUI != null) pauseGameUI.SetActive(false);
 
-        SceneManager.LoadScene(stateScenes[CurrentState]);
+        StartCoroutine(LoadNextScene(CurrentState));
     }
 
     void OnDestroy()
     {
         if (Instance != this) return;
-
-        if (pauseAction != null) pauseAction.performed -= OnPausePerformed;
-        if (cancelAction != null) cancelAction.performed -= OnCancelPerformed;
+        if (pauseSystem != null) pauseSystem.Shutdown();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -134,8 +131,22 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator LoadNextScene(State target)
     {
-        SetFaderActive(true);
-        yield return StartCoroutine(SceneTransition("fadeIn", 1f));
+        if (CurrentState != State.Menu) {
+            SetFaderActive(true);
+            yield return StartCoroutine(SceneTransition("fadeIn", 1f));
+        } else {
+            SetFaderActive(true, true);
+            SetChipActive(true);
+        }
+
+        if (target == State.InClub)
+        {
+            StartNewClubRound(PlayerBalance);
+            TwoDSceneUI.SetActive(true);
+        } else
+        {
+            TwoDSceneUI.SetActive(false);
+        }
 
         string sceneToLoad = stateScenes[target];
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneToLoad);
@@ -150,27 +161,24 @@ public class GameManager : MonoBehaviour
         yield return StartCoroutine(SceneTransition("fadeOut", 1f));
         SetFaderActive(false);
 
-        if (target == State.InClub)
-        {
-            StartNewClubRound(PlayerBalance);
-            TwoDSceneUI.SetActive(true);
-        } else
-        {
-            TwoDSceneUI.SetActive(false);
-        }
     }
 
-    void SetFaderActive(bool active)
+    void SetChipActive(bool active) 
+    {
+        Transform loadingChip = FaderObject.transform.Find("LoadingChip");
+        if (loadingChip) loadingChip.gameObject.SetActive(active);
+    }
+
+    void SetFaderActive(bool active, bool overrideAlpha = false)
     {
         if (FaderImage != null)
         {
             Color c = FaderImage.color;
-            c.a = Mathf.Clamp01(active ? 0f : 1f);
+            c.a = Mathf.Clamp01(active && !overrideAlpha ? 0f : 1f);
             FaderImage.color = c;
         }
         FaderObject.SetActive(active);
-        Transform loadingChip = FaderObject.transform.Find("LoadingChip");
-        if (loadingChip) loadingChip.gameObject.SetActive(!active);
+        SetChipActive(!active);
     }
 
     IEnumerator SceneTransition(string animationType, float duration)
@@ -181,8 +189,7 @@ public class GameManager : MonoBehaviour
 
         yield return StartCoroutine(FadeUI(startAlpha, endAlpha, duration));
 
-        Transform loadingChip = FaderObject.transform.Find("LoadingChip");
-        if (loadingChip && isFadeIn) loadingChip.gameObject.SetActive(true);
+        SetChipActive(isFadeIn);
     }
 
     private IEnumerator FadeUI(float startAlpha, float endAlpha, float duration)
@@ -218,31 +225,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void OnPausePerformed(InputAction.CallbackContext ctx)
-    {
-        if (IsGamePaused) return;
-        if (Time.unscaledTime - lastPauseToggleTime < PAUSE_TOGGLE_COOLDOWN) return;
-        lastPauseToggleTime = Time.unscaledTime;
-
-        PauseGame();
-        PlayerInputSystem.SwitchCurrentActionMap("UI");
-    }
-
-    private void OnCancelPerformed(InputAction.CallbackContext ctx)
-    {
-        if (!IsGamePaused) return;
-        if (Time.unscaledTime - lastPauseToggleTime < PAUSE_TOGGLE_COOLDOWN) return;
-        lastPauseToggleTime = Time.unscaledTime;
-
-        ResumeGame();
-        PlayerInputSystem.SwitchCurrentActionMap(stateActionMaps[CurrentState]);
-    }
-
     public void PauseGame()
     {
+        if (pauseSystem != null)
+        {
+            pauseSystem.PauseGame();
+            return;
+        }
+
         if (pauseGameUI != null) pauseGameUI.SetActive(true);
         GeneralPause();
-        IsGamePaused = true;
 
         if (CurrentState == State.FirstPerson)
         {
@@ -253,9 +245,14 @@ public class GameManager : MonoBehaviour
 
     public void ResumeGame()
     {
+        if (pauseSystem != null)
+        {
+            pauseSystem.ResumeGame();
+            return;
+        }
+
         if (pauseGameUI != null) pauseGameUI.SetActive(false);
         GeneralResume();
-        IsGamePaused = false;
 
         if (CurrentState == State.FirstPerson)
         {
