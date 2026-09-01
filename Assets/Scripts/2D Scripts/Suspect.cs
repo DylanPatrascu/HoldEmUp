@@ -60,6 +60,12 @@ public class Suspect : MonoBehaviour, IInteractable
     private void StartDialogue()
     {
         int round = GameManager.Instance.GameRound;
+        if (round < 1 || round > _trees.Length)
+        {
+            Debug.LogWarning($"No dialogue tree configured for round {round}; using the final round tree instead.");
+            round = Mathf.Clamp(round, 1, _trees.Length);
+        }
+
         DialogueTree currentDialogueTree = _trees[round - 1];
         DialogueManager dialogueManager = FindAnyObjectByType<DialogueManager>();
         print(currentDialogueTree + ", round: " + round + ", dialoguemanager: " + dialogueManager);

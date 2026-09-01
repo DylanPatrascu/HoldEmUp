@@ -144,12 +144,14 @@ public class PokerManager : MonoBehaviour
             // ONE winner
             Debug.Log($"WINNER NAME: {winners[0]} | " + $"HAND: {winningScore.pokerHand} | " + $"SCORE: {string.Join(", ", winningScore.pokerCards)}");
             PokerVisualManager.Instance.DisplaySentence($"{playerNames[winners[0]]} wins with {pokerHand[winningScore.pokerHand]}.");
+            BettingManager.Instance.AwardPot(winners);
         }
         else
         {
             // tie
             Debug.Log($"TIE! HAND: {winningScore.pokerHand} | " + $"SCORE: {string.Join(", ", winningScore.pokerCards)}");
             PokerVisualManager.Instance.DisplaySentence($"{string.Join(",", winners)} tie with {pokerHand[winningScore.pokerHand]}");
+            BettingManager.Instance.AwardPot(winners);
         }
     }
 

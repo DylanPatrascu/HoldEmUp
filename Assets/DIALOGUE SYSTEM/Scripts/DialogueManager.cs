@@ -203,7 +203,10 @@ public class DialogueManager : MonoBehaviour
             {
                 StartDialogue(finishedPort.node);
             }
-            else Debug.LogWarning("Finished Dialogue node is missing");
+            else
+            {
+                EndDialogue();
+            }
 
             return;
         }

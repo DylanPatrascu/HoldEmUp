@@ -176,6 +176,7 @@ public class PlayerManager : MonoBehaviour
         if (actionMode == PlayerActionMode.Waiting) return;
 
         int builtAmount = BettingManager.Instance.PlayerBet;
+        int currentContribution = BettingManager.Instance.GetBet(PLAYER_POSITION);
         int amountToCall = AmountToCall();
 
         // Nothing on the table yet - nothing to submit as a bet/raise.
@@ -194,21 +195,25 @@ public class PlayerManager : MonoBehaviour
         }
 
         PokerAction action;
+        int actionAmount;
         if (amountToCall == 0)
         {
             action = PokerAction.Bet; // nothing was owed, this opens the betting
+            actionAmount = builtAmount;
         }
         else if (builtAmount == amountToCall)
         {
             action = PokerAction.Call; // matched exactly, no extra on top
+            actionAmount = amountToCall;
         }
         else
         {
             action = PokerAction.Raise; // built more than what was owed
+            actionAmount = builtAmount - currentContribution;
         }
 
         PokerGameManager.Instance.SetPausedForAnimationEvents(true);
-        EventInvokingSubmitAction(action, builtAmount);
+        EventInvokingSubmitAction(action, actionAmount);
 
         EndTurn();
     }
@@ -221,7 +226,9 @@ public class PlayerManager : MonoBehaviour
     private void EventInvokingSubmitAction(PokerAction action, int amount)
     {
         PokerGameManager.Instance.SubmitAction(PLAYER_POSITION, action, amount);
-        PokerGameManager.Instance.PerformedPlayerAction?.Invoke(this, new PokerGameManager.PokerEvent(PLAYER_POSITION, action, amount, false));
+        var actionEvent = new PokerGameManager.PokerEvent(PLAYER_POSITION, action, amount, false);
+        Debug.Log($"[PlayerManager] Player action: {action} amount={amount}");
+        PokerGameManager.Instance.PerformedPlayerAction?.Invoke(this, actionEvent);
     }
 
     private void EndTurn()

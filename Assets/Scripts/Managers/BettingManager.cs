@@ -12,8 +12,25 @@ public class BettingManager : MonoBehaviour
 
     public int GetBet(PokerPosition player) => currentBets.TryGetValue(player, out int bet) ? bet : 0;
     public int GetHighestBet(List<PokerPosition> players) => players.Select(GetBet).DefaultIfEmpty(0).Max();
-    public bool AreEqualBets(List<PokerPosition> players) => players.All(player => currentBets[player] == currentBets[players[0]]);
+    public bool AreEqualBets(List<PokerPosition> players)
+    {
+        if (players == null || players.Count == 0)
+            return true;
+
+        List<PokerPosition> activePlayers = players
+            .Where(player => player != PokerPosition.Table)
+            .Distinct()
+            .ToList();
+
+        if (activePlayers.Count == 0)
+            return true;
+
+        int referenceBet = GetBet(activePlayers[0]);
+        return activePlayers.All(player => GetBet(player) == referenceBet);
+    }
+
     public int PlayerBet => currentBets.TryGetValue(PokerPosition.Joker, out int bet) ? bet : 0;
+    public int Pot => pot;
 
     [SerializeField] private int pot = 0;
 
@@ -57,18 +74,25 @@ public class BettingManager : MonoBehaviour
     // usable by UI and NPCS
     public bool BetAmount(PokerPosition player, int amount, List<PokerPosition> activePlayers)
     {
-        Debug.Log($"{player} just wanted to bet {amount}");
-        if (currentBets[player] + amount > MAXIMUM_BET ||
-            currentBets[player] + amount < GetHighestBet(activePlayers)) return false;
+        if (amount <= 0)
+            return false;
+
+        int currentPlayerBet = GetBet(player);
+        int highestBet = GetHighestBet(activePlayers);
+        int totalAfterBet = currentPlayerBet + amount;
+
+        Debug.Log($"{player} just wanted to bet {amount} (current {currentPlayerBet}, highest {highestBet})");
+        if (totalAfterBet > MAXIMUM_BET ||
+            totalAfterBet < highestBet) return false;
 
         if (player == PokerPosition.Joker)
         {
-            // TODO: Add visual cue that player has insufficient money
-            if (GameManager.Instance.PlayerBalance - amount < 0) return false;
+            if (GameManager.Instance.PlayerBalance < amount) return false;
             GameManager.Instance.PlayerBalance -= amount;
         }
+
         AudioManager.Instance.PlayAudioClip(AudioSnippet.PokerChip);
-        currentBets[player] += amount;
+        currentBets[player] = totalAfterBet;
         Debug.Log($"{player} bet {amount}");
         BettingVisualManager.Instance.UpdateBet(PlayerBet);
         return true;
@@ -93,13 +117,37 @@ public class BettingManager : MonoBehaviour
     {
         foreach (PokerPosition player in players)
         {
-            if (player == PokerPosition.Table) return;
+            if (player == PokerPosition.Table) continue;
             pot += currentBets[player];
             currentBets[player] = 0;
             BettingVisualManager.Instance.UpdateBet(PlayerBet);
             AudioManager.Instance.PlayAudioClip(AudioSnippet.PokerChip);
-
         }
+    }
+
+    public void AwardPot(List<PokerPosition> winners)
+    {
+        if (winners == null || winners.Count == 0)
+        {
+            pot = 0;
+            return;
+        }
+
+        if (pot <= 0)
+        {
+            pot = 0;
+            return;
+        }
+
+        int winningsPerWinner = pot / winners.Count;
+        int remainder = pot % winners.Count;
+
+        if (winners.Contains(PokerPosition.Joker))
+        {
+            GameManager.Instance.PlayerBalance += winningsPerWinner + remainder;
+        }
+
+        pot = 0;
     }
 
 }

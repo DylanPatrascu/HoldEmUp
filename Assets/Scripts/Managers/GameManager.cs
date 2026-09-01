@@ -257,7 +257,21 @@ public class GameManager : MonoBehaviour
 
     public bool CanAskQuestion()
     {
-        return CurrentQuestionsAskedThisRound < maxQuestionsPerRound[GameRound];
+        return CurrentQuestionsAskedThisRound < GetCurrentRoundQuestionLimit();
+    }
+
+    private int GetCurrentRoundQuestionLimit()
+    {
+        if (maxQuestionsPerRound == null || maxQuestionsPerRound.Count == 0)
+            return 0;
+
+        int roundIndex = GameRound - 1;
+        if (roundIndex < 0)
+            roundIndex = 0;
+        if (roundIndex >= maxQuestionsPerRound.Count)
+            roundIndex = maxQuestionsPerRound.Count - 1;
+
+        return maxQuestionsPerRound[roundIndex];
     }
 
     public bool CanAffordBribe(int bribeAmount)
@@ -280,8 +294,9 @@ public class GameManager : MonoBehaviour
 
     public void UpdateClubRoundText()
     {
-        questionText.text = (maxQuestionsPerRound[GameRound] - CurrentQuestionsAskedThisRound).ToString();
-        Debug.Log($"{maxQuestionsPerRound[GameRound]} / {CurrentQuestionsAskedThisRound}");
+        int questionLimit = GetCurrentRoundQuestionLimit();
+        questionText.text = (questionLimit - CurrentQuestionsAskedThisRound).ToString();
+        Debug.Log($"{questionLimit} / {CurrentQuestionsAskedThisRound}");
         chipsText.text = PokerChipsAvailable.ToString();
     }
 

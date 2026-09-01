@@ -56,16 +56,20 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        PokerGameManager.Instance.PerformedGameAction += ShowTells;
+        PokerGameManager.Instance.PerformedPlayerAction += ShowTells;
     }
 
     public void ShowTells(object sender, PokerGameManager.PokerEvent e)
     {
         if (e.Player == pokerPosition && e.IsBluffing)
+        {
+            Debug.Log($"[Enemy:{pokerPosition}] Bluff detected. Triggering tell animation. Action={e.Action}, Amount={e.Amount}");
             SetToAnimation();
+            StartCoroutine(PlayTellAnimation());
+        }
     }
 
-    public IEnumerator PlayTellAnimation(object sender, EventArgs e)
+    public IEnumerator PlayTellAnimation()
     {
         SetToAnimation();
         yield return new WaitForSeconds(3);

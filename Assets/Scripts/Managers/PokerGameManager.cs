@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PokerGameManager : MonoBehaviour
@@ -34,7 +35,6 @@ public class PokerGameManager : MonoBehaviour
     }
 
     public EventHandler<PokerEvent> PerformedPlayerAction;
-    public EventHandler<PokerEvent> PerformedGameAction;
 
     public static PokerGameManager Instance { get; private set; } 
 
@@ -77,15 +77,31 @@ public class PokerGameManager : MonoBehaviour
     {
         CurrentGameState = GameState.Preflop;
         yield return StartCoroutine(RunSafely(PreflopPhase(), "PreflopPhase"));
+        if (CurrentGameState == GameState.EndGame)
+        {
+            yield break;
+        }
 
         CurrentGameState = GameState.Postflop;
         yield return StartCoroutine(RunSafely(PostFlopPhase(3), "PostFlopPhase(Flop)"));
+        if (CurrentGameState == GameState.EndGame)
+        {
+            yield break;
+        }
 
         //Turn
         yield return StartCoroutine(RunSafely(PostFlopPhase(1), "PostFlopPhase(Turn)"));
+        if (CurrentGameState == GameState.EndGame)
+        {
+            yield break;
+        }
 
         //River
         yield return StartCoroutine(RunSafely(PostFlopPhase(1), "PostFlopPhase(River)"));
+        if (CurrentGameState == GameState.EndGame)
+        {
+            yield break;
+        }
 
         //Showdown
         try
@@ -128,36 +144,101 @@ public class PokerGameManager : MonoBehaviour
         }
     }
 
+    private void ResolveEarlyFoldWin()
+    {
+        List<PokerPosition> winnerList = ActivePlayers.Count > 0 ? new List<PokerPosition>(ActivePlayers) : Enum.GetValues(typeof(PokerPosition))
+            .Cast<PokerPosition>()
+            .Where(player => player != PokerPosition.Table)
+            .ToList();
+
+        var activePlayers = Enum.GetValues(typeof(PokerPosition))
+            .Cast<PokerPosition>()
+            .Where(player => player != PokerPosition.Table)
+            .ToList();
+
+        BettingManager.Instance.SubmitBets(activePlayers);
+        BettingManager.Instance.AwardPot(winnerList);
+
+        CurrentGameState = GameState.EndGame;
+        Debug.Log($"[PokerGameManager] Early fold resolution: {string.Join(", ", winnerList)} wins the pot.");
+    }
+
     IEnumerator BettingRound()
     {
         bool isFirstRound = true;
+        int maxRoundIterations = Mathf.Max(10, ActivePlayers.Count * 8);
+        int iterationCount = 0;
 
         while (!BettingManager.Instance.AreEqualBets(ActivePlayers) || isFirstRound)
         {
+            if (ActivePlayers.Count <= 1)
+            {
+                ResolveEarlyFoldWin();
+                yield break;
+            }
+
+            iterationCount++;
+            if (iterationCount > maxRoundIterations)
+            {
+                Debug.LogError($"[PokerGameManager] Betting round exceeded safe limit ({maxRoundIterations}). Forcing round close.");
+                break;
+            }
+
             BettingVisualManager.Instance.SpawnChips(BettingManager.Instance.PlayerBet, ChipLocation.Table, true);
             BettingVisualManager.Instance.SpawnChips(GameManager.Instance.PlayerBalance, ChipLocation.Stack);
+
+            bool anyActionThisPass = false;
             foreach (PokerPosition player in Enum.GetValues(typeof(PokerPosition)))
             {
                 if (player == PokerPosition.Table) continue;
                 if (!ActivePlayers.Contains(player)) continue; // folded players don't act again
  
                 CurrentPlayer = player;
+                anyActionThisPass = true;
  
                 if (player != PokerPosition.Joker)
                 {
-                    PokerAction action;
-                    int amount;
-                    bool isBluffing;
+                    PokerAction action = PokerAction.Check;
+                    int amount = 0;
+                    bool isBluffing = false;
+                    bool validAction = false;
 
-                    do
+                    for (int attempt = 0; attempt < 5; attempt++)
                     {
                         List<PlayingCard> hand = PokerManager.Instance.GetHand(player);
                         GameStateChanged?.Invoke(this, EventArgs.Empty); // Done this to force NPCPlayerAction to switch
                         (action, amount, isBluffing) = NPCManager.Instance.GetAction(PokerManager.Instance.communityCards, hand, player, ActivePlayers);
-                    } while (!SubmitAction(player, action, amount));
+
+                        if (SubmitAction(player, action, amount))
+                        {
+                            validAction = true;
+                            break;
+                        }
+
+                        Debug.LogWarning($"[PokerGameManager] NPC action rejected for {player}: {action} amount={amount}. Retry {attempt + 1}/5.");
+                    }
+
+                    if (!validAction)
+                    {
+                        int myBet = BettingManager.Instance.GetBet(player);
+                        int highestBet = BettingManager.Instance.GetHighestBet(ActivePlayers);
+                        int amountToCall = Mathf.Max(0, highestBet - myBet);
+                        action = amountToCall > 0 ? PokerAction.Call : PokerAction.Check;
+                        amount = amountToCall;
+                        Debug.LogWarning($"[PokerGameManager] Falling back to safe NPC action for {player}: {action} amount={amount}.");
+                        SubmitAction(player, action, amount);
+                    }
+
+                    if (ActivePlayers.Count <= 1)
+                    {
+                        ResolveEarlyFoldWin();
+                        yield break;
+                    }
 
                     SetPausedForAnimationEvents(true);
-                    PerformedPlayerAction?.Invoke(this, new PokerEvent(player, action, amount, isBluffing));
+                    var actionEvent = new PokerEvent(player, action, amount, isBluffing);
+                    Debug.Log($"[PokerGameManager] NPC action: {player} {action} amount={amount} bluff={isBluffing}");
+                    PerformedPlayerAction?.Invoke(this, actionEvent);
                     yield return new WaitUntil(() => !PausedForAnimationEvents);
                     continue;
                 }
@@ -168,8 +249,27 @@ public class PokerGameManager : MonoBehaviour
                 yield return new WaitUntil(() => !awaitingPlayer);
                 yield return new WaitUntil(() => !PausedForAnimationEvents);
                 isFirstRound = false;
+
+                if (ActivePlayers.Count <= 1)
+                {
+                    ResolveEarlyFoldWin();
+                    yield break;
+                }
             }
-        } 
+
+            if (!anyActionThisPass)
+            {
+                Debug.LogError("[PokerGameManager] Betting round made no progress this pass. Breaking to avoid infinite loop.");
+                break;
+            }
+        }
+
+        if (ActivePlayers.Count <= 1)
+        {
+            ResolveEarlyFoldWin();
+            yield break;
+        }
+
         BettingManager.Instance.SubmitBets(ActivePlayers);
     }
 
@@ -182,15 +282,37 @@ public class PokerGameManager : MonoBehaviour
                 case PokerAction.Fold:
                     ActivePlayers.Remove(player);
                     Debug.Log($"[PokerGameManager] {player} folds.");
-                    break;
+                    return true;
  
                 case PokerAction.Check:
                     Debug.Log($"[PokerGameManager] {player} checks.");
-                    break;
+                    return true;
  
                 case PokerAction.Call:
                 case PokerAction.Bet:
                 case PokerAction.Raise:
+                    if (amount <= 0)
+                    {
+                        Debug.LogWarning($"[PokerGameManager] Invalid move for {player}: {action} amount={amount}.");
+                        return false;
+                    }
+
+                    int myBet = BettingManager.Instance.GetBet(player);
+                    int highestBet = BettingManager.Instance.GetHighestBet(ActivePlayers);
+                    int amountToCall = Mathf.Max(0, highestBet - myBet);
+
+                    if (action == PokerAction.Call && amount != amountToCall)
+                    {
+                        Debug.LogWarning($"[PokerGameManager] Invalid call for {player}: amount={amount}, needed={amountToCall}.");
+                        return false;
+                    }
+
+                    if ((action == PokerAction.Bet || action == PokerAction.Raise) && amount + myBet < highestBet)
+                    {
+                        Debug.LogWarning($"[PokerGameManager] Invalid bet/raise for {player}: amount={amount}, current={myBet}, highest={highestBet}.");
+                        return false;
+                    }
+
                     Debug.Log($"[PokerGameManager] {player} {action.ToString().ToLower()}s {amount}.");
                     if (player != PokerPosition.Joker || action == PokerAction.Call)
                         return BettingManager.Instance.BetAmount(player, amount, ActivePlayers);
