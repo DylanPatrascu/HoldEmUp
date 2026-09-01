@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Suspect : MonoBehaviour, IInteractable
 {
@@ -60,7 +59,7 @@ public class Suspect : MonoBehaviour, IInteractable
 
     private void StartDialogue()
     {
-        int round = GameManager.Instance.PokerRound;
+        int round = GameManager.Instance.GameRound;
         DialogueTree currentDialogueTree = _trees[round - 1];
         DialogueManager dialogueManager = FindAnyObjectByType<DialogueManager>();
         print(currentDialogueTree + ", round: " + round + ", dialoguemanager: " + dialogueManager);

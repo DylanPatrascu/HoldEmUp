@@ -26,6 +26,13 @@ public class PauseMenu : MonoBehaviour
 
     public EventHandler ResumeRequested;
 
+    void OnEnable()
+    {
+        foreach (MenuObject m in options)
+            if (m.Menu == MenuState.Hands)
+                m.UIComponent.SetActive(GameManager.Instance.CurrentState == State.FirstPerson); 
+    }
+
     public void ResumeGame()
     { ResumeRequested?.Invoke(this, EventArgs.Empty); }
 

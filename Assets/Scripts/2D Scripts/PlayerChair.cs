@@ -29,6 +29,6 @@ public class PlayerChair : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        GameManager.Instance.DisplayConfirmationMenu();
+        GameManager.Instance.DisplayConfirmationMenu(GameManager.Instance.GameRound == 1 ? "Start the poker match?" : "Ready to keep playing?");
     }
 }

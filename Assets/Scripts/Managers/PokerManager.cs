@@ -107,7 +107,8 @@ public class PokerManager : MonoBehaviour
  
         foreach (KeyValuePair<PokerPosition, List<PlayingCard>> entry in allH)
         {
-            allScores.Add((entry.Key, EvaluateScore(communityCards, entry.Value)));
+            if (PokerGameManager.Instance.ActivePlayers.Contains(entry.Key))
+                allScores.Add((entry.Key, EvaluateScore(communityCards, entry.Value)));
         }
  
         // Start by assuming the first player has the best hand
