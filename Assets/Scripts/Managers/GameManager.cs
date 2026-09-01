@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 {
     public static StateMachine _stateMachine = new();
 
-    public static bool DEBUG = true;
+    public static bool DEBUG = false;
 
     public State CurrentState { get { return _stateMachine.CurrentState; } }
 
